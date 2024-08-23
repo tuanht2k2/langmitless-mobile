@@ -20,7 +20,7 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { Button, Dialog } from "@rneui/themed";
+import { Button, Dialog, Icon } from "@rneui/themed";
 import { logout } from "@/redux/reducers/authSlice";
 
 interface ITab {
@@ -78,19 +78,21 @@ export default function TabLayout() {
               />
               <Text style={styles.logoTitle}>onnectify</Text>
             </View>
-            <TouchableOpacity
-              style={styles.profileImageWrapper}
-              onPress={toggleDialog}
-              activeOpacity={0.7}
-            >
-              <Image
-                source={
-                  user?.profileImage ||
-                  require("@/assets/images/default_avt.png")
-                }
-                style={styles.profileImage}
-              />
-            </TouchableOpacity>
+
+            <View style={styles.actionHeaderWapper}>
+              <View style={styles.profileImageWrapper}>
+                <Image
+                  source={
+                    user?.profileImage ||
+                    require("@/assets/images/default_avt.png")
+                  }
+                  style={styles.profileImage}
+                />
+              </View>
+              <TouchableOpacity onPress={toggleDialog} activeOpacity={0.7}>
+                <Icon name="logout" color={"gray"} />
+              </TouchableOpacity>
+            </View>
             <Dialog isVisible={isDialogVisible} onBackdropPress={toggleDialog}>
               <View>
                 <Text style={styles.dialogWrapper}>
@@ -159,6 +161,7 @@ const styles = StyleSheet.create({
   logoWrapper: {
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
   },
   logo: {
     width: 30,
@@ -168,6 +171,12 @@ const styles = StyleSheet.create({
   logoTitle: {
     color: "#01084a",
     fontSize: 20,
+  },
+  actionHeaderWapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
   },
   profileImageWrapper: {
     height: 30,

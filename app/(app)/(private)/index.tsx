@@ -7,22 +7,7 @@ export default function HomeScreen() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const handleLogout = () => {
-    router.push("/login");
-    dispatch(logout());
-  };
-
-  return (
-    <View style={styles.bg}>
-      <Text>Hello android</Text>
-      <Button
-        onPress={() => {
-          handleLogout();
-        }}
-        title="Đăng xuất"
-      ></Button>
-    </View>
-  );
+  return <View style={styles.bg}></View>;
 }
 
 const styles = StyleSheet.create({
