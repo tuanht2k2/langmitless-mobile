@@ -13,7 +13,7 @@ const globalSlice = createSlice({
   name: "global",
   initialState,
   reducers: {
-    toggleLoading(state, action: PayloadAction<any>) {
+    toggleLoading(state) {
       state.isLoading = !state.isLoading;
     },
   },

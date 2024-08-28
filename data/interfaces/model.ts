@@ -3,7 +3,7 @@ export namespace Interfaces {
   export interface IAccount {
     id?: string;
     type?: number;
-    username?: string;
+    phoneNumber?: string;
     email?: string;
     password?: string;
     profileImage?: string;

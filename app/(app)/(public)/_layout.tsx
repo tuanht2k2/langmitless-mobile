@@ -16,7 +16,7 @@ export default function PublicLayout() {
 
   useEffect(() => {
     if (rootNavigationState && isLogin) {
-      router.push("/");
+      router.replace("/");
     }
   }, [isLogin]);
 

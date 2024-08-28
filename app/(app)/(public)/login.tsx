@@ -7,18 +7,24 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import loginBackground from "@/assets/images/login_bgr.png";
+import { Controller, useForm } from "react-hook-form";
+import { Link, useRouter } from "expo-router";
+import { useState } from "react";
 
+import loginBackground from "@/assets/images/login_bgr.png";
 import styles from "./style";
+import Toast from "react-native-toast-message";
+
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/reducers/authSlice";
-import { Controller, useForm } from "react-hook-form";
-import { Interfaces } from "@/data/interfaces/model";
-import { useState } from "react";
-import { Link } from "expo-router";
+import authService from "@/services/authService";
+
+import CommonService from "@/utils/CommonService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const {
     control,
@@ -29,15 +35,44 @@ export default function LoginScreen() {
 
   const [loggingIn, setLoggingIn] = useState<boolean>(false);
 
-  const handleLogin = (data: Interfaces.IAccount) => {
+  const onError = (errors: any) => {
+    CommonService.showToast(
+      "error",
+      "Lỗi",
+      errors.phoneNumber?.message?.toString() ||
+        errors.password?.message?.toString()
+    );
+  };
+
+  const handleLogin = (request: any) => {
     setLoggingIn(true);
 
-    setTimeout(() => {
-      if (data.username === "tuanht" && data.password === "111111")
-        dispatch(login({ displayName: "Dinh cong tuan", id: "user1" }));
-      else {
-        setLoggingIn(false);
-        setError("username", {
+    authService
+      .login(request)
+      .then((res: any) => {
+        const resData = res.data?.data;
+        const token = resData?.token;
+        const data = resData?.data;
+        if (token && data) {
+          AsyncStorage.setItem("token", token);
+          dispatch(login(data));
+        }
+      })
+      .then(() => {
+        CommonService.showToast(
+          "success",
+          "Đăng nhập thành công",
+          "Bạn sẽ được chuyển hướng"
+        );
+        router.replace("/");
+      })
+      .catch(() => {
+        CommonService.showToast(
+          "error",
+          "Đăng nhập thất bại",
+          "Vui lòng kiểm tra lại"
+        );
+        setError("phoneNumber", {
           type: "manual",
           message: "Sai tên đăng nhập hoặc mật khẩu",
         });
@@ -45,8 +80,10 @@ export default function LoginScreen() {
           type: "manual",
           message: "Sai tên đăng nhập hoặc mật khẩu",
         });
-      }
-    }, 3000);
+      })
+      .finally(() => {
+        setLoggingIn(false);
+      });
   };
 
   return (
@@ -62,15 +99,21 @@ export default function LoginScreen() {
       <View style={styles.inputContainer}>
         <Controller
           control={control}
-          name="username"
-          rules={{ required: "Tên đăng nhập không được bỏ trống" }}
+          name="phoneNumber"
+          rules={{
+            required: "Số điện thoại không được bỏ trống",
+            pattern: {
+              value: /^[0-9]{10,11}$/,
+              message: "Số điện thoại không hợp lệ, phải có 10-11 chữ số",
+            },
+          }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              placeholder="Tên đăng nhập"
+              placeholder="Số điện thoại"
               placeholderTextColor="#666"
               style={[
                 styles.input,
-                errors.username && { borderColor: "red", borderWidth: 1 },
+                errors.phoneNumber && { borderColor: "red", borderWidth: 1 },
               ]}
               keyboardType="email-address"
               autoCapitalize="none"
@@ -106,20 +149,22 @@ export default function LoginScreen() {
             />
           )}
         />
-        <View style={styles.errorTextWrapper}>
-          {(errors.username?.message || errors.password?.message) && (
+        {/* <View style={styles.errorTextWrapper}>
+          {(errors.phoneNumber?.message || errors.password?.message) && (
             <Text style={styles.errorText}>
-              {errors.username?.message?.toString() ||
+              {errors.phoneNumber?.message?.toString() ||
                 errors.password?.message?.toString()}
             </Text>
           )}
-        </View>
+        </View> */}
       </View>
 
       <TouchableOpacity
         activeOpacity={0.7}
         style={styles.button}
-        onPress={handleSubmit(handleLogin)}
+        onPress={handleSubmit(handleLogin, () => {
+          onError(errors);
+        })}
         disabled={loggingIn}
       >
         {loggingIn ? (
@@ -137,6 +182,8 @@ export default function LoginScreen() {
           <Text style={styles.linkText}>Đăng ký</Text>
         </Link>
       </View>
+
+      <Toast />
     </ImageBackground>
   );
 }

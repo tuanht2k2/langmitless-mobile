@@ -19,6 +19,8 @@ import loginBackground from "@/assets/images/login_bgr.png";
 import styles from "./style";
 import GlobalStyle from "@/assets/styles/globalStyles";
 import { ImagePickerComponent } from "@/components/ImagePicker";
+import Toast from "react-native-toast-message";
+import authService from "@/services/authService";
 
 export default function RegisterScreen() {
   const dispatch = useDispatch();
@@ -37,31 +39,32 @@ export default function RegisterScreen() {
     setLoading(true);
 
     setTimeout(() => {
-      if (data.username === "tuanht" && data.password === "111111") {
+      if (data.phoneNumber === "tuanht" && data.password === "111111") {
+        showToast("success", "Tạo tài khoản thành công");
+        setLoading(false);
       } else {
         setLoading(false);
       }
     }, 3000);
   };
 
+  const showToast = (
+    type: "success" | "error" | "info",
+    text1: string = "",
+    text2: string = ""
+  ) => {
+    Toast.show({
+      type: type,
+      text1: text1,
+      text2: text2,
+    });
+  };
+
   const [step, setStep] = useState<number>(0);
 
   // view functions
   const submitBasicView = () => {
-    setLoading(true);
-    setTimeout(() => {
-      // setError("phoneNumber", {
-      //   type: "manual",
-      //   message: "Số điện thoại đã tồn tại",
-      // });
-      // setError("email", {
-      //   type: "manual",
-      //   message: "Email đã tồn tại",
-      // });
-
-      setLoading(false);
-      nextStep();
-    }, 2000);
+    nextStep();
   };
 
   const submitSecurityView = () => {
@@ -306,6 +309,8 @@ export default function RegisterScreen() {
           </Link>
         </View>
       )}
+
+      <Toast />
     </ImageBackground>
   );
 }

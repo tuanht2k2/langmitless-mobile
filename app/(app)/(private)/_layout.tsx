@@ -22,6 +22,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Button, Dialog, Icon } from "@rneui/themed";
 import { logout } from "@/redux/reducers/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import accountService from "@/services/accountService";
+import { getApiConfig } from "@/services/axios";
 
 interface ITab {
   name: string;
@@ -45,9 +48,15 @@ export default function TabLayout() {
   const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
-    if (rootNavigationState?.key && !isLogin) {
-      router.push("/login");
-    }
+    // console.log(AsyncStorage.getItem("token"));
+    // if (rootNavigationState?.key && !isLogin) {
+    //   router.replace("/login");
+    // }
+    accountService
+      .getAccount("3ac963a9-28dc-4ec8-bca9-17b6965cb579")
+      .then((res) => {
+        console.log(res);
+      });
 
     return () => {};
   }, [isLogin]);
@@ -55,7 +64,7 @@ export default function TabLayout() {
   const dispatch = useDispatch();
   const handleLogout = () => {
     toggleDialog();
-    router.push("/login");
+    router.replace("/login");
     dispatch(logout());
   };
 
