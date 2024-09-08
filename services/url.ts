@@ -5,5 +5,5 @@ export enum AUTH_URL {
 }
 
 export enum ACCOUNT_URL {
-  BASE = "account",
+  BASE = "accounts",
 }

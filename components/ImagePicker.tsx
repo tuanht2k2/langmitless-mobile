@@ -4,6 +4,7 @@ import { Button, Icon } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Alert, Text, View } from "react-native";
+import React from "react";
 
 interface IProps {
   header?: string;

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import React from "react";
 
 import { Controller, useForm } from "react-hook-form";
 import { Interfaces } from "@/data/interfaces/model";

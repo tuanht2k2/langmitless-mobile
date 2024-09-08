@@ -2,6 +2,7 @@ import { logout } from "@/redux/reducers/authSlice";
 import { useRouter } from "expo-router";
 import { Image, StyleSheet, Text, View, Button } from "react-native";
 import { useDispatch } from "react-redux";
+import React from "react";
 
 export default function HomeScreen() {
   const dispatch = useDispatch();

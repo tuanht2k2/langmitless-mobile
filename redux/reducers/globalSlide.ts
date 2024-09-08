@@ -1,23 +1,27 @@
-import { Interfaces } from "@/data/interfaces/model";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface GlobalState {
   isLoading: boolean;
+  account: string;
 }
 
 const initialState: GlobalState = {
-  isLoading: false,
+  isLoading: true,
+  account: "",
 };
 
 const globalSlice = createSlice({
   name: "global",
   initialState,
   reducers: {
-    toggleLoading(state) {
-      state.isLoading = !state.isLoading;
+    loaded(state) {
+      state.isLoading = false;
+    },
+    loading(state) {
+      state.isLoading = true;
     },
   },
 });
 
-export const { toggleLoading } = globalSlice.actions;
+export const { loaded, loading } = globalSlice.actions;
 export default globalSlice.reducer;

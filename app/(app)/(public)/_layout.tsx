@@ -7,6 +7,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useEffect } from "react";
+import React from "react";
 
 export default function PublicLayout() {
   const router = useRouter();

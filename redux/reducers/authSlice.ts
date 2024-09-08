@@ -3,28 +3,29 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   isLogin: boolean;
-  user: Interfaces.IAccount | null;
+  account: string;
 }
 
 const initialState: AuthState = {
   isLogin: false,
-  user: null,
+  account: "",
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login(state, action: PayloadAction<Interfaces.IAccount>) {
+    login(state) {
       state.isLogin = true;
-      state.user = action.payload;
     },
     logout(state) {
       state.isLogin = false;
-      state.user = null;
+    },
+    loadAccount(state, action: PayloadAction<string>) {
+      state.account = action.payload;
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, loadAccount } = authSlice.actions;
 export default authSlice.reducer;

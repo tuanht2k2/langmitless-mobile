@@ -10,6 +10,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
+import React from "react";
 
 import loginBackground from "@/assets/images/login_bgr.png";
 import styles from "./style";
@@ -52,10 +53,9 @@ export default function LoginScreen() {
       .then((res: any) => {
         const resData = res.data?.data;
         const token = resData?.token;
-        const data = resData?.data;
-        if (token && data) {
+        if (token) {
           AsyncStorage.setItem("token", token);
-          dispatch(login(data));
+          dispatch(login());
         }
       })
       .then(() => {
@@ -70,7 +70,7 @@ export default function LoginScreen() {
         CommonService.showToast(
           "error",
           "Đăng nhập thất bại",
-          "Vui lòng kiểm tra lại"
+          "Sai tên đăng nhập hoặc mật khẩu"
         );
         setError("phoneNumber", {
           type: "manual",
@@ -149,14 +149,6 @@ export default function LoginScreen() {
             />
           )}
         />
-        {/* <View style={styles.errorTextWrapper}>
-          {(errors.phoneNumber?.message || errors.password?.message) && (
-            <Text style={styles.errorText}>
-              {errors.phoneNumber?.message?.toString() ||
-                errors.password?.message?.toString()}
-            </Text>
-          )}
-        </View> */}
       </View>
 
       <TouchableOpacity

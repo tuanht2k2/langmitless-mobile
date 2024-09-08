@@ -1,4 +1,5 @@
 import {
+  Link,
   Redirect,
   Slot,
   Tabs,
@@ -21,10 +22,21 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Button, Dialog, Icon } from "@rneui/themed";
-import { logout } from "@/redux/reducers/authSlice";
+import { loadAccount, logout } from "@/redux/reducers/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 import accountService from "@/services/accountService";
-import { getApiConfig } from "@/services/axios";
+import { Interfaces } from "@/data/interfaces/model";
+import { loaded } from "@/redux/reducers/globalSlide";
+
+interface ITokenData {
+  iss: string;
+  sub: string;
+  exp: number;
+  iat: number;
+  jti: string;
+  id: string;
+}
 
 interface ITab {
   name: string;
@@ -42,30 +54,39 @@ const TABS: ITab[] = [
 
 export default function TabLayout() {
   const router = useRouter();
-  const rootNavigationState = useRootNavigationState();
+  const dispatch = useDispatch();
 
-  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const [account, setAccount] = useState<Interfaces.IAccount | null>(null);
 
   useEffect(() => {
-    // console.log(AsyncStorage.getItem("token"));
-    // if (rootNavigationState?.key && !isLogin) {
-    //   router.replace("/login");
-    // }
-    accountService
-      .getAccount("3ac963a9-28dc-4ec8-bca9-17b6965cb579")
-      .then((res) => {
-        console.log(res);
-      });
+    AsyncStorage.getItem("token").then((token) => {
+      if (!token) return;
+      const data: ITokenData = jwtDecode(token);
+      dispatch(loadAccount(data?.id));
+
+      accountService
+        .getAccount(data?.id)
+        .then((res) => {
+          const data = res.data?.data;
+          if (data) setAccount(data);
+          dispatch(loaded());
+        })
+        .catch((e) => {
+          AsyncStorage.clear().then(() => {
+            dispatch(logout());
+          });
+        });
+    });
 
     return () => {};
-  }, [isLogin]);
+  }, []);
 
-  const dispatch = useDispatch();
   const handleLogout = () => {
-    toggleDialog();
-    router.replace("/login");
-    dispatch(logout());
+    AsyncStorage.clear().then(() => {
+      dispatch(logout());
+      setIsDialogVisible(false);
+      router.replace("/login");
+    });
   };
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
@@ -90,15 +111,21 @@ export default function TabLayout() {
             </View>
 
             <View style={styles.actionHeaderWapper}>
-              <View style={styles.profileImageWrapper}>
+              {/* <Link
+                href={{
+                  pathname: "/accounts/[id]",
+                  params: { id: account?.id },
+                }}
+                style={styles.profileImageWrapper}
+              >
                 <Image
                   source={
-                    user?.profileImage ||
+                    account?.profileImage ||
                     require("@/assets/images/default_avt.png")
                   }
                   style={styles.profileImage}
                 />
-              </View>
+              </Link> */}
               <TouchableOpacity onPress={toggleDialog} activeOpacity={0.7}>
                 <Icon name="logout" color={"gray"} />
               </TouchableOpacity>
