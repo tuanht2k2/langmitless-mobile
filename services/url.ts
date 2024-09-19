@@ -7,3 +7,13 @@ export enum AUTH_URL {
 export enum ACCOUNT_URL {
   BASE = "accounts",
 }
+
+export enum POST_URL {
+  BASE = "/posts",
+  SEARCH = "/posts/search",
+}
+
+export enum COMMENT_URL {
+  BASE = "/comments",
+  SEARCH = "/comments/search",
+}

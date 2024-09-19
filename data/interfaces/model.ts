@@ -20,4 +20,10 @@ export namespace Interfaces {
     gender?: number;
     fullName?: string;
   }
+
+  export interface IMultipartFile {
+    uri: string;
+    name: string;
+    type: string;
+  }
 }

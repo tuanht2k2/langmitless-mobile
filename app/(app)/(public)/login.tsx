@@ -20,7 +20,7 @@ import { useDispatch } from "react-redux";
 import { login } from "@/redux/reducers/authSlice";
 import authService from "@/services/authService";
 
-import CommonService from "@/utils/CommonService";
+import CommonService from "@/services/CommonService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen() {

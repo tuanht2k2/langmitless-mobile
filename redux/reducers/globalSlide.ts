@@ -1,13 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import React from "react";
+
+interface ModalPayload {
+  type: "COMMENT" | "REACTION";
+  props: any;
+}
 
 interface GlobalState {
   isLoading: boolean;
-  account: string;
+  modal: ModalPayload | null;
 }
 
 const initialState: GlobalState = {
   isLoading: true,
-  account: "",
+  modal: null,
 };
 
 const globalSlice = createSlice({
@@ -20,8 +26,14 @@ const globalSlice = createSlice({
     loading(state) {
       state.isLoading = true;
     },
+    openModal(state, action: PayloadAction<ModalPayload>) {
+      state.modal = action.payload;
+    },
+    closeModal(state) {
+      state.modal = null;
+    },
   },
 });
 
-export const { loaded, loading } = globalSlice.actions;
+export const { loaded, loading, openModal, closeModal } = globalSlice.actions;
 export default globalSlice.reducer;

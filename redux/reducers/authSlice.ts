@@ -3,12 +3,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   isLogin: boolean;
-  account: string;
+  account: Interfaces.IAccount | null;
 }
 
 const initialState: AuthState = {
   isLogin: false,
-  account: "",
+  account: null,
 };
 
 const authSlice = createSlice({
@@ -21,7 +21,7 @@ const authSlice = createSlice({
     logout(state) {
       state.isLogin = false;
     },
-    loadAccount(state, action: PayloadAction<string>) {
+    loadAccount(state, action: PayloadAction<Interfaces.IAccount>) {
       state.account = action.payload;
     },
   },
