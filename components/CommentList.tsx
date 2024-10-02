@@ -18,6 +18,7 @@ import Toast from "react-native-toast-message";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import commentService from "@/services/commentService";
 import { useRouter } from "expo-router";
+import { onValue } from "firebase/database";
 
 interface ICommentListComponentProps {
   postId: string;
@@ -27,7 +28,7 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
   const account = useSelector((state: RootState) => state.auth.account);
   const router = useRouter();
 
-  const { control, getValues, watch } = useForm({
+  const { control, getValues, watch, handleSubmit } = useForm({
     defaultValues: {
       content: "",
     },
@@ -37,7 +38,8 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [client, setClient] = useState<any>(null);
+  const [comments, setComments] = useState<any[] | null>([]);
+  const [commentsLoading, setCommentsLoading] = useState<boolean>(true)
 
   const onSubmit = async () => {
     setLoading(true);
@@ -50,11 +52,9 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
     commentService
       .create(request)
       .then(() => {
-        showToast("success", "Thành công", "Đăng bài viết thành công!");
-        router.push("/");
+        showToast("success", "Thành công", "Bạn đã bình luận!");
       })
       .catch((e) => {
-        console.log(e);
         showToast("error", "Thất bại", "Đã xảy ra lỗi!");
       })
       .finally(() => {
@@ -75,13 +75,15 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
     });
   };
 
-  const connectWebSocket = async (id: string) => {
-    const client = await commentService.createSocket(id);
-    setClient(client);
-  };
-
   useEffect(() => {
-    connectWebSocket(props.postId);
+    onValue(commentService.getCommentsRef(props.postId), (snapshot) => {
+      const comments = snapshot.val();
+      if (comments) {
+        setComments(comments)
+        
+      }
+      setCommentsLoading(false)
+    });
   }, [props]);
 
   return (
@@ -112,7 +114,7 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
           />
           <TouchableOpacity
             style={styles.button}
-            // onPress={takePhoto}
+            onPress={handleSubmit(onSubmit)}
             disabled={(!content.trim() && images.length == 0) || loading}
           >
             {loading ? (

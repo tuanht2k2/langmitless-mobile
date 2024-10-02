@@ -18,6 +18,7 @@ import { ResponseInterfaces } from "@/data/interfaces/response";
 import postService from "@/services/postService";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import PostComponent from "@/components/Post";
+import { ActivityIndicator } from "react-native";
 
 export default function HomeScreen() {
   const account = useSelector((state: RootState) => state.auth.account);
@@ -32,6 +33,7 @@ export default function HomeScreen() {
   const [posts, setPosts] = useState<ResponseInterfaces.IPostResponse[] | null>(
     null
   );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [request, setRequest] = useState<RequestInterfaces.ISearchPostRequest>({
     page: 0,
@@ -47,6 +49,7 @@ export default function HomeScreen() {
     const posts = data?.list;
 
     if (posts && posts.length > 0) setPosts(posts);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -73,12 +76,23 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
           <View style={{ gap: 10 }}>
-            {posts && posts.length > 0 ? (
+            {isLoading ? (
+              <ActivityIndicator size={"large"} style={{ marginTop: 30 }} />
+            ) : posts && posts.length > 0 ? (
               posts.map((post) => {
                 return <PostComponent key={post.id} {...post} />;
               })
             ) : (
-              <Text>Chưa có bài viết mới</Text>
+              <View
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: 30,
+                }}
+              >
+                <Text>Chưa có bài viết mới</Text>
+              </View>
             )}
           </View>
         </ScrollView>

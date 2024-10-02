@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.tuanht2k2.connectify"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +33,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bd6a02f8-f3ef-4799-90e7-4280a9e1d20a"
+      }
     }
   }
 }

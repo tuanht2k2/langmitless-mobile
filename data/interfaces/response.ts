@@ -38,4 +38,16 @@ export namespace ResponseInterfaces {
     group?: any;
     files: IFileResponse[];
   }
+
+  export interface ICommentResponse {
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    content?: string;
+    type?: "NORMAL" | "PROFILE_IMAGE";
+    audience?: "PUBLIC" | "FRIENDS" | "PRIVATE";
+    createdBy?: Interfaces.IUser;
+    group?: any;
+    files: IFileResponse[];
+  }
 }
