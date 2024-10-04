@@ -26,4 +26,12 @@ export namespace Interfaces {
     name: string;
     type: string;
   }
+
+  export interface IComment {
+    id: string;
+    createdAt: Date;
+    content: string;
+    createdBy: IUser;
+    updatedBy: IUser;
+  }
 }

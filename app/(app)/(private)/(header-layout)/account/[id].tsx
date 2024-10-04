@@ -6,9 +6,7 @@ import { Text, View } from "react-native";
 const AccountScreen = () => {
   const { id } = useLocalSearchParams();
 
-  useEffect(() => {
-    console.log(id);
-  }, []);
+  useEffect(() => {}, []);
   return (
     <View>
       <Text>account {id}</Text>

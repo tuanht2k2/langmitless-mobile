@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Text,
 } from "react-native";
 import { Icon } from "@rneui/themed";
 import color from "@/assets/styles/color";
@@ -19,6 +20,7 @@ import { RequestInterfaces } from "@/data/interfaces/request";
 import commentService from "@/services/commentService";
 import { useRouter } from "expo-router";
 import { onValue } from "firebase/database";
+import CommentComponent from "./Comment";
 
 interface ICommentListComponentProps {
   postId: string;
@@ -28,7 +30,17 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
   const account = useSelector((state: RootState) => state.auth.account);
   const router = useRouter();
 
-  const { control, getValues, watch, handleSubmit } = useForm({
+  const [searchRequest, setSearchRequest] =
+    useState<RequestInterfaces.ISearchCommentRequest>({
+      keyword: "",
+      page: 0,
+      pageSize: 20,
+      sortBy: "created_at",
+      sortDir: "ASC",
+      postId: props.postId,
+    });
+
+  const { control, getValues, watch, handleSubmit, setValue } = useForm({
     defaultValues: {
       content: "",
     },
@@ -39,7 +51,7 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [comments, setComments] = useState<any[] | null>([]);
-  const [commentsLoading, setCommentsLoading] = useState<boolean>(true)
+  const [commentsLoading, setCommentsLoading] = useState<boolean>(true);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -52,7 +64,8 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
     commentService
       .create(request)
       .then(() => {
-        showToast("success", "Thành công", "Bạn đã bình luận!");
+        // showToast("success", "Thành công", "Bạn đã bình luận!");
+        setValue("content", "");
       })
       .catch((e) => {
         showToast("error", "Thất bại", "Đã xảy ra lỗi!");
@@ -75,64 +88,92 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
     });
   };
 
+  const getComments = (request: RequestInterfaces.ICommonSearchRequest) => {
+    commentService
+      .search(request)
+      .then((res) => {
+        if (res?.data?.data) setComments(res?.data?.data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        setCommentsLoading(false);
+      });
+  };
+
   useEffect(() => {
     onValue(commentService.getCommentsRef(props.postId), (snapshot) => {
-      const comments = snapshot.val();
-      if (comments) {
-        setComments(comments)
-        
-      }
-      setCommentsLoading(false)
+      getComments(searchRequest);
     });
   }, [props]);
 
   return (
     <View style={styles.wrapper}>
       <Toast />
-      <ScrollView></ScrollView>
-      <View style={styles.formWrapper}>
-        <View style={styles.formComponent}>
-          <AvatarComponent
-            accountUrl={account?.id}
-            imageUrl={account?.profileImage}
-            size={40}
-          />
-          <Controller
-            control={control}
-            name="content"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Bình luận..."
-                placeholderTextColor="#666"
-                style={[styles.contentInput]}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                multiline={true}
-              />
-            )}
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleSubmit(onSubmit)}
-            disabled={(!content.trim() && images.length == 0) || loading}
-          >
-            {loading ? (
-              <ActivityIndicator />
-            ) : (
-              <Icon
-                name="send"
-                color={
-                  !content.trim() && images.length == 0
-                    ? color.grey
-                    : color.primary
-                }
-                size={30}
-              />
-            )}
-          </TouchableOpacity>
+      {commentsLoading ? (
+        <View style={{ marginTop: 40 }}>
+          <ActivityIndicator size={50} />
         </View>
-        {/* <View
+      ) : (
+        <>
+          <ScrollView style={{ paddingTop: 10 }}>
+            {comments && comments.length > 0 ? (
+              comments.map((comment, index) => {
+                return (
+                  <View style={{ paddingBottom: 10 }}>
+                    <CommentComponent {...comment} key={index} />
+                  </View>
+                );
+              })
+            ) : (
+              <View style={{ marginTop: 40 }}>
+                <Text>Chưa có bình luận nào</Text>
+              </View>
+            )}
+            {/* </View> */}
+          </ScrollView>
+          <View style={styles.formWrapper}>
+            <View style={styles.formComponent}>
+              <AvatarComponent
+                accountUrl={account?.id}
+                imageUrl={account?.profileImage}
+                size={40}
+              />
+              <Controller
+                control={control}
+                name="content"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    placeholder="Bình luận..."
+                    placeholderTextColor="#666"
+                    style={[styles.contentInput]}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    multiline={true}
+                  />
+                )}
+              />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleSubmit(onSubmit)}
+                disabled={(!content.trim() && images.length == 0) || loading}
+              >
+                {loading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Icon
+                    name="send"
+                    color={
+                      !content.trim() && images.length == 0
+                        ? color.grey
+                        : color.primary
+                    }
+                    size={30}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+            {/* <View
           style={{
             ...styles.formComponent,
             marginTop: 10,
@@ -182,7 +223,9 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
             />
           </TouchableOpacity>
         </View> */}
-      </View>
+          </View>
+        </>
+      )}
     </View>
   );
 };

@@ -46,9 +46,9 @@ const GlobalModalComponent = () => {
   };
 
   const handleGesture = (event: any) => {
-    if (event.nativeEvent.translationY > 100) {
-      dispatchCloseModal();
-    }
+    // if (event.nativeEvent.translationY > 100) {
+    //   dispatchCloseModal();
+    // }
   };
 
   useEffect(() => {
