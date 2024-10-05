@@ -4,13 +4,17 @@ import AvatarComponent from "./Avatar";
 import { Interfaces } from "@/data/interfaces/model";
 import { Link, useRouter } from "expo-router";
 import color from "@/assets/styles/color";
+import { useDispatch } from "react-redux";
+import { closeModal } from "@/redux/reducers/globalSlide";
 
 function CommentComponent(props: Interfaces.IComment) {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleNavigateAccount = (id: string) => {
     if (!id) return;
     router.push(`/account/${id}`);
+    dispatch(closeModal());
   };
 
   return (

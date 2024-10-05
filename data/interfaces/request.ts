@@ -47,4 +47,11 @@ export namespace RequestInterfaces {
     postId?: string;
     createdBy?: string;
   }
+
+  //reaction
+  export interface IEditReactionRequest {
+    id?: string;
+    postId?: string;
+    type?: "LIKE" | "LOVE" | "FUNNY" | "SAD" | "ANGRY";
+  }
 }

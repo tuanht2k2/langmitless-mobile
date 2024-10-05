@@ -1,7 +1,9 @@
+import { closeModal } from "@/redux/reducers/globalSlide";
 import { useRouter } from "expo-router";
 
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
 
 interface AvatarProps {
   imageUrl?: string;
@@ -11,9 +13,12 @@ interface AvatarProps {
 
 export default function AvatarComponent(props: AvatarProps) {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleNavigation = () => {
-    if (props.accountUrl) router.push(`/account/${props.accountUrl}`);
+    if (!props.accountUrl) return;
+    router.push(`/account/${props.accountUrl}`);
+    dispatch(closeModal());
   };
 
   return (

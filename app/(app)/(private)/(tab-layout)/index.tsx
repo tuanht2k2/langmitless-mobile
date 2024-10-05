@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AvatarComponent from "@/components/Avatar";
 import { RootState } from "@/redux/store";
 import color from "@/assets/styles/color";
@@ -19,6 +19,7 @@ import postService from "@/services/postService";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import PostComponent from "@/components/Post";
 import { ActivityIndicator } from "react-native";
+import { Icon } from "@rneui/themed";
 
 export default function HomeScreen() {
   const account = useSelector((state: RootState) => state.auth.account);
@@ -44,6 +45,7 @@ export default function HomeScreen() {
   });
 
   const getData = async () => {
+    setIsLoading(true);
     const res = await postService.search(request);
     const data = res.data?.data;
     const posts = data?.list;
@@ -58,10 +60,28 @@ export default function HomeScreen() {
     return () => {};
   }, []);
 
+  const scrollRef = useRef<ScrollView>(null);
+  const [isAtTop, setIsAtTop] = useState<boolean>(true);
+
+  const scrollToTop = () => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTo({ y: 0, animated: true });
+  };
+
+  const onScroll = (event: any) => {
+    const scrollPositionY = event.nativeEvent.contentOffset.y;
+    if (scrollPositionY === 0) {
+      getData();
+      setIsAtTop(true);
+    } else {
+      setIsAtTop(false);
+    }
+  };
+
   return (
     <View style={styles.bg}>
       <View style={{ marginTop: 10, marginBottom: 0, gap: 5 }}>
-        <ScrollView style={{}}>
+        <ScrollView ref={scrollRef} onScroll={onScroll}>
           <View style={styles.createPostWrapper}>
             <AvatarComponent
               imageUrl={account?.profileImage}
@@ -80,7 +100,13 @@ export default function HomeScreen() {
               <ActivityIndicator size={"large"} style={{ marginTop: 30 }} />
             ) : posts && posts.length > 0 ? (
               posts.map((post) => {
-                return <PostComponent key={post.id} {...post} />;
+                return (
+                  <PostComponent
+                    key={post.id}
+                    post={post}
+                    reloadPost={getData}
+                  />
+                );
               })
             ) : (
               <View
@@ -97,6 +123,27 @@ export default function HomeScreen() {
           </View>
         </ScrollView>
       </View>
+      {!isLoading && !isAtTop && (
+        <TouchableOpacity
+          style={{
+            borderRadius: 100,
+            borderWidth: 3,
+            borderColor: color.primary,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 10,
+            position: "absolute",
+            bottom: 10,
+            right: 0,
+            backgroundColor: color.white,
+          }}
+          onPress={scrollToTop}
+          disabled={isLoading}
+        >
+          <Icon name="north" size={20} color={color.primary} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -116,6 +163,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 300, height: 20 },
     shadowOpacity: 1,
     shadowRadius: 4,
+    position: "relative",
   },
   createPostButton: {
     fontSize: 17,

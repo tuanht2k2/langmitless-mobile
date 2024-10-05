@@ -17,3 +17,7 @@ export enum COMMENT_URL {
   BASE = "/comments",
   SEARCH = "/comments/search",
 }
+
+export enum REACTION_URL {
+  BASE = "/reactions",
+}

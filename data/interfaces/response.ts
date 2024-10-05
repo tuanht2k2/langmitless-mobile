@@ -1,3 +1,4 @@
+import { EReactionType } from "@/components/Post";
 import { Interfaces } from "./model";
 
 export namespace ResponseInterfaces {
@@ -35,8 +36,16 @@ export namespace ResponseInterfaces {
     type?: "NORMAL" | "PROFILE_IMAGE";
     audience?: "PUBLIC" | "FRIENDS" | "PRIVATE";
     createdBy?: Interfaces.IUser;
+    reactions?: IReactionResponse[];
     group?: any;
     files: IFileResponse[];
+  }
+
+  export interface IReactionResponse {
+    id?: string;
+    createdBy?: Interfaces.IUser;
+    createdAt?: Date;
+    type: EReactionType;
   }
 
   export interface ICommentResponse {

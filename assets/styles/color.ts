@@ -1,4 +1,5 @@
 const color = {
+  pink: "#c21552",
   primary: "#3498db",
   secondary: "#2ecc71",
   danger: "#e74c3c",
@@ -13,6 +14,8 @@ const color = {
 
   // overlay
   lightOverlay: "#282a354a",
+  extraLightOverlay: "#5a5a5a0d",
+  extraBlueOverlay: "#002fff0f",
 };
 
 export default color;

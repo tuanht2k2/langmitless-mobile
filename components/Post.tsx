@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,15 +13,63 @@ import AvatarComponent from "./Avatar";
 import color from "@/assets/styles/color";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import { Icon } from "@rneui/themed";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import CommonService from "@/services/CommonService";
-import CommentListComponent from "./CommentList";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openModal } from "@/redux/reducers/globalSlide";
+import { RootState } from "@/redux/store";
+import reactionService from "@/services/reactionService";
 
-const PostComponent: React.FC<ResponseInterfaces.IPostResponse> = (
-  post: ResponseInterfaces.IPostResponse
-) => {
+export enum EReactionType {
+  "LIKE" = "LIKE",
+  "LOVE" = "LOVE",
+  "SAD" = "SAD",
+  "FUNNY" = "FUNNY",
+  "ANGRY" = "ANGRY",
+}
+
+interface IReaction {
+  code: EReactionType | string;
+  label?: string;
+  icon: string;
+  color?: string;
+}
+
+const REACTIONS: IReaction[] = [
+  {
+    code: EReactionType.LIKE,
+    icon: "thumb-up",
+    color: color.primary,
+  },
+  {
+    code: EReactionType.LOVE,
+    icon: "favorite",
+    color: color.pink,
+  },
+  {
+    code: EReactionType.FUNNY,
+    icon: "mood",
+    color: color.warning,
+  },
+  {
+    code: EReactionType.SAD,
+    icon: "sentiment-dissatisfied",
+    color: color.warning,
+  },
+  {
+    code: "CLEAR",
+    icon: "close",
+    // color: color.warning,
+  },
+];
+
+interface IProps {
+  post: ResponseInterfaces.IPostResponse;
+  reloadPost: () => Promise<void>;
+}
+
+const PostComponent: React.FC<IProps> = ({ post, reloadPost }) => {
+  const user = useSelector((state: RootState) => state.auth.account);
   const width = Dimensions.get("window").width;
   const router = useRouter();
   const dispatch = useDispatch();
@@ -47,6 +97,52 @@ const PostComponent: React.FC<ResponseInterfaces.IPostResponse> = (
       })
     );
   };
+
+  const [reactionLoading, setReactionLoading] = useState<boolean>(false);
+
+  const [reacted, setReacted] =
+    useState<ResponseInterfaces.IReactionResponse | null>(null);
+  const [reactModalVisible, setReactModalVisible] = useState<boolean>(false);
+
+  const getAccountReacted = (post: ResponseInterfaces.IPostResponse) => {
+    return post.reactions?.find((reaction) => {
+      return reaction?.createdBy?.id == user?.id;
+    });
+  };
+
+  const handleUnReact = () => {
+    setReactionLoading(true);
+    if (reacted?.id) {
+      reactionService.delete(reacted?.id).then(() => {
+        setReacted(null);
+        setReactionLoading(false);
+      });
+    }
+  };
+
+  const handleReact = (reactionType: EReactionType) => {
+    setReactionLoading(true);
+    const request = { ...reacted, type: reactionType, postId: post.id };
+    if (request?.id) {
+      reactionService.update(request).then(() => {
+        setReacted((prev) => ({ ...prev, type: reactionType }));
+        setReactionLoading(false);
+      });
+    } else {
+      reactionService.create(request).then((res) => {
+        const reactionId = res?.data?.data;
+        setReacted((prev) => ({ ...prev, type: reactionType, id: reactionId }));
+        setReactionLoading(false);
+      });
+    }
+  };
+
+  useEffect(() => {
+    const reacted = getAccountReacted(post);
+    if (reacted) setReacted(reacted);
+
+    return () => {};
+  }, [post]);
 
   return (
     <View style={styles.wrapper}>
@@ -115,14 +211,167 @@ const PostComponent: React.FC<ResponseInterfaces.IPostResponse> = (
           </TouchableOpacity>
         )}
       </View>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 10,
+        }}
+      >
+        {post.reactions?.length ? (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Icon name="recommend" color={color.primary} size={20} />
+            <Text>{post.reactions.length}</Text>
+          </View>
+        ) : null}
+      </View>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Icon name="thumb-up" color={color.darkGrey} size={17} />
-          {/* <Icon name="favorite" />
-          <Icon name="mood" />
-          <Icon name="sentiment-dissatisfied" /> */}
-          <Text style={styles.footerButtonTitle}>Thích</Text>
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => {
+            setReactModalVisible(true);
+          }}
+          delayLongPress={100}
+          disabled={!!reactionLoading}
+        >
+          <Modal
+            visible={reactModalVisible}
+            animationType="slide"
+            transparent={true}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setReactModalVisible(false);
+                }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    borderRadius: 5,
+                    padding: 3,
+                    gap: 15,
+                  }}
+                >
+                  {REACTIONS.map((reaction, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          if (reaction.code == "CLEAR") {
+                            handleUnReact();
+                          } else {
+                            handleReact(reaction.code as EReactionType);
+                          }
+                          setReactModalVisible(false);
+                        }}
+                        style={{
+                          backgroundColor: color.white,
+                          borderRadius: 100,
+                          padding: 5,
+                          borderWidth: 1,
+                          borderColor: reaction.color,
+                        }}
+                      >
+                        <Icon name={reaction.icon} color={reaction.color} />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+          {reactionLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <>
+              {!reacted && (
+                <>
+                  <Icon name="thumb-up" color={color.darkGrey} size={17} />
+                  <Text style={styles.footerButtonTitle}>Thích</Text>
+                </>
+              )}
+              {reacted?.type == EReactionType.LIKE && (
+                <>
+                  <Icon name="thumb-up" color={color.primary} size={20} />
+                  <Text
+                    style={{
+                      ...styles.footerButtonTitle,
+                      color: color.primary,
+                    }}
+                  >
+                    Thích
+                  </Text>
+                </>
+              )}
+              {reacted?.type == EReactionType.LOVE && (
+                <>
+                  <Icon name="favorite" color={color.pink} size={20} />
+                  <Text
+                    style={{ ...styles.footerButtonTitle, color: color.pink }}
+                  >
+                    Yêu thích
+                  </Text>
+                </>
+              )}
+              {reacted?.type == EReactionType.FUNNY && (
+                <>
+                  <Icon name="mood" color={color.warning} size={20} />
+                  <Text
+                    style={{
+                      ...styles.footerButtonTitle,
+                      color: color.warning,
+                    }}
+                  >
+                    Haha
+                  </Text>
+                </>
+              )}
+              {reacted?.type == EReactionType.SAD && (
+                <>
+                  <Icon
+                    name="sentiment-dissatisfied"
+                    color={color.warning}
+                    size={20}
+                  />
+                  <Text
+                    style={{
+                      ...styles.footerButtonTitle,
+                      color: color.warning,
+                    }}
+                  >
+                    Buồn
+                  </Text>
+                </>
+              )}
+            </>
+          )}
         </TouchableOpacity>
+
         {/* <CommentListComponent /> */}
         <TouchableOpacity
           style={styles.footerButton}

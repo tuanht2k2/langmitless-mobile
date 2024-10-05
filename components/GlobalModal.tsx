@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { closeModal } from "@/redux/reducers/globalSlide";
 import CommentListComponent from "./CommentList";
+// import { useNavigation } from "expo-router";
 
 const { height } = Dimensions.get("window");
 

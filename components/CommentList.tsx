@@ -64,7 +64,6 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
     commentService
       .create(request)
       .then(() => {
-        // showToast("success", "Thành công", "Bạn đã bình luận!");
         setValue("content", "");
       })
       .catch((e) => {
@@ -114,13 +113,13 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
           <ActivityIndicator size={50} />
         </View>
       ) : (
-        <>
-          <ScrollView style={{ paddingTop: 10 }}>
+        <View style={{ height: "100%" }}>
+          <ScrollView style={{ paddingTop: 10, flex: 1 }}>
             {comments && comments.length > 0 ? (
               comments.map((comment, index) => {
                 return (
-                  <View style={{ paddingBottom: 10 }}>
-                    <CommentComponent {...comment} key={index} />
+                  <View key={index} style={{ paddingBottom: 10 }}>
+                    <CommentComponent {...comment} />
                   </View>
                 );
               })
@@ -129,7 +128,6 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
                 <Text>Chưa có bình luận nào</Text>
               </View>
             )}
-            {/* </View> */}
           </ScrollView>
           <View style={styles.formWrapper}>
             <View style={styles.formComponent}>
@@ -173,67 +171,15 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
                 )}
               </TouchableOpacity>
             </View>
-            {/* <View
-          style={{
-            ...styles.formComponent,
-            marginTop: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          {images.length == 0 ? (
-            <View style={styles.formComponent}>
-              <TouchableOpacity style={styles.button} onPress={takePhoto}>
-                <Icon name="add-a-photo" color={color.grey} size={27} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button}>
-                <Icon
-                  name="image"
-                  color={color.grey}
-                  size={27}
-                  onPress={pickImage}
-                />
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={styles.formImageWrapper}>
-              <Image src={images[0]} style={styles.formImage} />
-              <TouchableOpacity
-                onPress={() => {
-                  handleRemoveImage(0);
-                }}
-                style={styles.formImageRemove}
-              >
-                <Icon name="close" color={color.white} size={20} />
-              </TouchableOpacity>
-            </View>
-          )}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={takePhoto}
-            disabled={!content.trim() && images.length == 0}
-          >
-            <Icon
-              name="send"
-              color={
-                !content.trim() && images.length == 0
-                  ? color.grey
-                  : color.primary
-              }
-              size={30}
-            />
-          </TouchableOpacity>
-        </View> */}
           </View>
-        </>
+        </View>
       )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
-    height: "100%",
-  },
+  wrapper: { height: "100%" },
   formWrapper: {
     paddingVertical: 10,
   },
