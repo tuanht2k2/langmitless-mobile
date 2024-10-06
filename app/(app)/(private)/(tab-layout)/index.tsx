@@ -35,33 +35,43 @@ export default function HomeScreen() {
     null
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isRecordLimited, setIsRecordLimited] = useState<boolean>(false);
 
   const [request, setRequest] = useState<RequestInterfaces.ISearchPostRequest>({
     page: 0,
-    pageSize: 30,
+    pageSize: 3,
     sortBy: "created_at",
     sortDir: "DESC",
     keyword: "",
   });
 
-  const getData = async () => {
+  const getData = async (request: RequestInterfaces.ICommonSearchRequest) => {
     setIsLoading(true);
     const res = await postService.search(request);
     const data = res.data?.data;
     const posts = data?.list;
 
-    if (posts && posts.length > 0) setPosts(posts);
+    if (posts && posts.length > 0) {
+      if (posts.length < request.pageSize) setIsRecordLimited(true);
+      setPosts((prev) =>
+        prev && request.page > 0 ? [...prev, ...posts] : posts
+      );
+    }
     setIsLoading(false);
   };
 
   useEffect(() => {
-    getData();
+    if (isRecordLimited) return;
+    getData(request);
 
     return () => {};
-  }, []);
+  }, [request]);
 
   const scrollRef = useRef<ScrollView>(null);
-  const [isAtTop, setIsAtTop] = useState<boolean>(true);
+  const [scrollPosition, setScrollPosition] = useState<
+    "TOP" | "BOTTOM" | "MIDDLE"
+  >("TOP");
+  const [scrollViewHeight, setScrollViewHeight] = useState(0);
 
   const scrollToTop = () => {
     if (!scrollRef.current) return;
@@ -69,19 +79,32 @@ export default function HomeScreen() {
   };
 
   const onScroll = (event: any) => {
+    if (isLoading) return;
     const scrollPositionY = event.nativeEvent.contentOffset.y;
     if (scrollPositionY === 0) {
-      getData();
-      setIsAtTop(true);
-    } else {
-      setIsAtTop(false);
+      setIsRecordLimited(false);
+      setRequest((prev) => ({ ...prev, page: 0 }));
     }
+    if (scrollPositionY >= scrollViewHeight * 0.3) {
+      setRequest((prev) => ({ ...prev, page: prev.page + 1 }));
+      return;
+    }
+  };
+
+  const onLayout = (event: any) => {
+    const { height } = event.nativeEvent?.layout;
+    setScrollViewHeight(height);
   };
 
   return (
     <View style={styles.bg}>
       <View style={{ marginTop: 10, marginBottom: 0, gap: 5 }}>
-        <ScrollView ref={scrollRef} onScroll={onScroll}>
+        <ScrollView
+          ref={scrollRef}
+          onScroll={onScroll}
+          onLayout={onLayout}
+          scrollEventThrottle={16}
+        >
           <View style={styles.createPostWrapper}>
             <AvatarComponent
               imageUrl={account?.profileImage}
@@ -96,54 +119,53 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
           <View style={{ gap: 10 }}>
-            {isLoading ? (
+            {isLoading && request.page == 0 ? (
               <ActivityIndicator size={"large"} style={{ marginTop: 30 }} />
             ) : posts && posts.length > 0 ? (
               posts.map((post) => {
-                return (
-                  <PostComponent
-                    key={post.id}
-                    post={post}
-                    reloadPost={getData}
-                  />
-                );
+                return <PostComponent key={post.id} post={post} />;
               })
-            ) : (
+            ) : null}
+            {isRecordLimited && (
               <View
                 style={{
                   width: "100%",
                   display: "flex",
                   alignItems: "center",
-                  marginTop: 30,
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  marginTop: 10,
+                  marginBottom: 20,
                 }}
               >
-                <Text>Chưa có bài viết mới</Text>
+                <Icon name="hourglass-disabled" color={color.darkGrey} />
+                <Text style={{ color: color.darkGrey, fontWeight: "600" }}>
+                  Chưa có bài viết mới
+                </Text>
               </View>
             )}
           </View>
         </ScrollView>
       </View>
-      {!isLoading && !isAtTop && (
-        <TouchableOpacity
-          style={{
-            borderRadius: 100,
-            borderWidth: 3,
-            borderColor: color.primary,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 10,
-            position: "absolute",
-            bottom: 10,
-            right: 0,
-            backgroundColor: color.white,
-          }}
-          onPress={scrollToTop}
-          disabled={isLoading}
-        >
-          <Icon name="north" size={20} color={color.primary} />
-        </TouchableOpacity>
-      )}
+      {/* <TouchableOpacity
+        style={{
+          borderRadius: 100,
+          borderWidth: 3,
+          borderColor: color.primary,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 10,
+          position: "absolute",
+          bottom: 10,
+          right: 0,
+          backgroundColor: color.white,
+        }}
+        onPress={scrollToTop}
+        disabled={isLoading}
+      >
+        <Icon name="north" size={20} color={color.primary} />
+      </TouchableOpacity> */}
     </View>
   );
 }

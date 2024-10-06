@@ -65,7 +65,7 @@ const REACTIONS: IReaction[] = [
 
 interface IProps {
   post: ResponseInterfaces.IPostResponse;
-  reloadPost: () => Promise<void>;
+  reloadPost?: () => Promise<void>;
 }
 
 const PostComponent: React.FC<IProps> = ({ post, reloadPost }) => {
@@ -113,10 +113,14 @@ const PostComponent: React.FC<IProps> = ({ post, reloadPost }) => {
   const handleUnReact = () => {
     setReactionLoading(true);
     if (reacted?.id) {
-      reactionService.delete(reacted?.id).then(() => {
-        setReacted(null);
-        setReactionLoading(false);
-      });
+      reactionService
+        .delete(reacted?.id)
+        .then(() => {
+          setReacted(null);
+        })
+        .catch(() => {
+          setReactionLoading(false);
+        });
     }
   };
 
