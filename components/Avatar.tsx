@@ -1,3 +1,4 @@
+import color from "@/assets/styles/color";
 import { closeModal } from "@/redux/reducers/globalSlide";
 import { useRouter } from "expo-router";
 
@@ -27,6 +28,8 @@ export default function AvatarComponent(props: AvatarProps) {
       style={{
         height: props.size || 30,
         width: props.size || 30,
+        borderWidth: 1,
+        borderColor: color.grey,
         ...styles.profileImageWrapper,
       }}
     >
@@ -47,8 +50,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     overflow: "hidden",
     cursor: "pointer",
-    borderBlockColor: "#0b83bf",
-    borderWidth: 1,
+    // borderBlockColor: "#0b83bf",
+    // borderWidth: 1,
   },
   profileImage: {
     height: "100%",

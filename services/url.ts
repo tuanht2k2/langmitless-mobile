@@ -6,6 +6,7 @@ export enum AUTH_URL {
 
 export enum ACCOUNT_URL {
   BASE = "accounts",
+  SEARCH = "/accounts/search",
 }
 
 export enum POST_URL {
@@ -20,4 +21,16 @@ export enum COMMENT_URL {
 
 export enum REACTION_URL {
   BASE = "/reactions",
+}
+
+export enum MESSENGER_URL {
+  BASE = "/messengers",
+  FIND_BY_MEMBERS = "/messengers/find-by-members",
+  FIND_PERSONAL_BY_MEMBERS = "/messengers/find-personal-by-members",
+  SEARCH = "/messengers/search",
+}
+
+export enum MESSAGE_URL {
+  BASE = "/messages",
+  SEARCH = "/messages/search",
 }

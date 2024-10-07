@@ -7,7 +7,7 @@ const color = {
   success: "#27ae60",
   white: "#ffffff",
   black: "#000000",
-  grey: "#95a5a6",
+  grey: "#a0a7a7",
   lightGrey: "#c8d3d5",
   darkGrey: "#7f8c8d",
   extraLightGrey: "#e5e2e2",

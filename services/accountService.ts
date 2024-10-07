@@ -7,8 +7,9 @@ const accountService = {
     const config = await getApiConfig();
     return ApiInstance.get(`${ACCOUNT_URL.BASE}/${id}`, config);
   },
-  search(request: RequestInterfaces.ICommonSearchRequest) {
-    return ApiInstance.post(ACCOUNT_URL.BASE, request);
+  async search(request: RequestInterfaces.ICommonSearchRequest) {
+    const config = await getApiConfig();
+    return ApiInstance.post(`${ACCOUNT_URL.SEARCH}`, request, config);
   },
 };
 

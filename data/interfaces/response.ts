@@ -59,4 +59,23 @@ export namespace ResponseInterfaces {
     group?: any;
     files: IFileResponse[];
   }
+
+  export interface IMessengerResponse {
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    createdBy: Interfaces.IUser;
+    name?: string;
+    type?: "GROUP" | "PERSONAL";
+    members?: Interfaces.IUser[];
+  }
+
+  export interface IMessageResponse {
+    id: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    createdBy?: Interfaces.IUser;
+    content?: string;
+    messengerId?: string;
+  }
 }

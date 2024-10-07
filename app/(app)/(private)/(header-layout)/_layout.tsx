@@ -19,6 +19,14 @@ export default function HeaderLayout() {
         }}
       />
       <Stack.Screen
+        name="messenger/[id]"
+        options={{
+          headerTitle: "Nhắn tin",
+          headerStyle: styles.header,
+          headerTitleStyle: styles.headerText,
+        }}
+      />
+      <Stack.Screen
         name="post/[id]"
         options={{
           headerTitle: "Bài viết",

@@ -54,4 +54,20 @@ export namespace RequestInterfaces {
     postId?: string;
     type?: "LIKE" | "LOVE" | "FUNNY" | "SAD" | "ANGRY";
   }
+
+  // chat
+  export interface IEditMessengerRequest {
+    id?: string;
+    name?: string;
+    member?: string[];
+  }
+
+  export interface IEditMessageRequest {
+    messengerId: string;
+    content: string;
+  }
+
+  export interface ISearchMessageRequest {
+    messengerId?: string;
+  }
 }

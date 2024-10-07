@@ -64,7 +64,8 @@
     "socket.io-client": "^4.7.5",
     "sockjs-client": "^1.6.1",
     "tesseract.js": "^5.1.1",
-    "text-encoding": "^0.7.0"
+    "text-encoding": "^0.7.0",
+    "use-debounce": "^10.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
