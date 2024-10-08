@@ -3,13 +3,16 @@ import { Image } from "@rneui/base";
 import { Button, Icon } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Text, View } from "react-native";
 import React from "react";
 
 interface IProps {
   header?: string;
   onSubmit: (uri: any) => void;
   onCancel: () => void;
+  cameraDisabled?: boolean;
+  pickDisabled?: boolean;
+  loading?: boolean;
 }
 
 export function ImagePickerComponent(props: IProps) {
@@ -90,17 +93,21 @@ export function ImagePickerComponent(props: IProps) {
       </View>
 
       <View style={GlobalStyle.horizontalButtonGroup}>
-        <Button
-          title="Chọn ảnh từ thư viện"
-          onPress={pickImage}
-          buttonStyle={GlobalStyle.smBorderRadius}
-        />
-        <Button
-          title="Chụp ảnh"
-          onPress={takePhoto}
-          color={"secondary"}
-          buttonStyle={GlobalStyle.smBorderRadius}
-        />
+        {!props.pickDisabled && (
+          <Button
+            title="Chọn ảnh từ thư viện"
+            onPress={pickImage}
+            buttonStyle={GlobalStyle.smBorderRadius}
+          />
+        )}
+        {!props.cameraDisabled && (
+          <Button
+            title="Chụp ảnh"
+            onPress={takePhoto}
+            color={"secondary"}
+            buttonStyle={GlobalStyle.smBorderRadius}
+          />
+        )}
       </View>
 
       {image && (
@@ -130,13 +137,14 @@ export function ImagePickerComponent(props: IProps) {
           <Text style={{ color: "white" }}>Quay lại</Text>
         </Button>
         <Button
-          disabled={!image}
-          title={"Tiếp tục"}
-          buttonStyle={GlobalStyle.xsBorderRadius}
+          disabled={!image || props.loading}
+          buttonStyle={{ ...GlobalStyle.xsBorderRadius, minWidth: 80 }}
           onPress={() => {
             props.onSubmit(image);
           }}
-        />
+        >
+          {props.loading ? <ActivityIndicator /> : <Text>Tiếp tục</Text>}
+        </Button>
       </View>
     </View>
   );

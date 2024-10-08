@@ -1,4 +1,14 @@
+import { Interfaces } from "./model";
+
 export namespace RequestInterfaces {
+  export interface IIndentifyRequest {
+    image: Interfaces.IMultipartFile;
+  }
+
+  export interface IFaceMatchRequest {
+    file: Interfaces.IMultipartFile[];
+  }
+
   export interface ICommonSearchRequest {
     page: number;
     pageSize: number;

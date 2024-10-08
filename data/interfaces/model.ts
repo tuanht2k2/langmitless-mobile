@@ -24,7 +24,7 @@ export namespace Interfaces {
   export interface IMultipartFile {
     uri: string;
     name: string;
-    type: string;
+    type: string | Blob;
   }
 
   export interface IComment {

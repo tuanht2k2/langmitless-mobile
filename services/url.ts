@@ -34,3 +34,8 @@ export enum MESSAGE_URL {
   BASE = "/messages",
   SEARCH = "/messages/search",
 }
+
+export enum FPT_AI_URL {
+  IDENTIFY = "/vision/idr/vnm/",
+  FACE_MATCH = "/dmp/checkface/v1"
+}

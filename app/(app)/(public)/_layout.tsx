@@ -22,7 +22,12 @@ export default function PublicLayout() {
   }, [isLogin]);
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        presentation: "card",
+        animation: "slide_from_right",
+      }}
+    >
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="register" options={{ headerShown: false }} />
     </Stack>

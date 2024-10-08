@@ -22,6 +22,9 @@ import GlobalStyle from "@/assets/styles/globalStyles";
 import { ImagePickerComponent } from "@/components/ImagePicker";
 import Toast from "react-native-toast-message";
 import authService from "@/services/authService";
+import CommonService from "@/services/CommonService";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import fptAiService from "@/services/fptAiService";
 
 export default function RegisterScreen() {
   const dispatch = useDispatch();
@@ -32,7 +35,21 @@ export default function RegisterScreen() {
     setError,
     formState: { errors },
     watch,
-  } = useForm();
+    setValue,
+  } = useForm({
+    defaultValues: {
+      phoneNumber: "",
+      email: "",
+      password: "",
+      address: "",
+      displayName: "",
+      identificationNumber: "",
+      gender: 0,
+      fullName: "",
+      dob: "",
+      confirmPassword: "",
+    },
+  });
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -271,7 +288,39 @@ export default function RegisterScreen() {
 
   const [text, setText] = useState("");
   // authentication
-  const submitAuthenticationView = async (uri: string) => {};
+  const submitAuthenticationView = async (uri: string) => {
+    setLoading(true);
+    const images = await CommonService.uriListToFiles([uri]);
+
+    const request: any = images[0];
+
+    fptAiService
+      .identify(request)
+      .then((res) => {
+        CommonService.showToast(
+          "success",
+          "Thành công",
+          "Xác thực căn cước công dân thành công!"
+        );
+        const data = res?.data?.data?.[0];
+        if (!data) return;
+        setValue("identificationNumber", data.id);
+        setValue("address", data.address);
+        setValue("dob", data.dob);
+        setValue("fullName", data.name);
+        setValue("gender", data.sex == "NAM" ? 0 : 1);
+      })
+      .catch(() => {
+        CommonService.showToast(
+          "error",
+          "Thất bại",
+          "Ảnh không hợp lệ, hãy chụp lại!"
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const authenticationView = () => {
     return (
@@ -280,12 +329,29 @@ export default function RegisterScreen() {
           header="Chụp ảnh căn cước công dân"
           onCancel={backStep}
           onSubmit={submitAuthenticationView}
+          loading={loading}
         />
       </View>
     );
   };
 
-  const views = [basicView, securityView, authenticationView];
+  const submitFaceMatchView = () => {};
+
+  const faceMatchView = () => {
+    return (
+      <View>
+        <ImagePickerComponent
+          header="Chụp ảnh khuôn mặt"
+          onCancel={backStep}
+          onSubmit={submitAuthenticationView}
+          pickDisabled
+        />
+      </View>
+    );
+  };
+
+  // const views = [basicView, securityView, authenticationView, faceMatchView];
+  const views = [authenticationView, faceMatchView];
   const CurrentView = views[step];
 
   return (
