@@ -41,6 +41,10 @@ const CommonService = {
 
     return `${day}/${month}/${year}, lúc ${hours}:${minutes}`;
   },
+  stringToDate: (stringDate: string): Date => {
+    const [day, month, year] = stringDate.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  },
 };
 
 export default CommonService;

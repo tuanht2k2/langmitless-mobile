@@ -127,6 +127,7 @@ function SearchAccountModalComponent(props: IProps) {
                       key={index}
                       disabled={currentAccount?.id == account.id}
                       onPress={() => {
+                        props.onClose();
                         props.onClick(account.id);
                       }}
                       style={{

@@ -1,6 +1,6 @@
 import { Icon } from "@rneui/themed";
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { StyleProp, Text, TouchableOpacity, ViewStyle } from "react-native";
 
 interface Props {
   onPress?: () => void;

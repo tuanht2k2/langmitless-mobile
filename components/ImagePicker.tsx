@@ -5,6 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { ActivityIndicator, Alert, Text, View } from "react-native";
 import React from "react";
+import color from "@/assets/styles/color";
 
 interface IProps {
   header?: string;
@@ -89,7 +90,7 @@ export function ImagePickerComponent(props: IProps) {
         >
           {props.header}
         </Text>
-        <Icon name="remember-me" color={"#0a94cf"} />
+        {/* <Icon name="remember-me" color={"#0a94cf"} /> */}
       </View>
 
       <View style={GlobalStyle.horizontalButtonGroup}>
@@ -104,7 +105,7 @@ export function ImagePickerComponent(props: IProps) {
           <Button
             title="Chụp ảnh"
             onPress={takePhoto}
-            color={"secondary"}
+            color={color.danger}
             buttonStyle={GlobalStyle.smBorderRadius}
           />
         )}
@@ -131,6 +132,7 @@ export function ImagePickerComponent(props: IProps) {
             ...GlobalStyle.xsBorderRadius,
             borderColor: "white",
           }}
+          color={color.primary}
           onPress={props.onCancel}
           type="outline"
         >

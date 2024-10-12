@@ -78,4 +78,11 @@ export namespace ResponseInterfaces {
     content?: string;
     messengerId?: string;
   }
+
+  export interface IRelationshipResponse {
+    id: string;
+    receiverId: string;
+    createdBy: string;
+    status: "PENDING" | "FRIEND" | "DELETE";
+  }
 }

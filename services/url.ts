@@ -1,7 +1,8 @@
 export enum AUTH_URL {
-  LOG_IN = "log-in",
-  REGISTER = "register",
-  LOG_OUT = "log-out",
+  LOG_IN = "/auth/log-in",
+  REGISTER = "/auth/register",
+  LOG_OUT = "/auth/log-out",
+  CHECK_VALID_REGISTER_INFO = "/auth/check-valid-register-info",
 }
 
 export enum ACCOUNT_URL {
@@ -35,7 +36,13 @@ export enum MESSAGE_URL {
   SEARCH = "/messages/search",
 }
 
+export enum RELATIONSHIP_URL {
+  BASE = "/relationships",
+  ACCEPT_REQUEST = "/relationships/accept",
+  DELETE = "/relationships/delete-by-ids",
+}
+
 export enum FPT_AI_URL {
   IDENTIFY = "/vision/idr/vnm/",
-  FACE_MATCH = "/dmp/checkface/v1"
+  FACE_MATCH = "/dmp/checkface/v1",
 }

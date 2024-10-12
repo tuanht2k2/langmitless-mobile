@@ -10,6 +10,8 @@ interface AvatarProps {
   imageUrl?: string;
   accountUrl?: string;
   size?: number;
+  borderColor?: string;
+  borderWidth?: number;
 }
 
 export default function AvatarComponent(props: AvatarProps) {
@@ -28,8 +30,8 @@ export default function AvatarComponent(props: AvatarProps) {
       style={{
         height: props.size || 30,
         width: props.size || 30,
-        borderWidth: 1,
-        borderColor: color.grey,
+        borderWidth: props.borderWidth,
+        borderColor: props.borderColor,
         ...styles.profileImageWrapper,
       }}
     >
@@ -47,7 +49,7 @@ export default function AvatarComponent(props: AvatarProps) {
 
 const styles = StyleSheet.create({
   profileImageWrapper: {
-    borderRadius: 50,
+    borderRadius: 100,
     overflow: "hidden",
     cursor: "pointer",
     // borderBlockColor: "#0b83bf",

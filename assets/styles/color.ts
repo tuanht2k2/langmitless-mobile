@@ -8,7 +8,7 @@ const color = {
   white: "#ffffff",
   black: "#000000",
   grey: "#a0a7a7",
-  lightGrey: "#c8d3d5",
+  lightGrey: "#d6d6d6",
   darkGrey: "#7f8c8d",
   extraLightGrey: "#e5e2e2",
 

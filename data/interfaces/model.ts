@@ -1,3 +1,5 @@
+import { ResponseInterfaces } from "./response";
+
 export namespace Interfaces {
   // account
   export interface IAccount {
@@ -9,6 +11,7 @@ export namespace Interfaces {
     profileImage?: string;
     displayName?: string;
     createdAt?: Date;
+    coverImage?: string;
   }
 
   export interface IAdmin extends IAccount {}
@@ -19,6 +22,7 @@ export namespace Interfaces {
     address?: string;
     gender?: number;
     fullName?: string;
+    relationship?: ResponseInterfaces.IRelationshipResponse;
   }
 
   export interface IMultipartFile {

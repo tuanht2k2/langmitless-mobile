@@ -17,6 +17,10 @@ export namespace RequestInterfaces {
     sortDir: "ASC" | "DESC";
   }
 
+  export interface ICommonDeleteRequest {
+    ids: string[];
+  }
+
   export interface ILoginRequest {
     phoneNumber: string;
     password: string;
@@ -32,6 +36,7 @@ export namespace RequestInterfaces {
     address?: string;
     gender?: number;
     fullName?: string;
+    phoneNumber?: string;
   }
 
   export interface IEditPostRequest {
@@ -79,5 +84,11 @@ export namespace RequestInterfaces {
 
   export interface ISearchMessageRequest {
     messengerId?: string;
+  }
+
+  export interface IEditRelationshipRequest {
+    id?: string;
+    receiverId?: string;
+    status?: "PENDING" | "FRIEND" | "DELETED";
   }
 }
