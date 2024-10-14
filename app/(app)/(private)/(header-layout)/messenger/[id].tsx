@@ -9,6 +9,7 @@ import { RootState } from "@/redux/store";
 import CommonService from "@/services/CommonService";
 import messageService from "@/services/messageService";
 import messengerService from "@/services/messengerService";
+import useSocket from "@/utils/useSocket";
 import { Icon } from "@rneui/themed";
 import { useLocalSearchParams } from "expo-router";
 import { onValue } from "firebase/database";
@@ -116,6 +117,15 @@ function MessengerScreen() {
   >();
   const [messageLoading, setMessageLoading] = useState<boolean>(true);
 
+  const handleSocketData = (
+    newMessage: ResponseInterfaces.IMessageResponse | null
+  ) => {
+    if (!newMessage) return;
+    setMessages((prev) => (prev ? [...prev, newMessage] : [newMessage]));
+  };
+
+  useSocket(`/topic/messengers/${id as string}/messages`, handleSocketData);
+
   const getMessages = (messengerId: string) => {
     const request: RequestInterfaces.ISearchMessageRequest = { messengerId };
 
@@ -131,9 +141,7 @@ function MessengerScreen() {
   };
 
   useEffect(() => {
-    onValue(messageService.getMessagesRef(id as string), (snapshot) => {
-      getMessages(id as string);
-    });
+    getMessages(id as string);
   }, []);
 
   return (
@@ -151,96 +159,102 @@ function MessengerScreen() {
                 minHeight: "100%",
               }}
             >
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  backgroundColor: color.extraLightGrey,
-                  paddingVertical: 10,
-                  paddingHorizontal: 20,
-                  borderBottomWidth: 1,
-                  borderTopWidth: 1,
-                  borderColor: color.primary,
-                }}
-              >
+              <View>
                 <View
                   style={{
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
-                    gap: 5,
+                    justifyContent: "space-between",
+                    backgroundColor: color.extraLightGrey,
+                    paddingVertical: 10,
+                    paddingHorizontal: 20,
+                    borderBottomWidth: 1,
+                    borderTopWidth: 1,
+                    borderColor: color.primary,
                   }}
                 >
-                  <AvatarComponent
-                    imageUrl={getMessengerImage(messenger)}
-                    size={35}
-                  />
-                  <View>
-                    <Text style={{ fontWeight: 500, fontSize: 15 }}>
-                      {getMessengerName(messenger.members, messenger.type)}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 500,
-                        color: color.grey,
-                      }}
-                    >
-                      Người lạ
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    gap: 5,
-                  }}
-                >
-                  <IconButtonComponent
-                    icon="videocam"
-                    iconColor={color.primary}
-                    size={30}
-                  />
-                  <IconButtonComponent
-                    icon="info"
-                    iconColor={color.primary}
-                    size={25}
-                  />
-                </View>
-              </View>
-              <ScrollView
-                style={{
-                  paddingHorizontal: 20,
-                }}
-              >
-                {messageLoading && <ActivityIndicator size={30} />}
-                {!messageLoading && !messages && (
                   <View
                     style={{
-                      gap: 5,
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
+                      gap: 5,
                     }}
                   >
-                    <Icon name="hourglass-disabled" color={color.grey} />
-                    <Text style={{ color: color.grey }}>
-                      Chưa có tin nhắn nào
-                    </Text>
+                    <AvatarComponent
+                      imageUrl={getMessengerImage(messenger)}
+                      size={35}
+                    />
+                    <View>
+                      <Text style={{ fontWeight: 500, fontSize: 15 }}>
+                        {getMessengerName(messenger.members, messenger.type)}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 500,
+                          color: color.grey,
+                        }}
+                      >
+                        Người lạ
+                      </Text>
+                    </View>
                   </View>
-                )}
-                {!messageLoading &&
-                  messages &&
-                  messages.length > 0 &&
-                  messages.map((message, index) => {
-                    return <MessageComponent key={index} {...message} />;
-                  })}
-              </ScrollView>
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      gap: 5,
+                    }}
+                  >
+                    <IconButtonComponent
+                      icon="videocam"
+                      iconColor={color.primary}
+                      size={30}
+                    />
+                    <IconButtonComponent
+                      icon="info"
+                      iconColor={color.primary}
+                      size={25}
+                    />
+                  </View>
+                </View>
+                <ScrollView
+                  style={{
+                    paddingHorizontal: 20,
+                    maxHeight: Dimensions.get("window").height - 210,
+                  }}
+                  scrollEnabled
+                >
+                  {messageLoading && <ActivityIndicator size={30} />}
+                  {!messageLoading && !messages && (
+                    <View
+                      style={{
+                        gap: 5,
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 30,
+                      }}
+                    >
+                      <Icon name="hourglass-disabled" color={color.grey} />
+                      <Text style={{ color: color.grey }}>
+                        Chưa có tin nhắn nào
+                      </Text>
+                    </View>
+                  )}
+                  {!messageLoading &&
+                    messages &&
+                    messages.length > 0 &&
+                    messages.map((message, index) => {
+                      return <MessageComponent key={index} {...message} />;
+                    })}
+                </ScrollView>
+              </View>
               <View
                 style={{
                   display: "flex",

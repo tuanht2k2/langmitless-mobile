@@ -25,7 +25,7 @@ function MessageComponent(props: ResponseInterfaces.IMessageResponse) {
         style={{
           gap: 5,
           display: "flex",
-          flexDirection: "row",
+          flexDirection: isCurrentAccount ? "row-reverse" : "row",
           alignItems: "center",
         }}
       >

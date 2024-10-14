@@ -29,6 +29,7 @@ export enum MESSENGER_URL {
   FIND_BY_MEMBERS = "/messengers/find-by-members",
   FIND_PERSONAL_BY_MEMBERS = "/messengers/find-personal-by-members",
   SEARCH = "/messengers/search",
+  SEARCH_BY_ACCOUNT = "/messengers/search-by-account",
 }
 
 export enum MESSAGE_URL {

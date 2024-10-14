@@ -86,6 +86,10 @@ export namespace RequestInterfaces {
     messengerId?: string;
   }
 
+  export interface ISearchMessengerByAccountRequest {
+    accountId?: string;
+  }
+
   export interface IEditRelationshipRequest {
     id?: string;
     receiverId?: string;

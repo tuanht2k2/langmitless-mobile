@@ -29,7 +29,8 @@ const CommonService = {
 
     return files;
   },
-  getFormattedISO: (iso: string) => {
+  getFormattedISO: (iso: any) => {
+    if (!iso) return;
     const date = new Date(iso);
 
     const day = String(date.getDate()).padStart(2, "0");

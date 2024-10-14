@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
   Text,
+  Dimensions,
 } from "react-native";
 import { Icon } from "@rneui/themed";
 import color from "@/assets/styles/color";
@@ -21,6 +22,8 @@ import commentService from "@/services/commentService";
 import { useRouter } from "expo-router";
 import { onValue } from "firebase/database";
 import CommentComponent from "./Comment";
+import { ResponseInterfaces } from "@/data/interfaces/response";
+import useSocket from "@/utils/useSocket";
 
 interface ICommentListComponentProps {
   postId: string;
@@ -34,7 +37,7 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
     useState<RequestInterfaces.ISearchCommentRequest>({
       keyword: "",
       page: 0,
-      pageSize: 20,
+      pageSize: 30,
       sortBy: "created_at",
       sortDir: "ASC",
       postId: props.postId,
@@ -87,6 +90,15 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
     });
   };
 
+  const handleSocketData = (
+    newComment: ResponseInterfaces.ICommentResponse | null
+  ) => {
+    if (!newComment) return;
+    setComments((prev) => (prev ? [...prev, newComment] : [newComment]));
+  };
+
+  useSocket(`/topic/posts/${props.postId}/comments`, handleSocketData);
+
   const getComments = (request: RequestInterfaces.ICommonSearchRequest) => {
     commentService
       .search(request)
@@ -100,9 +112,7 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
   };
 
   useEffect(() => {
-    onValue(commentService.getCommentsRef(props.postId), (snapshot) => {
-      getComments(searchRequest);
-    });
+    getComments(searchRequest);
   }, [props]);
 
   return (
@@ -114,7 +124,14 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
         </View>
       ) : (
         <View style={{ height: "100%" }}>
-          <ScrollView style={{ paddingTop: 10, flex: 1 }}>
+          <ScrollView
+            style={{
+              paddingTop: 10,
+              flex: 1,
+              maxHeight: Dimensions.get("window").height - 100,
+            }}
+            scrollEnabled
+          >
             {comments && comments.length > 0 ? (
               comments.map((comment, index) => {
                 return (

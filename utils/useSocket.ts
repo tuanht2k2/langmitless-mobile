@@ -1,0 +1,40 @@
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
+import { useEffect, useState } from "react";
+
+const useSocket = (topic: string, handleSocketData: any) => {
+  const [connected, setConnected] = useState(false);
+  useEffect(() => {
+    const socketBaseUrl = process.env.EXPO_PUBLIC_WEBSOCKET_BASE_URL;
+    if (!socketBaseUrl) return;
+    const socket = new SockJS(socketBaseUrl);
+    const client = Stomp.over(socket);
+    client.connect(
+      {},
+      (frame: any) => {
+        setConnected(true);
+        client.subscribe(topic, (message) => {
+          const data = JSON.parse(message.body);
+          handleSocketData(data);
+        });
+      },
+      (error) => {
+        console.error("Error connecting to WebSocket", error);
+        setConnected(false);
+      }
+    );
+
+    return () => {
+      if (client && client.connected) {
+        client.disconnect(() => {
+          setConnected(false);
+          console.log("Disconnected");
+        });
+      }
+    };
+  }, [topic]);
+
+  return connected;
+};
+
+export default useSocket;
