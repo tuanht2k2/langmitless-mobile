@@ -15,6 +15,10 @@ const relationshipService = {
     const config = await getApiConfig();
     return ApiInstance.post(RELATIONSHIP_URL.DELETE, request, config);
   },
+  async getFriendRequests() {
+    const config = await getApiConfig();
+    return ApiInstance.get(RELATIONSHIP_URL.GET_FRIEND_REQUESTS, config);
+  },
 };
 
 export default relationshipService;

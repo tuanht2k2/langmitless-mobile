@@ -132,7 +132,6 @@ export default function MessengerScreen() {
     </View>
   ) : (
     <View style={{ padding: 20 }}>
-      <Toast />
       <SearchAccountModalComponent
         onClose={hideSearchVisible}
         onOpen={showSearchVisible}
@@ -207,6 +206,8 @@ export default function MessengerScreen() {
           Chưa có tin nhắn nào
         </Text>
       )}
+
+      <Toast />
     </View>
   );
 }

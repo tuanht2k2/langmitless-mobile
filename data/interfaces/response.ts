@@ -81,8 +81,12 @@ export namespace ResponseInterfaces {
 
   export interface IRelationshipResponse {
     id: string;
-    receiverId: string;
-    createdBy: string;
+    receiver: Interfaces.IUser;
+    createdBy: Interfaces.IUser;
     status: "PENDING" | "FRIEND" | "DELETE";
+  }
+
+  export interface INotificationResponse {
+    message?: string;
   }
 }

@@ -2,10 +2,16 @@ import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loadAccount, login, logout } from "@/redux/reducers/authSlice";
 import accountService from "@/services/accountService";
 import { loaded } from "@/redux/reducers/globalSlide";
+import Toast from "react-native-toast-message";
+import { ResponseInterfaces } from "@/data/interfaces/response";
+import CommonService from "@/services/CommonService";
+import useSocket from "@/utils/useSocket";
+import { RootState } from "@/redux/store";
+import { Audio } from "expo-av";
 
 interface ITokenData {
   iss: string;
@@ -19,6 +25,8 @@ interface ITokenData {
 export default function PrivateLayout() {
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const account = useSelector((state: RootState) => state.auth.account);
 
   useEffect(() => {
     AsyncStorage.getItem("token")
@@ -56,15 +64,32 @@ export default function PrivateLayout() {
     });
   };
 
+  const playNotificationAudio = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      require("@/assets/sounds/notification_sound.mp3")
+    );
+    await sound.playAsync();
+  };
+
+  const notice = (notification: ResponseInterfaces.INotificationResponse) => {
+    CommonService.showToast("error", "Thông báo", notification.message, false);
+    playNotificationAudio();
+  };
+
+  useSocket(`/topic/${account?.id}/notifications`, notice);
+
   return (
-    <Stack
-      screenOptions={{
-        presentation: "card",
-        animation: "slide_from_right",
-      }}
-    >
-      <Stack.Screen name="(header-layout)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tab-layout)" options={{ headerShown: false }} />
-    </Stack>
+    <>
+      <Stack
+        screenOptions={{
+          presentation: "card",
+          animation: "slide_from_right",
+        }}
+      >
+        <Stack.Screen name="(header-layout)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tab-layout)" options={{ headerShown: false }} />
+      </Stack>
+      <Toast />
+    </>
   );
 }

@@ -1,14 +1,16 @@
 import color from "@/assets/styles/color";
 import AvatarComponent from "@/components/Avatar";
+import FullScreenLoadingComponent from "@/components/FullScreenActivityIndicator";
 import IconButtonComponent from "@/components/IconButton";
 import { Interfaces } from "@/data/interfaces/model";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import { RootState } from "@/redux/store";
 import accountService from "@/services/accountService";
 import CommonService from "@/services/CommonService";
+import messengerService from "@/services/messengerService";
 import relationshipService from "@/services/relationshipService";
 import { Button, Icon } from "@rneui/themed";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 import {
@@ -210,7 +212,7 @@ const AccountScreen = () => {
                 onPress={acceptFriendRequest}
               >
                 <Icon name="check-circle" color={color.white} />
-                Chấp nhận lời mời
+                Chấp nhận
               </Button>
             </View>
           )}
@@ -251,7 +253,7 @@ const AccountScreen = () => {
         const relationship =
           account.relationship.status == "FRIEND"
             ? "FRIEND"
-            : account.relationship.createdBy == currentAccount?.id
+            : account.relationship.createdBy?.id == currentAccount?.id
             ? "REQUESTED"
             : "RECEIVED";
         setRelationship(relationship);
@@ -259,6 +261,18 @@ const AccountScreen = () => {
       .catch(() => {
         CommonService.showToast("error", "Lỗi", "Mất kết nối tới máy chủ");
       });
+  };
+
+  const router = useRouter();
+
+  const openMessenger = async (targetAccount: string) => {
+    const res = await messengerService.findPersonalByMembers(targetAccount);
+    const messengerId: string = res?.data?.data;
+    if (!messengerId || res.status == 400) {
+      CommonService.showToast("error", "Lỗi");
+      return;
+    }
+    router.push(`/messenger/${messengerId}`);
   };
 
   useEffect(() => {
@@ -271,7 +285,7 @@ const AccountScreen = () => {
   return (
     <View>
       {loading || !account ? (
-        <ActivityIndicator style={{ marginTop: 30 }} />
+        <FullScreenLoadingComponent />
       ) : (
         <View style={{ borderBottomWidth: 3, borderColor: color.darkGrey }}>
           <View style={{ position: "relative" }}>
@@ -363,6 +377,9 @@ const AccountScreen = () => {
                       borderRadius: 10,
                       gap: 5,
                       backgroundColor: color.primary,
+                    }}
+                    onPress={() => {
+                      openMessenger(account.id || "");
                     }}
                   >
                     <Icon name="mark-email-unread" color={color.white} />

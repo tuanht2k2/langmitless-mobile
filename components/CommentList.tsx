@@ -117,7 +117,6 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
 
   return (
     <View style={styles.wrapper}>
-      <Toast />
       {commentsLoading ? (
         <View style={{ marginTop: 40 }}>
           <ActivityIndicator size={50} />
@@ -191,6 +190,8 @@ const CommentListComponent = (props: ICommentListComponentProps) => {
           </View>
         </View>
       )}
+
+      <Toast />
     </View>
   );
 };

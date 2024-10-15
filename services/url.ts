@@ -41,6 +41,7 @@ export enum RELATIONSHIP_URL {
   BASE = "/relationships",
   ACCEPT_REQUEST = "/relationships/accept",
   DELETE = "/relationships/delete-by-ids",
+  GET_FRIEND_REQUESTS = "/relationships/get-friend-requests",
 }
 
 export enum FPT_AI_URL {

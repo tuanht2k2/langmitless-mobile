@@ -146,9 +146,17 @@ function MessengerScreen() {
 
   return (
     <View style={{ height: "100%", width: "100%" }}>
-      <Toast />
       {loading ? (
-        <ActivityIndicator style={{ marginTop: 20 }} size={30} />
+        <View
+          style={{
+            height: "100%",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator style={{ marginTop: 20 }} size={30} />
+        </View>
       ) : (
         <View style={{}}>
           {messenger?.members && messenger.type && (
@@ -319,6 +327,8 @@ function MessengerScreen() {
           )}
         </View>
       )}
+
+      <Toast />
     </View>
   );
 }

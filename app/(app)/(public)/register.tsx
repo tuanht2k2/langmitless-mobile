@@ -353,7 +353,7 @@ export default function RegisterScreen() {
   };
 
   const confirmView = () => {
-    const [confirmViewLoading, setConfirmViewLoading] = useState(false)
+    const [confirmViewLoading, setConfirmViewLoading] = useState(false);
 
     const Field = (props: { label: string; value: string | number }) => {
       return (
@@ -406,7 +406,6 @@ export default function RegisterScreen() {
 
     return (
       <Modal visible>
-        <Toast />
         <View
           style={{
             display: "flex",
@@ -458,6 +457,8 @@ export default function RegisterScreen() {
             </Button>
           </View>
         </View>
+
+        <Toast />
       </Modal>
     );
   };

@@ -5,12 +5,14 @@ const CommonService = {
   showToast: (
     type: "success" | "error" | "info",
     text1: string = "",
-    text2: string = ""
+    text2: string = "",
+    autoHide: boolean = true
   ) => {
     Toast.show({
       type: type,
       text1: text1,
       text2: text2,
+      autoHide,
     });
   },
   uriListToFiles: async (
