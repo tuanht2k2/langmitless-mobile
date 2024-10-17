@@ -3,7 +3,7 @@ import { ApiInstance, getApiConfig } from "./axios";
 import { MESSENGER_URL } from "./url";
 
 const messengerService = {
-  async create(request: RequestInterfaces.IEditCommentRequest) {
+  async create(request: RequestInterfaces.IEditMessengerRequest) {
     const config = await getApiConfig();
 
     return ApiInstance.post(MESSENGER_URL.BASE, request, config);
@@ -25,7 +25,9 @@ const messengerService = {
       config
     );
   },
-  async findMessengersByAccount(request: RequestInterfaces.ISearchMessengerByAccountRequest) {
+  async findMessengersByAccount(
+    request: RequestInterfaces.ISearchMessengerByAccountRequest
+  ) {
     const config = await getApiConfig();
     return ApiInstance.post(
       `${MESSENGER_URL.SEARCH_BY_ACCOUNT}`,

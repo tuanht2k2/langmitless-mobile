@@ -35,7 +35,6 @@ interface ITab {
 
 const TABS: ITab[] = [
   { name: "index", title: "Trang chủ", icon: "home" },
-  // { name: "reels", title: "Thước phim", icon: "camera" },
   { name: "friend-requests", title: "Kết bạn", icon: "people" },
   { name: "notifications", title: "Thông báo", icon: "notifications" },
   { name: "messenger", title: "Trò chuyện", icon: "chatbox" },

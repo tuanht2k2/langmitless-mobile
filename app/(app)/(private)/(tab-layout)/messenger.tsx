@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Modal,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import SearchAccountModalComponent from "@/components/SearchAccountModal";
@@ -23,6 +24,8 @@ import { ResponseInterfaces } from "@/data/interfaces/response";
 import { ActivityIndicator } from "react-native";
 import MultipleAvatarComponent from "@/components/MultipleAvatar";
 import { Interfaces } from "@/data/interfaces/model";
+import IconButtonComponent from "@/components/IconButton";
+import MultiSelectAccountComponent from "@/components/MultiSelectAccount";
 
 export default function MessengerScreen() {
   const currentAccount = useSelector((state: RootState) => state.auth.account);
@@ -53,6 +56,7 @@ export default function MessengerScreen() {
   const [messengers, setMessengers] = useState<
     ResponseInterfaces.IMessengerResponse[] | null
   >();
+  const [createGroupVisible, setCreateGroupVisible] = useState<boolean>(false);
 
   const getMessengers = () => {
     const request: RequestInterfaces.ISearchMessengerByAccountRequest = {
@@ -108,6 +112,28 @@ export default function MessengerScreen() {
     return accounts
       .slice(0, length)
       .map((account, index) => account.profileImage || "");
+  };
+
+  const createMessenger = (members: string[]) => {
+    const request: RequestInterfaces.IEditMessengerRequest = {
+      members,
+      name: "Cuộc trò chuyện mới",
+      type: "GROUP",
+    };
+
+    messengerService
+      .create(request)
+      .then(() => {
+        CommonService.showToast(
+          "info",
+          "Thành công",
+          "Tạo cuộc trò chuyện thành công!"
+        );
+      })
+      .catch(() => {
+        CommonService.showToast("error", "Thất bại", "Đã xảy ra lỗi");
+      })
+      .finally(() => {});
   };
 
   useEffect(() => {
@@ -202,11 +228,30 @@ export default function MessengerScreen() {
           ))}
         </ScrollView>
       ) : (
-        <Text style={{ color: color.darkGrey, fontWeight: "bold" }}>
+        <Text
+          style={{ color: color.darkGrey, fontWeight: "bold", marginTop: 20 }}
+        >
           Chưa có tin nhắn nào
         </Text>
       )}
-
+      <Modal visible={createGroupVisible}>
+        <MultiSelectAccountComponent
+          onSubmit={createMessenger}
+          onClose={() => {
+            setCreateGroupVisible(false);
+          }}
+        />
+      </Modal>
+      <View style={{ position: "absolute", bottom: 0, right: 20 }}>
+        <IconButtonComponent
+          icon="add"
+          color={color.primary}
+          iconColor={color.white}
+          onPress={() => {
+            setCreateGroupVisible(true);
+          }}
+        />
+      </View>
       <Toast />
     </View>
   );

@@ -38,4 +38,16 @@ export namespace Interfaces {
     createdBy: IUser;
     updatedBy: IUser;
   }
+
+  export interface IVideoCall {
+    messengerId?: string;
+    senderId?: string;
+    webRTC?: IWebRTC;
+  }
+
+  export interface IWebRTC {
+    type?: "offer" | "answer" | "candidate";
+    sdp?: string;
+    candidate?: string;
+  }
 }

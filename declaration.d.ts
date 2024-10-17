@@ -17,3 +17,8 @@ declare module "*.svg" {
   const content: any;
   export default content;
 }
+
+declare module '@zegocloud/zego-uikit-prebuilt-call-rn' {
+  const ZegoUIKitPrebuiltCallRN: any;
+  export default ZegoUIKitPrebuiltCallRN;
+}

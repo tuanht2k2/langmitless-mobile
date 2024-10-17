@@ -74,7 +74,8 @@ export namespace RequestInterfaces {
   export interface IEditMessengerRequest {
     id?: string;
     name?: string;
-    member?: string[];
+    members?: string[];
+    type: "GROUP" | "PERSONAL";
   }
 
   export interface IEditMessageRequest {
