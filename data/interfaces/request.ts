@@ -91,9 +91,18 @@ export namespace RequestInterfaces {
     accountId?: string;
   }
 
+  export interface ISearchAccountByPhoneNumbers {
+    phoneNumbers: string[];
+  }
+
   export interface IEditRelationshipRequest {
     id?: string;
     receiverId?: string;
     status?: "PENDING" | "FRIEND" | "DELETED";
+  }
+
+  export interface IEditCommentReportRequest {
+    commentId?: string;
+    reason?: string;
   }
 }

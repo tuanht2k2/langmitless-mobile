@@ -8,6 +8,7 @@ export enum AUTH_URL {
 export enum ACCOUNT_URL {
   BASE = "accounts",
   SEARCH = "/accounts/search",
+  SEARCH_BY_PHONE_NUMBERS = "/accounts/search-by-phone-numbers",
 }
 
 export enum POST_URL {
@@ -42,6 +43,11 @@ export enum RELATIONSHIP_URL {
   ACCEPT_REQUEST = "/relationships/accept",
   DELETE = "/relationships/delete-by-ids",
   GET_FRIEND_REQUESTS = "/relationships/get-friend-requests",
+}
+
+export enum COMMENT_REPORT_URL {
+  BASE = "/comment-reports",
+  SEARCH = "/comment-reports/search",
 }
 
 export enum FPT_AI_URL {

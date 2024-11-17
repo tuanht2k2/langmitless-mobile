@@ -17,6 +17,7 @@ import { ResponseInterfaces } from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
 import FullScreenLoadingComponent from "@/components/FullScreenActivityIndicator";
 import AvatarComponent from "@/components/Avatar";
+import SuggestAccount from "@/components/SuggestAccount";
 
 export default function FriendRequestScreen() {
   const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
@@ -93,6 +94,11 @@ export default function FriendRequestScreen() {
         <Text>Tìm kiếm...</Text>
       </TouchableOpacity>
       {loading && <FullScreenLoadingComponent />}
+      {!loading && (
+        <View style={{ paddingVertical: 10 }}>
+          <SuggestAccount></SuggestAccount>
+        </View>
+      )}
       {!loading && (
         <View
           style={{
