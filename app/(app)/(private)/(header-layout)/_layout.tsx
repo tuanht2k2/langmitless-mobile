@@ -10,54 +10,14 @@ export default function HeaderLayout() {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen
-        name="account/[id]"
-        options={{
-          headerTitle: "",
-          headerStyle: styles.header,
-          headerTitleStyle: styles.headerText,
-        }}
-      />
-      <Stack.Screen
-        name="messenger/[id]"
-        options={{
-          headerTitle: "Nhắn tin",
-          headerStyle: styles.header,
-          headerTitleStyle: styles.headerText,
-        }}
-      />
-      <Stack.Screen
-        name="post/[id]"
-        options={{
-          headerTitle: "Bài viết",
-          headerStyle: styles.header,
-          headerTitleStyle: styles.headerText,
-        }}
-      />
-      <Stack.Screen
-        name="post/create"
-        options={{
-          headerTitle: "Tạo bài viết mới",
-          headerStyle: styles.header,
-          headerTitleStyle: styles.headerText,
-        }}
-      />
-      <Stack.Screen
-        name="post/edit/[id]"
-        options={{
-          headerTitle: "Chỉnh sửa bài viết",
-          headerStyle: styles.header,
-          headerTitleStyle: styles.headerText,
-        }}
-      />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="image/[id]"
         options={{
           headerTitle: "Ảnh",
           headerStyle: styles.header,
           headerTitleStyle: styles.headerText,
         }}
-      />
+      /> */}
     </Stack>
   );
 }

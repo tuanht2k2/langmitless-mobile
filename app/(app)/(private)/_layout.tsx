@@ -44,7 +44,7 @@ export default function PrivateLayout() {
             dispatch(loadAccount(data));
             dispatch(login());
           })
-          .catch(() => {
+          .catch((err) => {
             handleLogout();
           })
           .finally(() => {

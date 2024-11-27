@@ -1,9 +1,5 @@
 import {
-  Link,
-  Redirect,
-  Slot,
   Tabs,
-  useRootNavigationState,
   useRouter,
 } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
@@ -12,7 +8,6 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import {
   Image,
-  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -35,9 +30,6 @@ interface ITab {
 
 const TABS: ITab[] = [
   { name: "index", title: "Trang chủ", icon: "home" },
-  { name: "friend-requests", title: "Kết bạn", icon: "people" },
-  { name: "notifications", title: "Thông báo", icon: "notifications" },
-  { name: "messenger", title: "Trò chuyện", icon: "chatbox" },
 ];
 
 export default function TabLayout() {
@@ -69,7 +61,7 @@ export default function TabLayout() {
           <View style={styles.header}>
             <View style={styles.logoWrapper}>
               <Image
-                source={require("@/assets/images/logo.png")}
+                source={require("@/assets/images/logo_remove_bgr.png")}
                 style={styles.logo}
               />
               <Text style={styles.logoTitle}>onnectify</Text>

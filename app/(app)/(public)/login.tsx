@@ -90,7 +90,7 @@ export default function LoginScreen() {
     <ImageBackground style={styles.container} source={loginBackground}>
       <View style={styles.logoWrapper}>
         <Image
-          source={require("@/assets/images/logo.png")}
+          source={require("@/assets/images/logo_remove_bgr.png")}
           style={styles.logo}
         />
         <Text style={styles.logoTitle}>onnectify</Text>
