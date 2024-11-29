@@ -1,3 +1,6 @@
+import { ImageSourcePropType } from "react-native";
+import { ViewStyle } from "react-native";
+
 export namespace ComponentIntefaces {
   export interface IActionDialog {
     isVisible?: boolean;
@@ -11,5 +14,24 @@ export namespace ComponentIntefaces {
     name: string;
     code: T;
     icon?: string;
+    img?: ImageSourcePropType;
+  }
+
+  export interface IButtonGroupItem {
+    name: string;
+    code: any;
+    icon?: string;
+    img?: ImageSourcePropType;
+    description?: string;
+  }
+
+  export interface IMenuItem {
+    name?: string;
+    icon?: string;
+    to?: string;
+    onClick?: () => void;
+    style?: ViewStyle;
+    labelColor?: string;
+    iconColor?: string;
   }
 }

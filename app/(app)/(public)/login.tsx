@@ -93,7 +93,7 @@ export default function LoginScreen() {
           source={require("@/assets/images/logo_remove_bgr.png")}
           style={styles.logo}
         />
-        <Text style={styles.logoTitle}>onnectify</Text>
+        <Text style={styles.logoTitle}>engfinity</Text>
       </View>
 
       <View style={styles.inputContainer}>

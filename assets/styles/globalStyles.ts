@@ -1,6 +1,12 @@
 import { StyleSheet } from "react-native";
+import color from "./color";
 
 const GlobalStyle = StyleSheet.create({
+  mainText: {
+    color: color.textMain,
+    // fontFamily: "monospace",
+  },
+
   // padding
   xsPadding: {
     padding: 10,

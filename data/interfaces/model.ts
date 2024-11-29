@@ -9,20 +9,14 @@ export namespace Interfaces {
     email?: string;
     password?: string;
     profileImage?: string;
-    displayName?: string;
+    name?: string;
     createdAt?: Date;
-    coverImage?: string;
   }
 
   export interface IAdmin extends IAccount {}
 
   export interface IUser extends IAccount {
-    identificationNumber?: string;
-    dob?: Date;
-    address?: string;
-    gender?: number;
-    fullName?: string;
-    relationship?: ResponseInterfaces.IRelationshipResponse;
+    balance?: number;
   }
 
   export interface IMultipartFile {

@@ -8,11 +8,11 @@ const messengerService = {
 
     return ApiInstance.post(MESSENGER_URL.BASE, request, config);
   },
-  async search(request: RequestInterfaces.ISearchCommentRequest) {
-    const config = await getApiConfig();
+  // async search(request: RequestInterfaces.ISearchCommentRequest) {
+  //   const config = await getApiConfig();
 
-    return ApiInstance.post(MESSENGER_URL.SEARCH, request, config);
-  },
+  //   return ApiInstance.post(MESSENGER_URL.SEARCH, request, config);
+  // },
   async get(id: string) {
     const config = await getApiConfig();
     return ApiInstance.get(`${MESSENGER_URL.BASE}/${id}`, config);

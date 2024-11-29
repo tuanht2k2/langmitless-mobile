@@ -30,3 +30,65 @@ export const getApiConfig = async () => {
 
   return config;
 };
+
+export const apiService = {
+  post: async (url: string, body: any) => {
+    const config = await getApiConfig();
+    try {
+      const response = await ApiInstance.post(url, body, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  get: async (url: string, params?: any) => {
+    const config = await getApiConfig();
+    try {
+      const response = await ApiInstance.get(url, { ...config, params });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  put: async (url: string, body: any) => {
+    const config = await getApiConfig();
+    try {
+      const response = await ApiInstance.put(url, body, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  delete: async (url: string, params?: any) => {
+    const config = await getApiConfig();
+    try {
+      const response = await ApiInstance.delete(url, { ...config, params });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  postForm: async (url: string, formData: FormData) => {
+    const config = await getApiConfig();
+    try {
+      const response = await ApiInstance.post(url, formData, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  putForm: async (url: string, formData: FormData) => {
+    const config = await getApiConfig();
+    try {
+      const response = await ApiInstance.put(url, formData, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+};

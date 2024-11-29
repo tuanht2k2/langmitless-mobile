@@ -54,3 +54,7 @@ export enum FPT_AI_URL {
   IDENTIFY = "/vision/idr/vnm/",
   FACE_MATCH = "/dmp/checkface/v1",
 }
+
+export enum MOMO_URL {
+  BASE = "/payment/momo",
+}

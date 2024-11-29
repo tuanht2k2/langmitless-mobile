@@ -39,37 +39,6 @@ export namespace RequestInterfaces {
     phoneNumber?: string;
   }
 
-  export interface IEditPostRequest {
-    content?: string;
-    type?: string;
-    audience?: string;
-    files?: any;
-  }
-
-  export interface IEditCommentRequest {
-    postId: string;
-    content?: string;
-    files?: any;
-  }
-
-  export interface ISearchPostRequest extends ICommonSearchRequest {
-    createdBy?: string;
-    group?: string;
-    audience?: "PUBLIC" | "PRIVATE" | "FRIENDS";
-  }
-
-  export interface ISearchCommentRequest extends ICommonSearchRequest {
-    postId?: string;
-    createdBy?: string;
-  }
-
-  //reaction
-  export interface IEditReactionRequest {
-    id?: string;
-    postId?: string;
-    type?: "LIKE" | "LOVE" | "FUNNY" | "SAD" | "ANGRY";
-  }
-
   // chat
   export interface IEditMessengerRequest {
     id?: string;
@@ -95,14 +64,8 @@ export namespace RequestInterfaces {
     phoneNumbers: string[];
   }
 
-  export interface IEditRelationshipRequest {
-    id?: string;
-    receiverId?: string;
-    status?: "PENDING" | "FRIEND" | "DELETED";
-  }
-
-  export interface IEditCommentReportRequest {
-    commentId?: string;
-    reason?: string;
+  export interface IEditPaymentRequest {
+    amount: number;
+    orderInfo: string;
   }
 }

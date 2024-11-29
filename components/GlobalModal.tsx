@@ -17,7 +17,6 @@ import color from "@/assets/styles/color";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { closeModal } from "@/redux/reducers/globalSlide";
-import CommentListComponent from "./CommentList";
 // import { useNavigation } from "expo-router";
 
 const { height } = Dimensions.get("window");
@@ -74,11 +73,6 @@ const GlobalModalComponent = () => {
                   <Text>Đóng</Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.main}>
-                {modal.type === "COMMENT" && (
-                  <CommentListComponent postId={modal.props.postId} />
-                )}
-              </View>
             </Animated.View>
           </PanGestureHandler>
         </View>
@@ -118,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 5,
     // borderWidth: 1,
-    borderColor: color.extraLightGrey,
+    borderColor: color.grey1,
     borderRadius: 5,
     padding: 5,
     paddingHorizontal: 20,
@@ -127,7 +121,7 @@ const styles = StyleSheet.create({
   footerButtonTitle: {
     fontSize: 13,
     fontWeight: "600",
-    color: color.grey,
+    color: color.grey1,
   },
 });
 

@@ -1,18 +1,9 @@
-import {
-  Tabs,
-  useRouter,
-} from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -22,15 +13,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AvatarComponent from "@/components/Avatar";
 import color from "@/assets/styles/color";
 
+import { LinearGradient } from "expo-linear-gradient";
+
 interface ITab {
   name: string;
   title: string;
   icon: "home" | "camera" | "people" | "notifications" | "chatbox" | "settings";
 }
 
-const TABS: ITab[] = [
-  { name: "index", title: "Trang chủ", icon: "home" },
-];
+const TABS: ITab[] = [{ name: "index", title: "Trang chủ", icon: "home" }];
 
 export default function TabLayout() {
   const router = useRouter();
@@ -56,15 +47,20 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors["light"].tint,
-        headerShown: true,
+        headerShown: false,
         headerTitle: () => (
-          <View style={styles.header}>
+          <LinearGradient
+            colors={["#f2f2f2", "#a0a7a7", "#4d5656"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.header}
+          >
             <View style={styles.logoWrapper}>
               <Image
                 source={require("@/assets/images/logo_remove_bgr.png")}
                 style={styles.logo}
               />
-              <Text style={styles.logoTitle}>onnectify</Text>
+              <Text style={styles.logoTitle}>engfinity</Text>
             </View>
 
             <View style={styles.actionHeaderWapper}>
@@ -102,7 +98,7 @@ export default function TabLayout() {
                 </View>
               </View>
             </Dialog>
-          </View>
+          </LinearGradient>
         ),
         tabBarStyle: styles.tabBar,
       }}
@@ -141,20 +137,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
+    height: "100%",
   },
   logoWrapper: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    gap: 3,
   },
   logo: {
     width: 30,
     height: 30,
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   logoTitle: {
-    color: "#01084a",
+    color: color.textMain,
     fontSize: 20,
+    fontWeight: "bold",
   },
   actionHeaderWapper: {
     display: "flex",

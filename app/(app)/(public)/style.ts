@@ -1,3 +1,4 @@
+import color from "@/assets/styles/color";
 import { Animated, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -10,19 +11,18 @@ const styles = StyleSheet.create({
     minHeight: "100%",
   },
   logoWrapper: {
-    flexDirection: "row",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 65,
   },
   logo: {
-    width: 50,
-    height: 50,
-    resizeMode: "cover",
+    width: 110,
+    height: 80,
+    resizeMode: "contain",
   },
   logoTitle: {
-    color: "#01084a",
+    color: color.textMain,
     fontSize: 30,
   },
   inputContainer: {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   linkText: {
-    color: "#dfe5f0",
+    color: color.primary1,
     fontSize: 14,
   },
 });

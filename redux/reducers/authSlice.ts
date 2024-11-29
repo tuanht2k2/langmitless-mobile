@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   isLogin: boolean;
-  account: Interfaces.IAccount | null;
+  account: Interfaces.IUser | null;
 }
 
 const initialState: AuthState = {
