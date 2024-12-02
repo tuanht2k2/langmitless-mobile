@@ -27,6 +27,7 @@ import { RequestInterfaces } from "@/data/interfaces/request";
 import fptAiService from "@/services/fptAiService";
 import { Modal } from "react-native";
 import color from "@/assets/styles/color";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function RegisterScreen() {
   const {
@@ -478,7 +479,12 @@ export default function RegisterScreen() {
   const CurrentView = views[step];
 
   return (
-    <ImageBackground style={styles.container} source={loginBackground}>
+    <LinearGradient
+      colors={[color.primary4, color.pink1]}
+      style={styles.container}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+    >
       <View style={styles.logoWrapper}>
         <Image
           source={require("@/assets/images/logo_remove_bgr.png")}
@@ -501,6 +507,6 @@ export default function RegisterScreen() {
       )}
 
       <Toast />
-    </ImageBackground>
+    </LinearGradient>
   );
 }

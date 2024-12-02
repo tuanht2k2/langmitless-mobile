@@ -33,5 +33,6 @@ export namespace ComponentIntefaces {
     style?: ViewStyle;
     labelColor?: string;
     iconColor?: string;
+    img?: ImageSourcePropType;
   }
 }

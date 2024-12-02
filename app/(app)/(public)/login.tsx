@@ -22,6 +22,8 @@ import authService from "@/services/authService";
 
 import CommonService from "@/services/CommonService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
+import color from "@/assets/styles/color";
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
@@ -87,7 +89,12 @@ export default function LoginScreen() {
   };
 
   return (
-    <ImageBackground style={styles.container} source={loginBackground}>
+    <LinearGradient
+      colors={[color.primary4, color.pink1]}
+      style={styles.container}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+    >
       <View style={styles.logoWrapper}>
         <Image
           source={require("@/assets/images/logo_remove_bgr.png")}
@@ -176,6 +183,6 @@ export default function LoginScreen() {
       </View>
 
       <Toast />
-    </ImageBackground>
+    </LinearGradient>
   );
 }

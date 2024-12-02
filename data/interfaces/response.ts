@@ -1,4 +1,3 @@
-import { EReactionType } from "@/components/Post";
 import { Interfaces } from "./model";
 
 export namespace ResponseInterfaces {
@@ -27,39 +26,6 @@ export namespace ResponseInterfaces {
     postId: string;
   }
 
-  // post
-  export interface IPostResponse {
-    id?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    content?: string;
-    type?: "NORMAL" | "PROFILE_IMAGE";
-    audience?: "PUBLIC" | "FRIENDS" | "PRIVATE";
-    createdBy?: Interfaces.IUser;
-    reactions?: IReactionResponse[];
-    group?: any;
-    files: IFileResponse[];
-  }
-
-  export interface IReactionResponse {
-    id?: string;
-    createdBy?: Interfaces.IUser;
-    createdAt?: Date;
-    type: EReactionType;
-  }
-
-  export interface ICommentResponse {
-    id?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    content?: string;
-    type?: "NORMAL" | "PROFILE_IMAGE";
-    audience?: "PUBLIC" | "FRIENDS" | "PRIVATE";
-    createdBy?: Interfaces.IUser;
-    group?: any;
-    files: IFileResponse[];
-  }
-
   export interface IMessengerResponse {
     id?: string;
     createdAt?: Date;
@@ -77,13 +43,6 @@ export namespace ResponseInterfaces {
     createdBy?: Interfaces.IUser;
     content?: string;
     messengerId?: string;
-  }
-
-  export interface IRelationshipResponse {
-    id: string;
-    receiver: Interfaces.IUser;
-    createdBy: Interfaces.IUser;
-    status: "PENDING" | "FRIEND" | "DELETE";
   }
 
   export interface INotificationResponse {

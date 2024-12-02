@@ -65,7 +65,8 @@ export namespace RequestInterfaces {
   }
 
   export interface IEditPaymentRequest {
-    amount: number;
-    orderInfo: string;
+    amount?: number;
+    description?: string;
+    receiver?: string;
   }
 }

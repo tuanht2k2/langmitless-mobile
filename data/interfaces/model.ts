@@ -10,6 +10,7 @@ export namespace Interfaces {
     password?: string;
     profileImage?: string;
     name?: string;
+    role?: "ADMIN" | "USER" | "TEACHER";
     createdAt?: Date;
   }
 

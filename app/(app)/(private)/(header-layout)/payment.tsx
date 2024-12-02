@@ -61,7 +61,7 @@ function PaymentScreen() {
     try {
       const request = {
         amount: parseInt(data.amount || 0),
-        orderInfo: data.orderInfo,
+        description: data.orderInfo,
       };
       const res = await momoService.create(request);
       const url = res.data?.payUrl;

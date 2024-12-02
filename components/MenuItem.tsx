@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentIntefaces } from "@/constants/component";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import IconButtonComponent from "./IconButton";
 import { Icon } from "@rneui/themed";
 import { useRouter } from "expo-router";
@@ -27,8 +27,20 @@ function MenuItem(props: ComponentIntefaces.IMenuItem) {
         } else props.onClick?.();
       }}
     >
-      <Icon name={props.icon || ""} color={props.iconColor} />
-      <Text style={{ color: props.labelColor, fontWeight: "bold" }}>
+      {props.img && (
+        <Image
+          source={props.img}
+          style={{ height: 40, width: 40, objectFit: "contain" }}
+        />
+      )}
+      {props.icon && <Icon name={props.icon || ""} color={props.iconColor} />}
+      <Text
+        style={{
+          color: props.labelColor,
+          fontWeight: "bold",
+          fontSize: 12,
+        }}
+      >
         {props.name}
       </Text>
     </TouchableOpacity>

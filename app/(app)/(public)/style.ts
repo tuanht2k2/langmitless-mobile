@@ -24,6 +24,8 @@ const styles = StyleSheet.create({
   logoTitle: {
     color: color.textMain,
     fontSize: 30,
+    fontWeight: "bold",
+    fontFamily: "monospace",
   },
   inputContainer: {
     width: "100%",
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   linkText: {
-    color: color.primary1,
+    color: color.white1,
     fontSize: 14,
   },
 });

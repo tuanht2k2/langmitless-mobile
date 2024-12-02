@@ -21,36 +21,22 @@ interface ITab {
   icon: "home" | "camera" | "people" | "notifications" | "chatbox" | "settings";
 }
 
-const TABS: ITab[] = [{ name: "index", title: "Trang chủ", icon: "home" }];
+const TABS: ITab[] = [
+  { name: "index", title: "Trang chủ", icon: "home" },
+  { name: "account", title: "Tôi", icon: "people" },
+];
 
 export default function TabLayout() {
-  const router = useRouter();
-  const dispatch = useDispatch();
-
   const account = useSelector((state: RootState) => state.auth.account);
-
-  const handleLogout = () => {
-    AsyncStorage.clear().then(() => {
-      dispatch(logout());
-      setIsDialogVisible(false);
-      router.replace("/login");
-    });
-  };
-
-  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
-
-  const toggleDialog = () => {
-    setIsDialogVisible(!isDialogVisible);
-  };
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors["light"].tint,
-        headerShown: false,
+        headerShown: true,
         headerTitle: () => (
           <LinearGradient
-            colors={["#f2f2f2", "#a0a7a7", "#4d5656"]}
+            colors={[color.white1, color.white1]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.header}
@@ -68,36 +54,7 @@ export default function TabLayout() {
                 accountUrl={account?.id}
                 imageUrl={account?.profileImage}
               />
-              <TouchableOpacity onPress={toggleDialog} activeOpacity={0.7}>
-                <Icon name="logout" color={"gray"} />
-              </TouchableOpacity>
             </View>
-            <Dialog isVisible={isDialogVisible} onBackdropPress={toggleDialog}>
-              <View>
-                <Text style={styles.dialogHeader}>
-                  Bạn có muốn đăng xuất không?
-                </Text>
-                <View style={styles.dialogButtonWrapper}>
-                  <Button
-                    title="Không"
-                    color={"primary"}
-                    buttonStyle={{
-                      borderRadius: 8,
-                    }}
-                    onPress={toggleDialog}
-                  ></Button>
-                  <Button
-                    title="Có"
-                    color={"secondary"}
-                    buttonStyle={{
-                      borderRadius: 8,
-                      minWidth: 70,
-                    }}
-                    onPress={handleLogout}
-                  ></Button>
-                </View>
-              </View>
-            </Dialog>
           </LinearGradient>
         ),
         tabBarStyle: styles.tabBar,
