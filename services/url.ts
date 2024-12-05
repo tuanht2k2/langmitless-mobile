@@ -9,6 +9,8 @@ export enum ACCOUNT_URL {
   BASE = "accounts",
   SEARCH = "/accounts/search",
   SEARCH_BY_PHONE_NUMBERS = "/accounts/search-by-phone-numbers",
+  BECOME_A_TEACHER = "/accounts/become-a-teacher",
+  UPDATE_STATUS = "/accounts/update-status",
 }
 
 export enum POST_URL {
@@ -57,4 +59,8 @@ export enum FPT_AI_URL {
 
 export enum MOMO_URL {
   BASE = "/payment/momo",
+}
+
+export enum HIRE_URL {
+  BASE = "/hires",
 }

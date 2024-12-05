@@ -17,6 +17,10 @@ export namespace RequestInterfaces {
     sortDir: "ASC" | "DESC";
   }
 
+  export interface ISearchAccountRequest extends ICommonSearchRequest {
+    role: "ADMIN" | "USER" | "TEACHER";
+  }
+
   export interface ICommonDeleteRequest {
     ids: string[];
   }
@@ -27,16 +31,18 @@ export namespace RequestInterfaces {
   }
 
   export interface IRegisterRequest {
-    username?: string;
     email?: string;
     password?: string;
-    displayName?: string;
-    identificationNumber?: string;
-    dob?: Date;
-    address?: string;
-    gender?: number;
-    fullName?: string;
+    name?: string;
     phoneNumber?: string;
+  }
+
+  export interface IEditAccountRequest extends IRegisterRequest {
+    id?: string;
+    identification?: string;
+    address?: string;
+    gender?: "MALE" | "FEMALE" | "OTHER";
+    fullName?: string;
   }
 
   // chat
@@ -68,5 +74,17 @@ export namespace RequestInterfaces {
     amount?: number;
     description?: string;
     receiver?: string;
+  }
+
+  export interface IEditAccountStatusRequest {
+    id?: string;
+    status: "ONLINE" | "OFFLINE" | "IN_CALL" | "BLOCKED";
+  }
+
+  export interface IEditHireRequest {
+    id?: string;
+    teacherId?: string;
+    totalTime?: number;
+    status?: "ACCEPTED" | "REJECTED";
   }
 }

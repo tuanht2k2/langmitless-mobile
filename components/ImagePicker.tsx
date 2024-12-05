@@ -3,17 +3,18 @@ import { Image } from "@rneui/base";
 import { Button, Icon } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { ActivityIndicator, Alert, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Text, View, ViewStyle } from "react-native";
 import React from "react";
 import color from "@/assets/styles/color";
 
 interface IProps {
   header?: string;
-  onSubmit: (uri: any) => void;
-  onCancel: () => void;
+  onSubmit?: (uri: any) => void;
+  onCancel?: () => void;
   cameraDisabled?: boolean;
   pickDisabled?: boolean;
   loading?: boolean;
+  style?: ViewStyle;
 }
 
 export function ImagePickerComponent(props: IProps) {
@@ -42,6 +43,7 @@ export function ImagePickerComponent(props: IProps) {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const { uri } = result.assets[0];
       setImage(uri);
+      props.onSubmit?.(uri);
     }
   };
 
@@ -59,38 +61,29 @@ export function ImagePickerComponent(props: IProps) {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const { uri } = result.assets[0];
       setImage(uri);
+      props.onSubmit?.(uri);
     }
   };
 
   return (
-    <View
-      style={{
-        borderWidth: 2,
-        borderColor: "#027d6b",
-        borderRadius: 15,
-        padding: 10,
-        backgroundColor: "#0f6357",
-      }}
-    >
+    <View style={props.style}>
       <View
         style={{
           display: "flex",
-          justifyContent: "center",
           flexDirection: "row",
           gap: 2,
-          marginBottom: 40,
+          padding: 10,
         }}
       >
         <Text
           style={{
-            color: "#34edd3",
+            color: color.textBlack1,
             fontWeight: "bold",
             fontSize: 17,
           }}
         >
           {props.header}
         </Text>
-        {/* <Icon name="remember-me" color={"#0a94cf"} /> */}
       </View>
 
       <View style={GlobalStyle.horizontalButtonGroup}>
@@ -105,7 +98,7 @@ export function ImagePickerComponent(props: IProps) {
           <Button
             title="Chụp ảnh"
             onPress={takePhoto}
-            color={color.danger}
+            color={color.danger2}
             buttonStyle={GlobalStyle.smBorderRadius}
           />
         )}
@@ -126,28 +119,38 @@ export function ImagePickerComponent(props: IProps) {
         </View>
       )}
 
-      <View style={{ ...GlobalStyle.horizontalButtonGroup, marginTop: 20 }}>
-        <Button
-          buttonStyle={{
-            ...GlobalStyle.xsBorderRadius,
-            borderColor: "white",
-          }}
-          color={color.primary}
-          onPress={props.onCancel}
-          type="outline"
-        >
-          <Text style={{ color: "white" }}>Quay lại</Text>
-        </Button>
-        <Button
-          disabled={!image || props.loading}
-          buttonStyle={{ ...GlobalStyle.xsBorderRadius, minWidth: 80 }}
-          onPress={() => {
-            props.onSubmit(image);
-          }}
-        >
-          {props.loading ? <ActivityIndicator /> : <Text>Tiếp tục</Text>}
-        </Button>
-      </View>
+      {/* <View style={{ ...GlobalStyle.horizontalButtonGroup, marginTop: 20 }}>
+        {props.onCancel && (
+          <Button
+            buttonStyle={{
+              ...GlobalStyle.xsBorderRadius,
+              borderColor: "white",
+            }}
+            color={color.primary4}
+            onPress={props.onCancel}
+            type="outline"
+          >
+            <Text style={{ color: "white" }}>Quay lại</Text>
+          </Button>
+        )}
+        {props.onSubmit && (
+          <Button
+            disabled={!image || props.loading}
+            buttonStyle={{ ...GlobalStyle.xsBorderRadius, minWidth: 80 }}
+            onPress={() => {
+              props.onSubmit?.(image);
+            }}
+          >
+            {props.loading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={{ color: color.textWhite2, fontWeight: "bold" }}>
+                Xác nhận
+              </Text>
+            )}
+          </Button>
+        )}
+      </View> */}
     </View>
   );
 }

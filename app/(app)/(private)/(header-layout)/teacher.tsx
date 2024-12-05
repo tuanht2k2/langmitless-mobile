@@ -3,12 +3,45 @@ import React from "react";
 import { Image, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
-import educationImg from "@/assets/images/education.png";
 import Button from "@/components/Button";
 import GlobalStyle from "@/assets/styles/globalStyles";
+import { useRouter } from "expo-router";
+import { ComponentIntefaces } from "@/constants/component";
+import color from "@/assets/styles/color";
+import Card from "@/components/Card";
+import MenuItem from "@/components/MenuItem";
+import HorizontalDivider from "@/components/HorizontalDivider";
+import { Icon } from "@rneui/themed";
 
+interface IRoute {
+  name: string;
+  title: string;
+}
+
+const MENU: ComponentIntefaces.IMenuItem[] = [
+  {
+    name: "Topic",
+    to: "/topic",
+    iconColor: color.danger3,
+    labelColor: color.textMain,
+    icon: "topic",
+  },
+  {
+    name: "Kết nối",
+    to: "/payment/success",
+    iconColor: color.primary3,
+    labelColor: color.textMain,
+    icon: "join-right",
+  },
+];
 function TeacherScreen() {
   const account = useSelector((state: RootState) => state.auth.account);
+
+  const router = useRouter();
+
+  const handleNavigate = () => {
+    router.push("/become-a-teacher");
+  };
 
   return (
     <View>
@@ -21,14 +54,6 @@ function TeacherScreen() {
             height: "100%",
           }}
         >
-          {/* <Image
-            source={educationImg}
-            style={{
-              objectFit: "contain",
-              height: 100,
-              width: "50%",
-            }}
-          /> */}
           <Text
             style={{
               ...GlobalStyle.mainText,
@@ -39,10 +64,48 @@ function TeacherScreen() {
           >
             Bạn chưa phải là giáo viên
           </Text>
-          <Button title="Đăng ký ngay" />
+          <Button onClick={handleNavigate} title="Đăng ký ngay" />
         </View>
       ) : (
-        <View>your are teacher</View>
+        <View>
+          <Card
+            styles={{
+              gap: 10,
+              marginTop: 20,
+              borderWidth: 1,
+              borderColor: color.grey2,
+            }}
+          >
+            <Text style={{ ...GlobalStyle.mainText, fontWeight: "bold" }}>
+              Công cụ của bạn
+            </Text>
+            <HorizontalDivider />
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 20,
+              }}
+            >
+              {MENU.map((item, index) => (
+                <MenuItem key={index} {...item} />
+              ))}
+            </View>
+          </Card>
+          <Card
+            styles={{
+              gap: 10,
+              marginTop: 20,
+              borderWidth: 1,
+              borderColor: color.grey2,
+            }}
+          >
+            <Text style={{ ...GlobalStyle.mainText, fontWeight: "bold" }}>
+              Bảng tin
+            </Text>
+            <HorizontalDivider />
+          </Card>
+        </View>
       )}
     </View>
   );

@@ -32,62 +32,84 @@ export const getApiConfig = async () => {
 };
 
 export const apiService = {
-  post: async (url: string, body: any) => {
+  post: async (url: string, body: any, handleError?: (error?: any) => void) => {
     const config = await getApiConfig();
     try {
       const response = await ApiInstance.post(url, body, config);
       return response.data;
     } catch (error) {
+      handleError?.(error);
       throw error;
     }
   },
 
-  get: async (url: string, params?: any) => {
+  get: async (
+    url: string,
+    params?: any,
+    handleError?: (error?: any) => void
+  ) => {
     const config = await getApiConfig();
     try {
       const response = await ApiInstance.get(url, { ...config, params });
       return response.data;
     } catch (error) {
+      handleError?.(error);
       throw error;
     }
   },
 
-  put: async (url: string, body: any) => {
+  put: async (url: string, body: any, handleError?: (error?: any) => void) => {
     const config = await getApiConfig();
     try {
       const response = await ApiInstance.put(url, body, config);
       return response.data;
     } catch (error) {
+      handleError?.(error);
       throw error;
     }
   },
 
-  delete: async (url: string, params?: any) => {
+  delete: async (
+    url: string,
+    params?: any,
+    handleError?: (error?: any) => void
+  ) => {
     const config = await getApiConfig();
     try {
       const response = await ApiInstance.delete(url, { ...config, params });
       return response.data;
     } catch (error) {
+      handleError?.(error);
       throw error;
     }
   },
 
-  postForm: async (url: string, formData: FormData) => {
+  postForm: async (
+    url: string,
+    formData: FormData,
+    handleError?: (error?: any) => void
+  ) => {
     const config = await getApiConfig();
     try {
       const response = await ApiInstance.post(url, formData, config);
       return response.data;
     } catch (error) {
+      handleError?.(error);
       throw error;
     }
   },
 
-  putForm: async (url: string, formData: FormData) => {
+  putForm: async (
+    url: string,
+    formData: FormData,
+    handleError?: (error?: any) => void
+  ) => {
     const config = await getApiConfig();
     try {
       const response = await ApiInstance.put(url, formData, config);
       return response.data;
     } catch (error) {
+      handleError?.(error);
       throw error;
     }
   },

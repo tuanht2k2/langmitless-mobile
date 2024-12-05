@@ -42,12 +42,7 @@ export default function RegisterScreen() {
       phoneNumber: "",
       email: "",
       password: "",
-      // address: "",
       name: "",
-      // identificationNumber: "",
-      // gender: "",
-      // fullName: "",
-      // dob: "",
       confirmPassword: "",
     },
   });
@@ -316,164 +311,6 @@ export default function RegisterScreen() {
     );
   };
 
-  // const authenticationView = () => {
-  //   const submitAuthenticationView = async (uri: string) => {
-  //     setLoading(true);
-  //     const images = await CommonService.uriListToFiles([uri]);
-  //     const request: any = images[0];
-
-  //     fptAiService
-  //       .identify(request)
-  //       .then((res) => {
-  //         CommonService.showToast(
-  //           "success",
-  //           "Thành công",
-  //           "Xác thực căn cước công dân thành công!"
-  //         );
-  //         const data = res?.data?.data?.[0];
-  //         if (!data) return;
-  //         // setValue("identificationNumber", data.id);
-  //         // setValue("address", data.address);
-  //         // setValue("dob", data.dob);
-  //         // setValue("fullName", data.name);
-  //         // setValue("gender", data.sex);
-  //         nextStep();
-  //       })
-  //       .catch(() => {
-  //         CommonService.showToast(
-  //           "error",
-  //           "Thất bại",
-  //           "Ảnh không hợp lệ, hãy chụp lại!"
-  //         );
-  //       })
-  //       .finally(() => {
-  //         setLoading(false);
-  //       });
-  //   };
-
-  //   return (
-  //     <View>
-  //       <ImagePickerComponent
-  //         header="Chụp ảnh căn cước công dân"
-  //         onCancel={backStep}
-  //         onSubmit={submitAuthenticationView}
-  //         loading={loading}
-  //       />
-  //     </View>
-  //   );
-  // };
-
-  // const confirmView = () => {
-  //   const [confirmViewLoading, setConfirmViewLoading] = useState(false);
-
-  //   const Field = (props: { label: string; value: string | number }) => {
-  //     return (
-  //       <View style={{ display: "flex", flexDirection: "row", gap: 5 }}>
-  //         <Text style={{ fontWeight: 500 }}>{props.label} :</Text>
-  //         <Text>{props.value}</Text>
-  //       </View>
-  //     );
-  //   };
-
-  //   const fields = [
-  //     { label: "Số điện thoại", value: getValues("phoneNumber") },
-  //     { label: "Email", value: getValues("email") },
-  //     { label: "Họ tên", value: getValues("name") },
-  //     { label: "Họ tên", value: getValues("fullName") },
-  //     { label: "Giới tính", value: getValues("gender") },
-  //     { label: "Số CCCD", value: getValues("identificationNumber") },
-  //     { label: "Ngày sinh", value: getValues("dob") },
-  //     { label: "Địa chỉ", value: getValues("address") },
-  //   ];
-
-  //   const submit = () => {
-  //     setConfirmViewLoading(true);
-
-  //     const request: RequestInterfaces.IRegisterRequest = {
-  //       ...getValues(),
-  //       gender: getValues("gender") == "NAM" ? 0 : 1,
-  //       dob: CommonService.stringToDate(getValues("dob")),
-  //     };
-  //     authService
-  //       .register(request)
-  //       .then(() => {
-  //         CommonService.showToast(
-  //           "success",
-  //           "Thành công",
-  //           "Bạn có thể quay lại trang đăng nhập"
-  //         );
-  //       })
-  //       .catch(() => {
-  //         CommonService.showToast("error", "Lỗi", "CCCD đã được sử dụng!");
-  //       })
-  //       .finally(() => {
-  //         setConfirmViewLoading(false);
-  //       });
-  //   };
-
-  //   const cancel = () => {
-  //     setStep(2);
-  //   };
-
-  //   return (
-  //     <Modal visible>
-  //       <View
-  //         style={{
-  //           display: "flex",
-  //           justifyContent: "center",
-  //           alignItems: "center",
-  //           height: "100%",
-  //         }}
-  //       >
-  //         <View style={{ gap: 30 }}>
-  //           <Text style={{ textAlign: "center", fontSize: 20 }}>
-  //             Xác nhận thông tin
-  //             <Icon name="check-circle" size={20} color={color.success} />
-  //           </Text>
-  //           <Image
-  //             source={require("@/assets/images/authentication.png")}
-  //             style={{ height: 100, width: "auto", objectFit: "contain" }}
-  //           />
-  //           <View style={{ height: 1, backgroundColor: color.black }}></View>
-  //           <View>
-  //             {fields.map((field, index) => {
-  //               return (
-  //                 <Field key={index} label={field.label} value={field.value} />
-  //               );
-  //             })}
-  //           </View>
-  //         </View>
-  //         <View
-  //           style={{
-  //             display: "flex",
-  //             flexDirection: "row",
-  //             gap: 10,
-  //             marginTop: 45,
-  //           }}
-  //         >
-  //           <Button
-  //             onPress={cancel}
-  //             color={color.danger}
-  //             buttonStyle={{ borderRadius: 10 }}
-  //           >
-  //             Hủy
-  //           </Button>
-  //           <Button
-  //             onPress={submit}
-  //             color={color.primary}
-  //             buttonStyle={{ borderRadius: 10, minWidth: 90 }}
-  //             disabled={loading}
-  //           >
-  //             {confirmViewLoading ? <ActivityIndicator /> : "Xác nhận"}
-  //           </Button>
-  //         </View>
-  //       </View>
-
-  //       <Toast />
-  //     </Modal>
-  //   );
-  // };
-
   const views = [basicView, securityView];
   // const views = [authenticationView, confirmView];
   const CurrentView = views[step];
@@ -490,7 +327,7 @@ export default function RegisterScreen() {
           source={require("@/assets/images/logo_remove_bgr.png")}
           style={styles.logo}
         />
-        <Text style={styles.logoTitle}>engfinity</Text>
+        <Text style={styles.logoTitle}>langmitless</Text>
       </View>
 
       <CurrentView />

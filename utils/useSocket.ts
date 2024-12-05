@@ -2,7 +2,11 @@ import Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import { useEffect, useState } from "react";
 
-const useSocket = (topic: string, handleSocketData: any) => {
+const useSocket = (
+  topic: string,
+  handleSocketData: any,
+  onDisconnect?: (data?: any) => void
+) => {
   const [connected, setConnected] = useState(false);
   useEffect(() => {
     const socketBaseUrl = process.env.EXPO_PUBLIC_WEBSOCKET_BASE_URL;
@@ -28,6 +32,7 @@ const useSocket = (topic: string, handleSocketData: any) => {
       if (client && client.connected) {
         client.disconnect(() => {
           setConnected(false);
+          onDisconnect?.();
           console.log("Disconnected");
         });
       }

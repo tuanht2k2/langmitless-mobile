@@ -14,7 +14,7 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import LoadingLayout from "@/components/Loading";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import GlobalModalComponent from "@/components/GlobalModal";
+import HireNotificationModalComponent from "@/components/HireNotificationModalComponent";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -48,7 +48,7 @@ export default function RootLayout() {
               <Stack.Screen name="(private)" options={{ headerShown: false }} />
               <Stack.Screen name="(public)" options={{ headerShown: false }} />
             </Stack>
-            <GlobalModalComponent />
+            <HireNotificationModalComponent />
           </GestureHandlerRootView>
         </LoadingLayout>
       </Provider>

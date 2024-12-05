@@ -18,12 +18,23 @@ import { LinearGradient } from "expo-linear-gradient";
 interface ITab {
   name: string;
   title: string;
-  icon: "home" | "camera" | "people" | "notifications" | "chatbox" | "settings";
+  icon:
+    | "home"
+    | "camera"
+    | "people"
+    | "notifications"
+    | "chatbox"
+    | "settings"
+    | "videocam"
+    | "person-circle"
+    | "cellular";
 }
 
 const TABS: ITab[] = [
   { name: "index", title: "Trang chủ", icon: "home" },
-  { name: "account", title: "Tôi", icon: "people" },
+  { name: "learn-with-teacher", title: "Học cùng giáo viên", icon: "videocam" },
+  { name: "topic", title: "Chủ đề học", icon: "cellular" },
+  { name: "account", title: "Tôi", icon: "person-circle" },
 ];
 
 export default function TabLayout() {
@@ -46,7 +57,7 @@ export default function TabLayout() {
                 source={require("@/assets/images/logo_remove_bgr.png")}
                 style={styles.logo}
               />
-              <Text style={styles.logoTitle}>engfinity</Text>
+              <Text style={styles.logoTitle}>langmitless</Text>
             </View>
 
             <View style={styles.actionHeaderWapper}>
@@ -108,8 +119,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   logoTitle: {
-    color: color.textMain,
-    fontSize: 20,
+    color: color.success4,
+    fontSize: 17,
     fontWeight: "bold",
   },
   actionHeaderWapper: {

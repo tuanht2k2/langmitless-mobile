@@ -48,4 +48,15 @@ export namespace ResponseInterfaces {
   export interface INotificationResponse {
     message?: string;
   }
+
+  export interface IHireResponse {
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    createdBy?: Interfaces.IUser;
+    teacher?: Interfaces.IUser;
+    cost?: number;
+    totalTime?: number;
+    status?: "ACCEPTED" | "REJECTED";
+  }
 }

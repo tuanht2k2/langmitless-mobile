@@ -14,7 +14,9 @@ function Card(props: ICardProps) {
         padding: 10,
         borderRadius: 10,
         backgroundColor: color.white1,
-        shadowColor: color.black,
+        shadowColor: color.black1,
+        borderWidth: 1,
+        borderColor: color.grey2,
         ...props.styles,
       }}
     >

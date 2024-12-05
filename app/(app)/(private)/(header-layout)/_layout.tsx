@@ -34,6 +34,14 @@ const ROUTES: IRoute[] = [
     name: "profile",
     title: "Thông tin cá nhân",
   },
+  {
+    name: "become-a-teacher",
+    title: "Đăng ký trở thành giáo viên",
+  },
+  {
+    name: "learn-with-teacher/[id]",
+    title: "Học cùng giáo viên",
+  },
 ];
 
 export default function HeaderLayout() {

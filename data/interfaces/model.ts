@@ -10,14 +10,17 @@ export namespace Interfaces {
     password?: string;
     profileImage?: string;
     name?: string;
+    fullName?: string;
     role?: "ADMIN" | "USER" | "TEACHER";
     createdAt?: Date;
+    status?: "ONLINE" | "OFFLINE" | "BLOCKED";
   }
 
   export interface IAdmin extends IAccount {}
 
   export interface IUser extends IAccount {
     balance?: number;
+    cost?: number
   }
 
   export interface IMultipartFile {

@@ -1,17 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Stack, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { loadAccount, login, logout } from "@/redux/reducers/authSlice";
 import accountService from "@/services/accountService";
-import { loaded } from "@/redux/reducers/globalSlide";
+import { loaded, noticeHired } from "@/redux/reducers/globalSlide";
 import Toast from "react-native-toast-message";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
 import useSocket from "@/utils/useSocket";
 import { RootState } from "@/redux/store";
 import { Audio } from "expo-av";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import { AppState, AppStateStatus } from "react-native";
+import { Modal } from "react-native";
 
 interface ITokenData {
   iss: string;
@@ -27,6 +30,8 @@ export default function PrivateLayout() {
   const router = useRouter();
 
   const account = useSelector((state: RootState) => state.auth.account);
+
+  const hireNotificationSoundRef = useRef<Audio.Sound | null>(null);
 
   useEffect(() => {
     AsyncStorage.getItem("token")
@@ -71,12 +76,59 @@ export default function PrivateLayout() {
     await sound.playAsync();
   };
 
+  const toggleHireNotificationAudio = async () => {
+    if (!hireNotificationSoundRef.current) {
+      const { sound } = await Audio.Sound.createAsync(
+        require("@/assets/sounds/warning_sound.mp3")
+      );
+      // await sound.setIsLoopingAsync(true);
+      await sound.playAsync();
+      hireNotificationSoundRef.current = sound;
+    } else {
+      hireNotificationSoundRef.current.stopAsync();
+      hireNotificationSoundRef.current.unloadAsync();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (!hireNotificationSoundRef.current) return;
+      hireNotificationSoundRef.current.unloadAsync();
+    };
+  }, []);
+
   const notice = (notification: ResponseInterfaces.INotificationResponse) => {
     CommonService.showToast("error", "Thông báo", notification.message, false);
     playNotificationAudio();
   };
 
+  const updateStatus = (appState: AppStateStatus) => {
+    const request: RequestInterfaces.IEditAccountStatusRequest = {
+      id: account?.id,
+      status: appState === "active" ? "ONLINE" : "OFFLINE",
+    };
+    try {
+      accountService.updateStatus(request);
+    } catch (error) {}
+  };
+
+  const hireListener = (hire: ResponseInterfaces.IHireResponse) => {
+    if (!hire) return;
+    if (account?.id === hire.teacher?.id) {
+      dispatch(noticeHired(hire));
+      toggleHireNotificationAudio();
+    }
+  };
+
   useSocket(`/topic/${account?.id}/notifications`, notice);
+  useSocket(`/topic/teachers/${account?.id}`, hireListener);
+
+  useEffect(() => {
+    if (!account) return;
+    AppState.addEventListener("change", updateStatus);
+
+    return () => {};
+  }, []);
 
   return (
     <>
