@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, Text, Button } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import useSocket from "@/utils/useSocket";
+import handleSocket from "@/utils/useSocket";
 import { RTCPeerConnection, mediaDevices, RTCView } from "react-native-webrtc";
 import { Interfaces } from "@/data/interfaces/model";
 
@@ -31,7 +31,10 @@ function VideoCallComponent() {
     }
   };
 
-  useSocket(`/topic/accounts/${currentAccount?.id}/messengers`, handleStream);
+  handleSocket(
+    `/topic/accounts/${currentAccount?.id}/messengers`,
+    handleStream
+  );
 
   const startLocalStream = async () => {
     try {

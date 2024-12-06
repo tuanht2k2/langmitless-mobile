@@ -19,6 +19,9 @@ import { RootState } from "@/redux/store";
 import { closeModal, clearHired } from "@/redux/reducers/globalSlide";
 import AvatarComponent from "./Avatar";
 import Button from "./Button";
+import hireService from "@/services/hireService";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import { useRouter } from "expo-router";
 // import { useNavigation } from "expo-router";
 
 const { height } = Dimensions.get("window");
@@ -27,6 +30,8 @@ const HireNotificationModalComponent = () => {
   const hire = useSelector((state: RootState) => state.global.hireNotification);
   const dispatch = useDispatch();
   const translateY = useSharedValue(height);
+
+  const router = useRouter();
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -42,12 +47,28 @@ const HireNotificationModalComponent = () => {
     translateY.value = withSpring(height);
   };
 
-  const dispatchClearHired = () => {
+  const updateHiredStatus = async (status: "ACCEPTED" | "REJECTED") => {
+    if (!hire) return;
+    try {
+      const request: RequestInterfaces.IEditHireRequest = {
+        id: hire?.id,
+        status,
+        teacherId: hire.teacher?.id,
+      };
+      hireService.updateStatus(request);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const rejectHired = () => {
     dispatch(clearHired());
+    updateHiredStatus("REJECTED");
   };
 
   const acceptHired = () => {
-    dispatchClearHired();
+    dispatch(clearHired());
+    updateHiredStatus("ACCEPTED");
   };
 
   useEffect(() => {
@@ -130,7 +151,7 @@ const HireNotificationModalComponent = () => {
                   marginTop: 20,
                 }}
               >
-                <Button title="Từ chối" onClick={dispatchClearHired} />
+                <Button title="Từ chối" onClick={rejectHired} />
                 <Button
                   title="Chấp nhận"
                   style={{ backgroundColor: color.success3 }}

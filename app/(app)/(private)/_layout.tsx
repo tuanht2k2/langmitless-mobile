@@ -14,7 +14,6 @@ import { RootState } from "@/redux/store";
 import { Audio } from "expo-av";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import { AppState, AppStateStatus } from "react-native";
-import { Modal } from "react-native";
 
 interface ITokenData {
   iss: string;
@@ -115,8 +114,14 @@ export default function PrivateLayout() {
   const hireListener = (hire: ResponseInterfaces.IHireResponse) => {
     if (!hire) return;
     if (account?.id === hire.teacher?.id) {
-      dispatch(noticeHired(hire));
-      toggleHireNotificationAudio();
+      if (!hire.status) {
+        dispatch(noticeHired(hire));
+        toggleHireNotificationAudio();
+        return;
+      }
+      if (hire.status === "ACCEPTED") {
+        router.replace(`/room/${hire.room?.id}`);
+      }
     }
   };
 

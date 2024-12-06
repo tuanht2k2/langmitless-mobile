@@ -49,14 +49,19 @@ export namespace ResponseInterfaces {
     message?: string;
   }
 
-  export interface IHireResponse {
-    id?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    createdBy?: Interfaces.IUser;
+  export interface IRoomResponse extends Interfaces.IEntity {
+    hire?: IHireResponse;
+    members?: Interfaces.IUser[];
+    expectedCallDuration?: number;
+    actualCallDuration?: number;
+    status?: "IN_PROGRESS" | "FINISHED";
+  }
+
+  export interface IHireResponse extends Interfaces.IEntity {
     teacher?: Interfaces.IUser;
     cost?: number;
     totalTime?: number;
     status?: "ACCEPTED" | "REJECTED";
+    room?: IRoomResponse;
   }
 }

@@ -42,6 +42,10 @@ const ROUTES: IRoute[] = [
     name: "learn-with-teacher/[id]",
     title: "Học cùng giáo viên",
   },
+  {
+    name: "room/[id]",
+    title: "Học cùng giáo viên",
+  },
 ];
 
 export default function HeaderLayout() {

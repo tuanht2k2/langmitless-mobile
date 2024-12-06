@@ -20,7 +20,7 @@ export namespace Interfaces {
 
   export interface IUser extends IAccount {
     balance?: number;
-    cost?: number
+    cost?: number;
   }
 
   export interface IMultipartFile {
@@ -47,5 +47,13 @@ export namespace Interfaces {
     type?: "offer" | "answer" | "candidate";
     sdp?: string;
     candidate?: string;
+  }
+
+  export interface IEntity {
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    createdBy?: Interfaces.IUser;
+    updatedBy?: Interfaces.IUser;
   }
 }
