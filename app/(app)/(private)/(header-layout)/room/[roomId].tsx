@@ -78,11 +78,6 @@ function RoomScreen() {
   };
 
   const handleAnswer = async (data: Interfaces.IWebRTC) => {
-    console.warn(
-      "co signal state: ",
-      account?.name,
-      localPCRef.current?.signalingState
-    );
     if (
       !data.sdp ||
       !localPCRef.current ||
@@ -99,7 +94,6 @@ function RoomScreen() {
         sdp: data.sdp,
       });
       await localPCRef.current.setRemoteDescription(rtcSessionDescription);
-      console.warn("remote ne: ", localPCRef.current.remoteDescription);
     } catch (error) {
       console.error("Lỗi khi xử lý answer:", error);
     }
@@ -242,6 +236,10 @@ function RoomScreen() {
   useEffect(() => {
     if (!socketClientRef.current) return;
     setUpPeerConnection();
+
+    return () => {
+      onDisconnect();
+    };
   }, [socketClientRef.current]);
 
   useEffect(() => {
@@ -268,6 +266,21 @@ function RoomScreen() {
         });
     };
   }, []);
+
+  const onDisconnect = () => {
+    if (localPCRef.current) {
+      localPCRef.current.getSenders().forEach((sender) => {
+        if (sender.track) sender.track.stop();
+      });
+
+      localPCRef.current.getReceivers().forEach((receiver) => {
+        if (receiver.track) receiver.track.stop();
+      });
+
+      localPCRef.current.close();
+      localPCRef.current = null;
+    }
+  };
 
   // video call action view
   const [videoCallActionVisible, setVideoCallActionVisible] =
