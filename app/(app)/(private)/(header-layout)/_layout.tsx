@@ -43,7 +43,7 @@ const ROUTES: IRoute[] = [
     title: "Học cùng giáo viên",
   },
   {
-    name: "room/[id]",
+    name: "room/[roomId]",
     title: "Học cùng giáo viên",
   },
 ];

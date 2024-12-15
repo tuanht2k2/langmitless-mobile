@@ -8,6 +8,7 @@ const useSocket = (
   onDisconnect?: (data?: any) => void
 ) => {
   const [connected, setConnected] = useState(false);
+  const [client, setClient] = useState<Stomp.Client | null>(null);
   useEffect(() => {
     const socketBaseUrl = process.env.EXPO_PUBLIC_WEBSOCKET_BASE_URL;
     if (!socketBaseUrl) return;
@@ -27,6 +28,7 @@ const useSocket = (
         setConnected(false);
       }
     );
+    setClient(client);
 
     return () => {
       if (client && client.connected) {
@@ -39,7 +41,7 @@ const useSocket = (
     };
   }, [topic]);
 
-  return connected;
+  return client;
 };
 
 export default useSocket;

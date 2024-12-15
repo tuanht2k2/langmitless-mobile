@@ -42,3 +42,13 @@ declare module "react-native-tesseract-ocr" {
     config?: OCRConfig
   ): Promise<string>;
 }
+
+declare global {
+  interface Window {
+    RTCPeerConnection: typeof RTCPeerConnection;
+    RTCSessionDescription: typeof RTCSessionDescription;
+    RTCIceCandidate: typeof RTCIceCandidate;
+  }
+}
+
+export {};

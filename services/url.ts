@@ -64,3 +64,8 @@ export enum MOMO_URL {
 export enum HIRE_URL {
   BASE = "/hires",
 }
+
+export enum ROOM_URL {
+  BASE = "/rooms",
+  VIDEO_CALL = "/app/rooms/video-call",
+}

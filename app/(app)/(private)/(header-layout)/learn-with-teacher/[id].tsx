@@ -42,10 +42,10 @@ function RoomScreen() {
   };
 
   const teacherListener = (hire: ResponseInterfaces.IHireResponse) => {
-    if (!hire.status) return;
+    if (!hire.status || hire.createdBy?.id !== account?.id) return;
     setHiring(false);
     if (hire.status === "ACCEPTED") {
-      router.replace(`/room/${id}`);
+      router.replace(`/room/${hire.room?.id}`);
       return;
     }
     CommonService.showToast("info", "Giáo viên đã từ chối bạn!");
@@ -100,7 +100,7 @@ function RoomScreen() {
                   style={{
                     fontSize: 16,
                     fontWeight: "bold",
-                    color: color.pink3,
+                    color: color.blue1,
                   }}
                 >
                   {teacherData.name}
@@ -131,9 +131,9 @@ function RoomScreen() {
                 }}
                 disabled={totalTime === 1}
                 size={15}
-                iconColor={color.pink3}
+                iconColor={color.blue1}
               />
-              <Text style={{ fontWeight: "bold", color: color.pink3 }}>
+              <Text style={{ fontWeight: "bold", color: color.blue1 }}>
                 {totalTime}h
               </Text>
               <IconButtonComponent
@@ -143,12 +143,13 @@ function RoomScreen() {
                 }}
                 disabled={totalTime === 5}
                 size={15}
-                iconColor={color.pink3}
+                iconColor={color.blue1}
               />
             </View>
             <Button
               title={`THUÊ - ${(teacherData.cost || 0) * totalTime} VND`}
-              style={{ minWidth: 145 }}
+              textColor={color.yellow1}
+              style={{ minWidth: 155, backgroundColor: color.blue1 }}
               loading={hiring}
               onClick={() => {
                 if (!teacherData.id) return;

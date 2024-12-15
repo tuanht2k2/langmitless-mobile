@@ -116,11 +116,11 @@ export default function PrivateLayout() {
     if (account?.id === hire.teacher?.id) {
       if (!hire.status) {
         dispatch(noticeHired(hire));
-        toggleHireNotificationAudio();
+        // toggleHireNotificationAudio();
         return;
       }
       if (hire.status === "ACCEPTED") {
-        router.replace(`/room/${hire.room?.id}`);
+        router.push(`/room/${hire.room?.id}`);
       }
     }
   };

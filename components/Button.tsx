@@ -14,6 +14,7 @@ interface IProps {
   title?: string;
   loading?: boolean;
   disabled?: boolean;
+  textColor?: string;
 }
 
 function Button(props: IProps) {
@@ -37,7 +38,13 @@ function Button(props: IProps) {
       {props.loading ? (
         <ActivityIndicator color={color.white1} />
       ) : (
-        <Text style={{ color: color.white2, fontWeight: "bold", fontSize: 16 }}>
+        <Text
+          style={{
+            color: props.textColor ? props.textColor : color.white2,
+            fontWeight: "bold",
+            fontSize: 16,
+          }}
+        >
           {props.title}
         </Text>
       )}

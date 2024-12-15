@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Modal,
 } from "react-native";
 import Animated, {
   useSharedValue,
@@ -49,12 +50,12 @@ const HireNotificationModalComponent = () => {
 
   const updateHiredStatus = async (status: "ACCEPTED" | "REJECTED") => {
     if (!hire) return;
+    const request: RequestInterfaces.IEditHireRequest = {
+      id: hire?.id,
+      status,
+      teacherId: hire.teacher?.id,
+    };
     try {
-      const request: RequestInterfaces.IEditHireRequest = {
-        id: hire?.id,
-        status,
-        teacherId: hire.teacher?.id,
-      };
       hireService.updateStatus(request);
     } catch (error) {
       throw error;
@@ -63,12 +64,20 @@ const HireNotificationModalComponent = () => {
 
   const rejectHired = () => {
     dispatch(clearHired());
-    updateHiredStatus("REJECTED");
+    try {
+      updateHiredStatus("REJECTED");
+    } catch (error) {
+      throw error;
+    }
   };
 
   const acceptHired = () => {
     dispatch(clearHired());
-    updateHiredStatus("ACCEPTED");
+    try {
+      updateHiredStatus("ACCEPTED");
+    } catch (error) {
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -80,89 +89,114 @@ const HireNotificationModalComponent = () => {
   }, [hire]);
 
   return (
-    <>
-      {hire && (
-        <View style={StyleSheet.absoluteFill}>
-          <PanGestureHandler>
-            <Animated.View style={[styles.modal, animatedStyle]}>
-              <View style={styles.header}>
-                <Text style={styles.title}>Bạn có yêu cầu mới</Text>
-              </View>
-              <View
-                style={{
-                  marginTop: 20,
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 20,
-                }}
-              >
-                <AvatarComponent
-                  imageUrl={hire.createdBy?.profileImage}
-                  size={100}
-                />
-                <View style={{}}>
-                  <Text>
-                    <Text style={{ color: color.pink3, fontWeight: "bold" }}>
-                      {hire.createdBy?.name}
-                    </Text>{" "}
-                    đã gửi yêu cầu thuê
-                  </Text>
+    <Modal
+      visible={!!hire}
+      animationType="slide"
+      transparent
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "flex-end",
+      }}
+    >
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-end",
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        <View
+          style={{
+            padding: 20,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            backgroundColor: color.blue1,
+            width: "100%",
+          }}
+        >
+          <View style={styles.header}>
+            <Text style={styles.title}>Bạn có yêu cầu mới</Text>
+          </View>
+          <View
+            style={{
+              marginTop: 20,
+              display: "flex",
+              flexDirection: "row",
+              gap: 20,
+            }}
+          >
+            <AvatarComponent
+              imageUrl={hire?.createdBy?.profileImage}
+              size={100}
+            />
+            <View style={{}}>
+              <Text style={{ color: color.white1 }}>
+                <Text style={{ color: color.yellow1, fontWeight: "bold" }}>
+                  {hire?.createdBy?.name}
+                </Text>{" "}
+                đã gửi yêu cầu thuê
+              </Text>
 
-                  <Text>
-                    Thời lượng:{" "}
-                    <Text style={{ color: color.pink3, fontWeight: "bold" }}>
-                      {hire.totalTime}h
-                    </Text>
-                  </Text>
+              <Text style={{ color: color.white1 }}>
+                Thời lượng:{" "}
+                <Text style={{ color: color.yellow1, fontWeight: "bold" }}>
+                  {hire?.totalTime}h
+                </Text>
+              </Text>
 
-                  <Text>
-                    Giá gốc:{" "}
-                    <Text style={{ color: color.pink3, fontWeight: "bold" }}>
-                      {hire.cost}
-                    </Text>
-                  </Text>
+              <Text style={{ color: color.white1 }}>
+                Giá gốc:{" "}
+                <Text style={{ color: color.yellow1, fontWeight: "bold" }}>
+                  {hire?.cost}
+                </Text>
+              </Text>
 
-                  <Text>
-                    Phí:{" "}
-                    <Text style={{ color: color.pink3, fontWeight: "bold" }}>
-                      {(hire.cost || 0 * 20) > 0
-                        ? Math.floor((hire.cost || 0 * 20) / 100)
-                        : 0}
-                    </Text>{" "}
-                    VND
-                  </Text>
+              <Text style={{ color: color.white1 }}>
+                Phí:{" "}
+                <Text style={{ color: color.yellow1, fontWeight: "bold" }}>
+                  {hire?.cost ? Math.floor((hire?.cost * 20) / 100) : 0}
+                </Text>{" "}
+                VND
+              </Text>
 
-                  <Text>
-                    Thu nhập:{" "}
-                    <Text style={{ color: color.pink3, fontWeight: "bold" }}>
-                      {hire.cost || 0 - (hire.cost || 0 * 20) > 0
-                        ? Math.floor((hire.cost || 0 * 20) / 100)
-                        : 0}
-                    </Text>
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  flexDirection: "row",
-                  gap: 20,
-                  marginTop: 20,
-                }}
-              >
-                <Button title="Từ chối" onClick={rejectHired} />
-                <Button
-                  title="Chấp nhận"
-                  style={{ backgroundColor: color.success3 }}
-                  onClick={acceptHired}
-                />
-              </View>
-            </Animated.View>
-          </PanGestureHandler>
+              <Text style={{ color: color.white1 }}>
+                Thu nhập:{" "}
+                <Text style={{ color: color.yellow1, fontWeight: "bold" }}>
+                  {hire?.cost
+                    ? hire?.cost - Math.floor((hire?.cost * 20) / 100)
+                    : 0}
+                </Text>
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "row",
+              gap: 20,
+              marginTop: 20,
+            }}
+          >
+            <Button
+              title="Từ chối"
+              onClick={rejectHired}
+              style={{ backgroundColor: color.yellow1 }}
+              textColor={color.red3}
+            />
+            <Button
+              title="Chấp nhận"
+              style={{ backgroundColor: color.yellow1 }}
+              onClick={acceptHired}
+              textColor={color.success3}
+            />
+          </View>
         </View>
-      )}
-    </>
+      </View>
+    </Modal>
   );
 };
 
@@ -186,8 +220,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
+    color: color.yellow1,
   },
   main: { paddingBottom: 10 },
   button: {

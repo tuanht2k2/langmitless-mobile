@@ -66,7 +66,7 @@ function LearnWithTeacherScreen() {
         <View style={{ minHeight: "100%", padding: 10 }}>
           <ScrollView style={{}}>
             <Card styles={{ gap: 10 }}>
-              <Text style={{ fontWeight: "bold", color: color.textBlack2 }}>
+              <Text style={{ fontWeight: "bold", color: color.textMain }}>
                 Danh sách giáo viên
               </Text>
               {teachersLoading ? (
@@ -106,7 +106,14 @@ function LearnWithTeacherScreen() {
                             alignItems: "center",
                           }}
                         >
-                          <Text style={{}}>{teacher.name}</Text>
+                          <Text
+                            style={{
+                              color: color.blue1,
+                              fontSize: 15,
+                            }}
+                          >
+                            {teacher.name}
+                          </Text>
                           <Icon
                             name="fiber-manual-record"
                             color={
@@ -123,20 +130,20 @@ function LearnWithTeacherScreen() {
                           display: "flex",
                           flexDirection: "row",
                           alignItems: "center",
-                          backgroundColor: color.pink1,
+                          backgroundColor: color.blue1,
                           borderWidth: 1,
-                          borderColor: color.pink2,
+                          borderColor: color.yellow1,
                           padding: 2,
                           borderRadius: 5,
                           paddingHorizontal: 10,
                         }}
                       >
                         <Text
-                          style={{ color: color.pink3, fontWeight: "bold" }}
+                          style={{ color: color.yellow1, fontWeight: "bold" }}
                         >
                           {teacher.cost}/h
                         </Text>
-                        <Icon name="attach-money" color={color.red3} />
+                        {/* <Icon name="attach-money" color={color.red3} /> */}
                       </View>
                     </TouchableOpacity>
                   ))}

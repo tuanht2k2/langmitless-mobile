@@ -1,17 +1,26 @@
 import color from "@/assets/styles/color";
 import { Icon } from "@rneui/themed";
 import React from "react";
-import { StyleProp, Text, TouchableOpacity, ViewStyle } from "react-native";
+import {
+  Image,
+  ImageSourcePropType,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 
 interface Props {
   onPress?: () => void;
   icon?: string;
+  image?: ImageSourcePropType;
   iconColor?: string;
   label?: string;
   labelColor?: string;
   size?: number;
   color?: string;
   disabled?: boolean;
+  style?: ViewStyle;
 }
 
 function IconButtonComponent(props: Props) {
@@ -22,19 +31,30 @@ function IconButtonComponent(props: Props) {
       style={{
         borderRadius: props.label ? 15 : 100,
         gap: 10,
-        padding: props.label ? 10 : 5,
+        padding: 10,
         backgroundColor: props.color,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
+        ...props.style,
       }}
     >
+      {props.image && (
+        <Image
+          source={props.image}
+          style={{
+            height: props.size || 25,
+            width: props.size || 25,
+            objectFit: "contain",
+          }}
+        />
+      )}
       {props.icon && (
         <Icon
           name={props.icon}
           color={props.disabled ? color.grey3 : props.iconColor}
-          size={props.size || 30}
+          size={props.size || 25}
         />
       )}
       {props.label && (

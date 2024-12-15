@@ -37,16 +37,14 @@ export namespace Interfaces {
     updatedBy: IUser;
   }
 
-  export interface IVideoCall {
-    messengerId?: string;
-    senderId?: string;
-    webRTC?: IWebRTC;
-  }
-
   export interface IWebRTC {
+    roomId?: string;
+    createdBy?: string;
     type?: "offer" | "answer" | "candidate";
     sdp?: string;
     candidate?: string;
+    sdpMid?: string;
+    sdpMLineIndex?: number;
   }
 
   export interface IEntity {

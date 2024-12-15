@@ -7,14 +7,22 @@ const hireService = {
     request: RequestInterfaces.IEditHireRequest,
     handleError: (error?: any) => void
   ) {
-    return apiService.post(HIRE_URL.BASE, request, handleError);
+    try {
+      return apiService.post(HIRE_URL.BASE, request, handleError);
+    } catch (error) {
+      handleError();
+    }
   },
 
   async updateStatus(
     request: RequestInterfaces.IEditHireRequest,
     handleError?: (error?: any) => void
   ) {
-    return apiService.put(HIRE_URL.BASE, request, handleError);
+    try {
+      return apiService.put(HIRE_URL.BASE, request, handleError);
+    } catch (error) {
+      handleError?.();
+    }
   },
 };
 
