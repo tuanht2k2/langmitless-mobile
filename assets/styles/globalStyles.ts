@@ -4,7 +4,6 @@ import color from "./color";
 const GlobalStyle = StyleSheet.create({
   mainText: {
     color: color.textMain,
-    // fontFamily: "monospace",
   },
 
   // padding
@@ -34,9 +33,19 @@ const GlobalStyle = StyleSheet.create({
     margin: 40,
   },
 
+  background: {
+    height: "100%",
+    backgroundColor: color.background,
+  },
   center: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center",
+  },
+
+  horizontalFlex: {
+    display: "flex",
+    flexDirection: "row",
     alignItems: "center",
   },
 

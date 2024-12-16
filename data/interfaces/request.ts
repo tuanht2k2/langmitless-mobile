@@ -87,4 +87,16 @@ export namespace RequestInterfaces {
     totalTime?: number;
     status?: "ACCEPTED" | "REJECTED";
   }
+
+  export interface ISearchCourseRequest extends ICommonSearchRequest {
+    createdBy?: string;
+  }
+
+  export interface IEditCourseRequest {
+    id?: string;
+    name?: string;
+    language?: string;
+    description?: string;
+    cost?: number;
+  }
 }

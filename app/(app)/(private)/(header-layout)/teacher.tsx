@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import Button from "@/components/Button";
 import GlobalStyle from "@/assets/styles/globalStyles";
 import { useRouter } from "expo-router";
-import { ComponentIntefaces } from "@/constants/component";
+import { ComponentInterfaces } from "@/constants/component";
 import color from "@/assets/styles/color";
 import Card from "@/components/Card";
 import MenuItem from "@/components/MenuItem";
@@ -18,13 +18,20 @@ interface IRoute {
   title: string;
 }
 
-const MENU: ComponentIntefaces.IMenuItem[] = [
+const MENU: ComponentInterfaces.IMenuItem[] = [
+  // {
+  //   name: "Topic",
+  //   to: "/topic",
+  //   iconColor: color.danger3,
+  //   labelColor: color.textMain,
+  //   icon: "topic",
+  // },
   {
-    name: "Topic",
-    to: "/topic",
+    name: "Khóa học",
+    to: "/teacher-management/course",
     iconColor: color.danger3,
     labelColor: color.textMain,
-    icon: "topic",
+    icon: "school",
   },
   {
     name: "Kết nối",
@@ -44,7 +51,7 @@ function TeacherScreen() {
   };
 
   return (
-    <View>
+    <View style={GlobalStyle.background}>
       {account?.role !== "TEACHER" ? (
         <View
           style={{
@@ -67,13 +74,10 @@ function TeacherScreen() {
           <Button onClick={handleNavigate} title="Đăng ký ngay" />
         </View>
       ) : (
-        <View>
+        <View style={{ padding: 10 }}>
           <Card
             styles={{
               gap: 10,
-              marginTop: 20,
-              borderWidth: 1,
-              borderColor: color.grey2,
             }}
           >
             <Text style={{ ...GlobalStyle.mainText, fontWeight: "bold" }}>
@@ -96,8 +100,6 @@ function TeacherScreen() {
             styles={{
               gap: 10,
               marginTop: 20,
-              borderWidth: 1,
-              borderColor: color.grey2,
             }}
           >
             <Text style={{ ...GlobalStyle.mainText, fontWeight: "bold" }}>

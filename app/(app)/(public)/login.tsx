@@ -1,7 +1,6 @@
 import {
   ActivityIndicator,
   Image,
-  ImageBackground,
   Text,
   TextInput,
   TouchableOpacity,
@@ -12,7 +11,6 @@ import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import React from "react";
 
-import loginBackground from "@/assets/images/login_bgr.png";
 import styles from "./style";
 import Toast from "react-native-toast-message";
 

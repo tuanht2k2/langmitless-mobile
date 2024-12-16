@@ -1,31 +1,24 @@
 import {
   ActivityIndicator,
   Image,
-  ImageBackground,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import React from "react";
 
 import { Controller, useForm } from "react-hook-form";
-import { Interfaces } from "@/data/interfaces/model";
 import { Link } from "expo-router";
 import { Button, Icon } from "@rneui/themed";
 
-import loginBackground from "@/assets/images/login_bgr.png";
 import styles from "./style";
 import GlobalStyle from "@/assets/styles/globalStyles";
-import { ImagePickerComponent } from "@/components/ImagePicker";
 import Toast from "react-native-toast-message";
 import authService from "@/services/authService";
 import CommonService from "@/services/CommonService";
 import { RequestInterfaces } from "@/data/interfaces/request";
-import fptAiService from "@/services/fptAiService";
-import { Modal } from "react-native";
 import color from "@/assets/styles/color";
 import { LinearGradient } from "expo-linear-gradient";
 

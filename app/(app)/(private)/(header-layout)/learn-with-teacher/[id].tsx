@@ -4,30 +4,30 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FullScreenLoadingComponent from "@/components/FullScreenActivityIndicator";
 import IconButtonComponent from "@/components/IconButton";
-import { Interfaces } from "@/data/interfaces/model";
-import { RequestInterfaces } from "@/data/interfaces/request";
-import { ResponseInterfaces } from "@/data/interfaces/response";
-import { RootState } from "@/redux/store";
 import accountService from "@/services/accountService";
 import CommonService from "@/services/CommonService";
 import hireService from "@/services/hireService";
 import useSocket from "@/utils/useSocket";
-import { Icon } from "@rneui/themed";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Interfaces } from "@/data/interfaces/model";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import { ResponseInterfaces } from "@/data/interfaces/response";
+import { RootState } from "@/redux/store";
 import React, { useEffect, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
+import { ScrollView, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 
 function RoomScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
   const account = useSelector((state: RootState) => state.auth.account);
+  const dispatch = useDispatch();
 
   const [teacherData, setTeacherData] = useState<Interfaces.IUser>({});
   const [loading, setLoading] = useState<boolean>(true);
-  const [hiring, setHiring] = useState<boolean>(false);
 
   const [totalTime, setTotalTime] = useState(1);
 
@@ -43,7 +43,7 @@ function RoomScreen() {
 
   const teacherListener = (hire: ResponseInterfaces.IHireResponse) => {
     if (!hire.status || hire.createdBy?.id !== account?.id) return;
-    setHiring(false);
+    dispatch(overlayLoaded());
     if (hire.status === "ACCEPTED") {
       router.replace(`/room/${hire.room?.id}`);
       return;
@@ -59,14 +59,14 @@ function RoomScreen() {
 
   const hireTeacher = async (teacherId: string) => {
     try {
-      setHiring(true);
+      dispatch(overlayLoading());
       const request: RequestInterfaces.IEditHireRequest = {
         teacherId,
         totalTime,
       };
       await hireService.create(request, showError);
     } catch (error) {
-      setHiring(false);
+      dispatch(overlayLoaded());
       showError("Giáo viên đang bận, vui lòng thử lại sau!");
     }
   };
@@ -150,7 +150,6 @@ function RoomScreen() {
               title={`THUÊ - ${(teacherData.cost || 0) * totalTime} VND`}
               textColor={color.yellow1}
               style={{ minWidth: 155, backgroundColor: color.blue1 }}
-              loading={hiring}
               onClick={() => {
                 if (!teacherData.id) return;
                 hireTeacher(teacherData.id);

@@ -1,4 +1,4 @@
-import { ComponentIntefaces } from "@/constants/component";
+import { ComponentInterfaces } from "@/constants/component";
 import { Icon } from "@rneui/themed";
 import React from "react";
 import { Text, TouchableOpacity, View, Image, StyleSheet } from "react-native";
@@ -6,7 +6,7 @@ import { Text, TouchableOpacity, View, Image, StyleSheet } from "react-native";
 import color from "@/assets/styles/color";
 
 interface IProps {
-  options: ComponentIntefaces.IButtonGroupItem[];
+  options: ComponentInterfaces.IButtonGroupItem[];
   onChange: (value: any) => void;
   value?: any;
   defaultValue?: any;
@@ -16,7 +16,7 @@ function ButtonGroup(props: IProps) {
   return (
     <View style={{ gap: 15, paddingVertical: 10 }}>
       {props.options.map(
-        (item: ComponentIntefaces.IButtonGroupItem, index: number) => {
+        (item: ComponentInterfaces.IButtonGroupItem, index: number) => {
           return (
             <TouchableOpacity
               key={index}

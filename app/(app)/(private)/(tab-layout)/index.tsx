@@ -6,7 +6,7 @@ import {
   ScrollView,
   ImageBackground,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
 
 import { Icon } from "@rneui/themed";
@@ -18,13 +18,14 @@ import Card from "@/components/Card";
 import MenuItem from "@/components/MenuItem";
 import FullScreenLoadingComponent from "@/components/FullScreenActivityIndicator";
 import HorizontalDivider from "@/components/HorizontalDivider";
-import { ComponentIntefaces } from "@/constants/component";
+import { ComponentInterfaces } from "@/constants/component";
 
 import color from "@/assets/styles/color";
 
+// @ts-ignore
 import backgroundImg from "@/assets/images/bgr_1.jpg";
 
-const MENU: ComponentIntefaces.IMenuItem[] = [
+const MENU: ComponentInterfaces.IMenuItem[] = [
   {
     name: "Nạp tiền",
     to: "/payment",

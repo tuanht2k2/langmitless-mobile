@@ -1,10 +1,4 @@
-import {
-  ImageBackground,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import Card from "@/components/Card";
 import { useSelector } from "react-redux";
@@ -12,9 +6,11 @@ import { RootState } from "@/redux/store";
 import GlobalStyle from "@/assets/styles/globalStyles";
 import HorizontalDivider from "@/components/HorizontalDivider";
 import { Controller, useForm } from "react-hook-form";
-import { ComponentIntefaces } from "@/constants/component";
+import { ComponentInterfaces } from "@/constants/component";
 
+// @ts-ignore
 import momoIcon from "@/assets/images/icons/momo.png";
+// @ts-ignore
 import vnpayIcon from "@/assets/images/icons/vnpay.png";
 import color from "@/assets/styles/color";
 import ButtonGroup from "@/components/ButtonGroup";
@@ -29,7 +25,7 @@ function PaymentScreen() {
   const [btnLoading, setBtnLoading] = useState(false);
   const [webViewUrl, setWebViewUrl] = useState("");
 
-  const paymentMethods: ComponentIntefaces.IButtonGroupItem[] = [
+  const paymentMethods: ComponentInterfaces.IButtonGroupItem[] = [
     {
       name: "Ví MoMo",
       code: "MOMO",
@@ -85,7 +81,7 @@ function PaymentScreen() {
   };
 
   return (
-    <ImageBackground style={{ height: "100%", padding: 10 }}>
+    <View style={{ height: "100%", padding: 10 }}>
       {webViewUrl && <WebViewComponent uri={webViewUrl} />}
       {!webViewUrl && (
         <ScrollView>
@@ -212,7 +208,7 @@ function PaymentScreen() {
           />
         </ScrollView>
       )}
-    </ImageBackground>
+    </View>
   );
 }
 

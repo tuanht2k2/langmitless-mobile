@@ -51,11 +51,11 @@ function ProfileScreen() {
   return (
     <View
       style={{
+        ...GlobalStyle.background,
         padding: 10,
         gap: 5,
         width: "100%",
         height: "100%",
-        backgroundColor: color.grey1,
         display: "flex",
         justifyContent: "space-between",
       }}
@@ -103,7 +103,9 @@ function ProfileScreen() {
                 }}
               >
                 <Icon name={item.icon} color={item.color} />
-                <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
+                <Text style={{ fontWeight: "bold", color: color.textMain }}>
+                  {item.name}
+                </Text>
               </View>
             </Link>
           ))}

@@ -69,3 +69,8 @@ export enum ROOM_URL {
   BASE = "/rooms",
   VIDEO_CALL = "/app/rooms/video-call",
 }
+
+export enum COURSE_URL {
+  BASE = "/courses",
+  SEARCH = "/courses/search",
+}

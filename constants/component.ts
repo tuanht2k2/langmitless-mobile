@@ -1,7 +1,7 @@
 import { ImageSourcePropType } from "react-native";
 import { ViewStyle } from "react-native";
 
-export namespace ComponentIntefaces {
+export namespace ComponentInterfaces {
   export interface IActionDialog {
     isVisible?: boolean;
     title?: string;

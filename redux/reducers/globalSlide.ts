@@ -9,12 +9,14 @@ interface ModalPayload {
 
 interface GlobalState {
   isLoading: boolean;
+  isOverlayLoading: boolean;
   modal: ModalPayload | null;
   hireNotification: ResponseInterfaces.IHireResponse | null;
 }
 
 const initialState: GlobalState = {
   isLoading: true,
+  isOverlayLoading: false,
   modal: null,
   hireNotification: null,
 };
@@ -28,6 +30,12 @@ const globalSlice = createSlice({
     },
     loading(state) {
       state.isLoading = true;
+    },
+    overlayLoaded(state) {
+      state.isOverlayLoading = false;
+    },
+    overlayLoading(state) {
+      state.isOverlayLoading = true;
     },
     openModal(state, action: PayloadAction<ModalPayload>) {
       state.modal = action.payload;
@@ -50,6 +58,8 @@ const globalSlice = createSlice({
 export const {
   loaded,
   loading,
+  overlayLoaded,
+  overlayLoading,
   openModal,
   closeModal,
   noticeHired,

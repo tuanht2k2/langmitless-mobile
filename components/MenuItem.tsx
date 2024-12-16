@@ -1,11 +1,11 @@
 import React from "react";
-import { ComponentIntefaces } from "@/constants/component";
+import { ComponentInterfaces } from "@/constants/component";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import IconButtonComponent from "./IconButton";
 import { Icon } from "@rneui/themed";
 import { useRouter } from "expo-router";
 
-function MenuItem(props: ComponentIntefaces.IMenuItem) {
+function MenuItem(props: ComponentInterfaces.IMenuItem) {
   const router = useRouter();
 
   const handleNavigate = (path: string) => {

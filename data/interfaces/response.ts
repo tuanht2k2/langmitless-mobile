@@ -64,4 +64,12 @@ export namespace ResponseInterfaces {
     status?: "ACCEPTED" | "REJECTED";
     room?: IRoomResponse;
   }
+
+  export interface ICourseResponse extends Interfaces.IEntity {
+    name?: string;
+    description?: string;
+    cost?: number;
+    language?: string;
+    members?: Interfaces.IAccount[];
+  }
 }

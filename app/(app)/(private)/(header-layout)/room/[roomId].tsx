@@ -20,7 +20,9 @@ import {
 import { useSelector } from "react-redux";
 import Stomp from "stompjs";
 
+// @ts-ignore
 import disconnectIcon from "@/assets/images/icons/disconnect.png";
+// @ts-ignore
 import noDataFoundImage from "@/assets/images/no_data_found.png";
 
 const configuration = {
@@ -78,18 +80,11 @@ function RoomScreen() {
   };
 
   const handleAnswer = async (data: Interfaces.IWebRTC) => {
-    console.warn(
-      "co signal state: ",
-      account?.name,
-      localPCRef.current?.signalingState
-    );
     if (
       !data.sdp ||
       !localPCRef.current ||
       localPCRef.current.signalingState !== "have-local-offer"
     ) {
-      console.warn("co ref.current: ", !!localPCRef.current);
-
       return;
     }
 
@@ -99,7 +94,6 @@ function RoomScreen() {
         sdp: data.sdp,
       });
       await localPCRef.current.setRemoteDescription(rtcSessionDescription);
-      console.warn("remote ne: ", localPCRef.current.remoteDescription);
     } catch (error) {
       console.error("Lỗi khi xử lý answer:", error);
     }

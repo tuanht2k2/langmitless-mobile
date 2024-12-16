@@ -46,6 +46,14 @@ const ROUTES: IRoute[] = [
     name: "room/[roomId]",
     title: "Học cùng giáo viên",
   },
+  {
+    name: "teacher-management/course/index",
+    title: "Khóa học của bạn",
+  },
+  {
+    name: "teacher-management/course/detail/[courseId]",
+    title: "Quản lý khóa học",
+  },
 ];
 
 export default function HeaderLayout() {
@@ -64,15 +72,15 @@ export default function HeaderLayout() {
             headerTitle: route.title,
             headerStyle: styles.header,
             headerTitleStyle: styles.headerText,
-            headerTintColor: color.textWhite2,
-            headerBackground: () => (
-              <LinearGradient
-                colors={[color.primary5, color.pink1]}
-                style={{ flex: 1 }}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-              />
-            ),
+            // headerTintColor: color.blue1,
+            // headerBackground: () => (
+            //   <LinearGradient
+            //     colors={[color.grey1, color.grey2]}
+            //     style={{ flex: 1 }}
+            //     start={{ x: 0, y: 0 }}
+            //     end={{ x: 1, y: 0 }}
+            //   />
+            // ),
           }}
         />
       ))}
@@ -83,8 +91,8 @@ export default function HeaderLayout() {
 const styles = StyleSheet.create({
   header: {},
   headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: color.textWhite2,
+    fontSize: 17,
+    fontWeight: "600",
+    color: color.textMain,
   },
 });

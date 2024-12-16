@@ -53,14 +53,14 @@ function IconButtonComponent(props: Props) {
       {props.icon && (
         <Icon
           name={props.icon}
-          color={props.disabled ? color.grey3 : props.iconColor}
+          color={props.disabled ? color.textMain : props.iconColor}
           size={props.size || 25}
         />
       )}
       {props.label && (
         <Text
           style={{
-            color: props.labelColor,
+            color: props.labelColor || color.textMain,
             fontSize: props.size ? props.size / 2 : 15,
             fontWeight: "500",
           }}

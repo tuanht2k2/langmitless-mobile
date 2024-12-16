@@ -33,7 +33,7 @@ interface ITab {
 const TABS: ITab[] = [
   { name: "index", title: "Trang chủ", icon: "home" },
   { name: "learn-with-teacher", title: "Học cùng giáo viên", icon: "videocam" },
-  { name: "topic", title: "Chủ đề học", icon: "cellular" },
+  { name: "topic", title: "Khóa học", icon: "cellular" },
   { name: "account", title: "Tôi", icon: "person-circle" },
 ];
 

@@ -60,8 +60,11 @@ const color = {
   grey5: "#4d5656",
 
   yellow1: "#faf8bf",
+  yellow2: "#FFAD33",
 
   blue1: "#244f71",
+
+  transparent: "#ff000000",
 
   lightOverlay: "#282a354a",
   extraLightOverlay: "#5a5a5a0d",
@@ -72,7 +75,15 @@ const color = {
   textBlack: "#000000",
   textBlack1: "#656565",
   textBlack2: "#1e2a3d",
-  textMain: "#244f71",
+  textGrey1: "#f2f2f2",
+  textGrey2: "#d6d6d6",
+  textGrey3: "#a0a7a7",
+  textGrey4: "#7f8c8d",
+  textGrey5: "#4d5656",
+  textBlue1: "#244f71",
+  textMain: "#2C1F50",
+
+  background: "#F8F8FA",
 };
 
 export default color;

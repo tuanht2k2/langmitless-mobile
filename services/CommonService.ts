@@ -1,5 +1,9 @@
+import { ComponentInterfaces } from "@/constants/component";
+import { LANGUAGES } from "@/constants/constant";
 import { Interfaces } from "@/data/interfaces/model";
+import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 import Toast from "react-native-toast-message";
+import { Dispatch, UnknownAction } from "redux";
 
 const CommonService = {
   showToast: (
@@ -47,6 +51,22 @@ const CommonService = {
   stringToDate: (stringDate: string): Date => {
     const [day, month, year] = stringDate.split("/").map(Number);
     return new Date(year, month - 1, day);
+  },
+  getCourseImage: (code?: string) => {
+    if (!code) return;
+    return LANGUAGES.find(
+      (item: ComponentInterfaces.IDropdownOption<any>) => item.code === code
+    )?.img;
+  },
+  dispatchOverlayLoading: (
+    dispatch: Dispatch<UnknownAction>,
+    isLoading: boolean
+  ) => {
+    if (isLoading) {
+      dispatch(overlayLoading());
+    } else {
+      dispatch(overlayLoaded());
+    }
   },
 };
 
