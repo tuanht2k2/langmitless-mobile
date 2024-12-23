@@ -99,4 +99,22 @@ export namespace RequestInterfaces {
     description?: string;
     cost?: number;
   }
+
+  export interface IEditTopicRequest {
+    id?: string;
+    description?: string;
+    tagId?: string;
+    courseId?: string;
+  }
+
+  export interface IEditTagRequest {
+    id?: string;
+    name?: string;
+    language?: string;
+  }
+
+  export interface ISearchTagRequest {
+    name?: string;
+    language?: string;
+  }
 }

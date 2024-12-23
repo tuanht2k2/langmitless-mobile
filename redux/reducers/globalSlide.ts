@@ -1,24 +1,18 @@
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import React from "react";
-
-interface ModalPayload {
-  type: "COMMENT" | "REACTION";
-  props: any;
-}
 
 interface GlobalState {
   isLoading: boolean;
   isOverlayLoading: boolean;
-  modal: ModalPayload | null;
   hireNotification: ResponseInterfaces.IHireResponse | null;
+  chatbotVisible: boolean;
 }
 
 const initialState: GlobalState = {
   isLoading: true,
   isOverlayLoading: false,
-  modal: null,
   hireNotification: null,
+  chatbotVisible: true,
 };
 
 const globalSlice = createSlice({
@@ -37,12 +31,6 @@ const globalSlice = createSlice({
     overlayLoading(state) {
       state.isOverlayLoading = true;
     },
-    openModal(state, action: PayloadAction<ModalPayload>) {
-      state.modal = action.payload;
-    },
-    closeModal(state) {
-      state.modal = null;
-    },
     noticeHired(
       state,
       action: PayloadAction<ResponseInterfaces.IHireResponse>
@@ -52,6 +40,12 @@ const globalSlice = createSlice({
     clearHired(state) {
       state.hireNotification = null;
     },
+    showChatbot(state) {
+      state.chatbotVisible = true;
+    },
+    hideChatbot(state) {
+      state.chatbotVisible = false;
+    },
   },
 });
 
@@ -60,8 +54,6 @@ export const {
   loading,
   overlayLoaded,
   overlayLoading,
-  openModal,
-  closeModal,
   noticeHired,
   clearHired,
 } = globalSlice.actions;

@@ -42,6 +42,15 @@ function CourseList(props: IProps) {
                 flex: 1,
               }}
             >
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: color.textMain,
+                  minWidth: 30,
+                }}
+              >
+                {index + 1}.
+              </Text>
               <View
                 style={{
                   ...GlobalStyle.horizontalFlex,
@@ -52,7 +61,7 @@ function CourseList(props: IProps) {
                 }}
               >
                 <Image
-                  source={CommonService.getCourseImage(item.language)}
+                  source={CommonService.getCourseLanguage(item.language)?.img}
                   style={{ height: 20, width: 20, borderRadius: 10 }}
                 />
                 <Text

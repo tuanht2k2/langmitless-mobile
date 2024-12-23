@@ -36,6 +36,7 @@ function YourCourseScreen() {
     setValue,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -130,7 +131,7 @@ function YourCourseScreen() {
           size={18}
           iconColor={color.pink3}
           onPress={() => {
-            router.push(`/teacher-management/course/detail/${data.id}`);
+            router.push(`/course/${data.id}`);
           }}
         />
       </View>
@@ -205,7 +206,7 @@ function YourCourseScreen() {
         </View>
         {!loading && (
           <Text style={{ padding: 5, width: "100%" }}>
-            Bản ghi: {courses.length}
+            Tất cả: {courses.length}
           </Text>
         )}
         {!loading && courses.length === 0 && (
@@ -227,31 +228,11 @@ function YourCourseScreen() {
         onClose={() => {
           setModalVisible(false);
         }}
+        showHeader
+        icon="school"
+        title={watch("id") ? "Chỉnh sửa khóa học" : "Tạo khóa học mới"}
       >
         <View style={{ padding: 14, gap: 10 }}>
-          <View
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <View
-              style={{
-                ...GlobalStyle.horizontalFlex,
-                gap: 4,
-                borderBottomWidth: 1,
-                borderColor: color.pink3,
-              }}
-            >
-              <Icon name="school" color={color.yellow2} />
-              <Text style={{ ...GlobalStyle.mainText, fontSize: 16 }}>
-                Tạo khóa học mới
-              </Text>
-            </View>
-            <IconButtonComponent icon="close" onPress={toggleModal} />
-          </View>
           <CourseEditor control={control} errors={errors} />
           <Button title="Lưu" onClick={handleSubmit(onCourseSubmit)} />
         </View>

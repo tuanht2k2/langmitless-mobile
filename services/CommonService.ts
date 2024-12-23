@@ -52,11 +52,11 @@ const CommonService = {
     const [day, month, year] = stringDate.split("/").map(Number);
     return new Date(year, month - 1, day);
   },
-  getCourseImage: (code?: string) => {
+  getCourseLanguage: (code?: string) => {
     if (!code) return;
     return LANGUAGES.find(
       (item: ComponentInterfaces.IDropdownOption<any>) => item.code === code
-    )?.img;
+    );
   },
   dispatchOverlayLoading: (
     dispatch: Dispatch<UnknownAction>,

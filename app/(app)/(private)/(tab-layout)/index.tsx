@@ -24,6 +24,7 @@ import color from "@/assets/styles/color";
 
 // @ts-ignore
 import backgroundImg from "@/assets/images/bgr_1.jpg";
+import GlobalStyle from "@/assets/styles/globalStyles";
 
 const MENU: ComponentInterfaces.IMenuItem[] = [
   {
@@ -66,7 +67,7 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <ImageBackground style={styles.bg} source={backgroundImg}>
+    <ImageBackground style={GlobalStyle.background} source={backgroundImg}>
       <View style={{ marginTop: 40, marginBottom: 0, gap: 5 }}>
         <ScrollView scrollEventThrottle={16}>
           {isLoading ? (
@@ -134,7 +135,7 @@ export default function HomeScreen() {
                     <MenuItem key={index} {...item} />
                   ))}
                 </View>
-                <HorizontalDivider />
+                <HorizontalDivider style={{ backgroundColor: color.pink3 }} />
                 <View
                   style={{
                     padding: 5,
@@ -174,9 +175,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  bg: {
-    height: "100%",
-  },
   createPostWrapper: {
     marginTop: 5,
     padding: 10,

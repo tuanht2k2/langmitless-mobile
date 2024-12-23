@@ -16,6 +16,7 @@ import LoadingLayout from "@/components/Loading";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import HireNotificationModalComponent from "@/components/HireNotificationModalComponent";
 import OverlayActivityIndicator from "@/components/OverlayActivityIndicator";
+import ChatbotComponent from "@/components/Chatbot";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -49,6 +50,7 @@ export default function RootLayout() {
               <Stack.Screen name="(private)" options={{ headerShown: false }} />
               <Stack.Screen name="(public)" options={{ headerShown: false }} />
             </Stack>
+            <ChatbotComponent />
             <OverlayActivityIndicator />
             <HireNotificationModalComponent />
           </GestureHandlerRootView>

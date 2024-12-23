@@ -70,7 +70,22 @@ export enum ROOM_URL {
   VIDEO_CALL = "/app/rooms/video-call",
 }
 
+export enum TAG_URL {
+  BASE = "/tags",
+  SEARCH = "/tags/search",
+}
+
 export enum COURSE_URL {
   BASE = "/courses",
   SEARCH = "/courses/search",
+}
+
+export enum TOPIC_URL {
+  BASE = "/topics",
+  SEARCH = "/topics/search",
+}
+
+export enum QUESTION_URL {
+  BASE = "/questions",
+  SEARCH = "/questions/search",
 }

@@ -1,8 +1,13 @@
 import color from "@/assets/styles/color";
 import { RootState } from "@/redux/store";
 import React from "react";
-import { ActivityIndicator, Modal, View } from "react-native";
+import { ActivityIndicator, Image, Modal, View } from "react-native";
 import { useSelector } from "react-redux";
+
+//@ts-ignore
+import loadingAnimation from "@/assets/animation/loading.gif";
+//@ts-ignore
+import searchingAnimation from "@/assets/animation/search-animation.gif";
 
 function OverlayActivityIndicator() {
   const isLoading = useSelector(
@@ -26,7 +31,8 @@ function OverlayActivityIndicator() {
           backgroundColor: color.lightOverlay,
         }}
       >
-        <ActivityIndicator color={color.blue1} size={30} />
+        {/* <ActivityIndicator color={color.blue1} size={30} /> */}
+        <Image source={searchingAnimation} style={{ height: 60, width: 60 }} />
       </View>
     </Modal>
   );

@@ -50,10 +50,6 @@ const ROUTES: IRoute[] = [
     name: "teacher-management/course/index",
     title: "Khóa học của bạn",
   },
-  {
-    name: "teacher-management/course/detail/[courseId]",
-    title: "Quản lý khóa học",
-  },
 ];
 
 export default function HeaderLayout() {
@@ -72,18 +68,14 @@ export default function HeaderLayout() {
             headerTitle: route.title,
             headerStyle: styles.header,
             headerTitleStyle: styles.headerText,
-            // headerTintColor: color.blue1,
-            // headerBackground: () => (
-            //   <LinearGradient
-            //     colors={[color.grey1, color.grey2]}
-            //     style={{ flex: 1 }}
-            //     start={{ x: 0, y: 0 }}
-            //     end={{ x: 1, y: 0 }}
-            //   />
-            // ),
           }}
         />
       ))}
+      <Stack.Screen
+        key={ROUTES.length}
+        name="course"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

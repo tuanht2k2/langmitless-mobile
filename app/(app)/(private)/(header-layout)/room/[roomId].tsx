@@ -326,6 +326,11 @@ function RoomScreen() {
                 iconColor={color.white1}
                 color={color.blue1}
               />
+              <IconButtonComponent
+                icon="wifi-calling"
+                onPress={startCall}
+                iconColor={color.blue1}
+              />
             </View>
             <IconButtonComponent
               icon="close"
@@ -404,6 +409,12 @@ function RoomScreen() {
           <Button title="Bắt đầu" onClick={startCall} />
         </View>
       )}
+      {/* <View style={{ gap: 10 }}>
+        <Text style={{ color: color.blue1, fontSize: 17 }}>
+          Bắt đầu cuộc trò chuyện ngay
+        </Text>
+        <Button title="Bắt đầu" onClick={startCall} />
+      </View> */}
     </ImageBackground>
   );
 }

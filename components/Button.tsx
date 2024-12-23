@@ -15,6 +15,7 @@ interface IProps {
   loading?: boolean;
   disabled?: boolean;
   textColor?: string;
+  fontSize?: number;
 }
 
 function Button(props: IProps) {
@@ -42,7 +43,7 @@ function Button(props: IProps) {
           style={{
             color: props.textColor ? props.textColor : color.white2,
             fontWeight: "bold",
-            fontSize: 16,
+            fontSize: props.fontSize || 16,
           }}
         >
           {props.title}

@@ -66,10 +66,24 @@ export namespace ResponseInterfaces {
   }
 
   export interface ICourseResponse extends Interfaces.IEntity {
+    id?: string;
     name?: string;
     description?: string;
     cost?: number;
     language?: string;
     members?: Interfaces.IAccount[];
+    topics?: ITopicResponse[];
+  }
+
+  export interface ITopicResponse extends Interfaces.IEntity {
+    id?: string;
+    description?: string;
+    tag?: ITagResponse;
+  }
+
+  export interface ITagResponse {
+    id?: string;
+    name?: string;
+    language?: string;
   }
 }

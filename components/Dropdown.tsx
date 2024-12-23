@@ -1,10 +1,16 @@
 import color from "@/assets/styles/color";
-import GlobalStyle from "@/assets/styles/globalStyles";
+import React from "react";
 import { ComponentInterfaces } from "@/constants/component";
 import { Icon, Text } from "@rneui/themed";
-import React from "react";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { Image, StyleProp, TextStyle, View, ViewStyle } from "react-native";
+import {
+  Image,
+  StyleProp,
+  TextInput,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 interface IProps {
@@ -16,6 +22,7 @@ interface IProps {
   style?: ViewStyle;
   placeholderStyle?: StyleProp<TextStyle>;
   size?: number;
+  filter?: boolean;
 }
 
 function DropdownComponent(props: IProps) {
@@ -44,6 +51,8 @@ function DropdownComponent(props: IProps) {
             valueField="code"
             placeholder={props.placeholder}
             placeholderStyle={props.placeholderStyle}
+            search={props.filter}
+            searchPlaceholder="Nhập từ khóa tìm kiếm..."
             renderItem={(item: ComponentInterfaces.IDropdownOption<any>) => {
               return (
                 <View
