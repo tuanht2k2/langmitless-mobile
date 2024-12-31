@@ -32,7 +32,7 @@ export namespace ResponseInterfaces {
     updatedAt?: Date;
     createdBy: Interfaces.IUser;
     name?: string;
-    type?: "GROUP" | "PERSONAL";
+    type?: "GROUP" | "PERSONAL" | "CHATBOT";
     members?: Interfaces.IUser[];
   }
 
@@ -42,7 +42,7 @@ export namespace ResponseInterfaces {
     updatedAt?: Date;
     createdBy?: Interfaces.IUser;
     content?: string;
-    messengerId?: string;
+    messenger?: string;
   }
 
   export interface INotificationResponse {
