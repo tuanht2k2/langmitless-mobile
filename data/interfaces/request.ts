@@ -117,4 +117,9 @@ export namespace RequestInterfaces {
     name?: string;
     language?: string;
   }
+
+  export interface IEditCrashRequest {
+    error?: string;
+    type?: "NETWORK_ERROR" | "CLIENT_ERROR";
+  }
 }

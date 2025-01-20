@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { loadAccount, login, logout } from "@/redux/reducers/authSlice";
 import accountService from "@/services/accountService";
-import { loaded, noticeHired } from "@/redux/reducers/globalSlide";
+import { loaded, noticeHired, setApiUrl } from "@/redux/reducers/globalSlide";
 import Toast from "react-native-toast-message";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
@@ -133,6 +133,15 @@ export default function PrivateLayout() {
     AppState.addEventListener("change", updateStatus);
 
     return () => {};
+  }, []);
+
+  const getApiUrl = async () => {
+    const apiUrl = await CommonService.getApiUrl();
+    dispatch(setApiUrl(apiUrl || ""));
+  };
+
+  useEffect(() => {
+    getApiUrl();
   }, []);
 
   return (

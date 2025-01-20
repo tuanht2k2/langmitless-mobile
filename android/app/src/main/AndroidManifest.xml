@@ -33,7 +33,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="engfinity"/>
-        <data android:scheme="com.tuanht2k2.connectify"/>
+        <data android:scheme="com.tuanht2k2.engfinity"/>
         <data android:scheme="exp+engfinity"/>
       </intent-filter>
     </activity>

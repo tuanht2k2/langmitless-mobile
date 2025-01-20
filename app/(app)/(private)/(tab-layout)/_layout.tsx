@@ -1,15 +1,12 @@
-import { Tabs, useRouter } from "expo-router";
-import React, { useContext, useEffect, useState } from "react";
+import { Tabs } from "expo-router";
+import React from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { Button, Dialog, Icon } from "@rneui/themed";
-import { logout } from "@/redux/reducers/authSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import AvatarComponent from "@/components/Avatar";
 import color from "@/assets/styles/color";
 
@@ -27,7 +24,8 @@ interface ITab {
     | "settings"
     | "videocam"
     | "person-circle"
-    | "cellular";
+    | "cellular"
+    | "cloud-download";
 }
 
 const TABS: ITab[] = [
@@ -35,6 +33,7 @@ const TABS: ITab[] = [
   { name: "learn-with-teacher", title: "Học cùng giáo viên", icon: "videocam" },
   { name: "topic", title: "Khóa học", icon: "cellular" },
   { name: "account", title: "Tôi", icon: "person-circle" },
+  { name: "file-download", title: "Tải file", icon: "cloud-download" },
 ];
 
 export default function TabLayout() {

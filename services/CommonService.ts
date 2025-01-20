@@ -1,5 +1,5 @@
 import { ComponentInterfaces } from "@/constants/component";
-import { LANGUAGES } from "@/constants/constant";
+import { LANGUAGES, REGION_MAP } from "@/constants/constant";
 import { Interfaces } from "@/data/interfaces/model";
 import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 import Toast from "react-native-toast-message";
@@ -67,6 +67,15 @@ const CommonService = {
     } else {
       dispatch(overlayLoaded());
     }
+  },
+  getApiUrl: async () => {
+    try {
+      const res = await fetch("https://ipinfo.io/42.119.156.213/json");
+      const data = await res.json();
+
+      const country = data.country || "VN";
+      return REGION_MAP[country] || process.env.EXPO_PUBLIC_BASE_URL;
+    } catch (error) {}
   },
 };
 

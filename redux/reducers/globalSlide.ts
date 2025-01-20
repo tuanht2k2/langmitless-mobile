@@ -6,6 +6,7 @@ interface GlobalState {
   isOverlayLoading: boolean;
   hireNotification: ResponseInterfaces.IHireResponse | null;
   chatbotVisible: boolean;
+  apiUrl: string;
 }
 
 const initialState: GlobalState = {
@@ -13,6 +14,7 @@ const initialState: GlobalState = {
   isOverlayLoading: false,
   hireNotification: null,
   chatbotVisible: true,
+  apiUrl: "",
 };
 
 const globalSlice = createSlice({
@@ -46,6 +48,9 @@ const globalSlice = createSlice({
     hideChatbot(state) {
       state.chatbotVisible = false;
     },
+    setApiUrl(state, action: PayloadAction<string>) {
+      state.apiUrl = action.payload;
+    },
   },
 });
 
@@ -56,5 +61,6 @@ export const {
   overlayLoading,
   noticeHired,
   clearHired,
+  setApiUrl,
 } = globalSlice.actions;
 export default globalSlice.reducer;

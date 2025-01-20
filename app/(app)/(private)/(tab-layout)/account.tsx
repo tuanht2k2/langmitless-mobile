@@ -1,13 +1,16 @@
 import color from "@/assets/styles/color";
 import GlobalStyle from "@/assets/styles/globalStyles";
 import { logout } from "@/redux/reducers/authSlice";
+import { RootState } from "@/redux/store";
+import crashService from "@/services/crashService";
+import testConnectionService from "@/services/testConnectionService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Icon } from "@rneui/themed";
 import { Href, Link, useRouter } from "expo-router";
 import React from "react";
 
 import { Text, TouchableOpacity, View } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface IMenuItem {
   icon: string;
@@ -40,12 +43,19 @@ const MENU: IMenuItem[] = [
 function ProfileScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const apiUrl = useSelector((state: RootState) => state.global.apiUrl);
 
   const handleLogout = () => {
     AsyncStorage.clear().then(() => {
       dispatch(logout());
       router.replace("/login");
     });
+  };
+
+  const testConnection = async () => {
+    // const res = await testConnectionService(apiUrl);
+    const res = await testConnectionService("http://3.101.24.105:8080/api/v1");
+    console.log(res.data);
   };
 
   return (
@@ -111,6 +121,23 @@ function ProfileScreen() {
           ))}
         </View>
       </View>
+      <TouchableOpacity onPress={testConnection}>
+        <Text
+          style={{
+            color: color.textMain,
+            fontWeight: "bold",
+            fontSize: 15,
+            textAlign: "center",
+            borderRadius: 10,
+            backgroundColor: color.white1,
+            padding: 10,
+            borderWidth: 1,
+            borderColor: color.grey2,
+          }}
+        >
+          Kiểm tra kết nối
+        </Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={handleLogout}>
         <Text
           style={{

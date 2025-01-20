@@ -1,4 +1,4 @@
-package com.tuanht2k2.connectify
+package com.tuanht2k2.engfinity
 
 import android.app.Application
 import android.content.res.Configuration

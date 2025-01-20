@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import React from "react";
 
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { store } from "@/redux/store";
 import LoadingLayout from "@/components/Loading";
 import { GestureHandlerRootView } from "react-native-gesture-handler";

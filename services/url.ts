@@ -89,3 +89,13 @@ export enum QUESTION_URL {
   BASE = "/questions",
   SEARCH = "/questions/search",
 }
+
+export enum FILE_URL {
+  BASE = "/files",
+  SEARCH = "/files/search",
+}
+
+export enum CRASH_URL {
+  BASE = "/crashes",
+  STATISTICS = "/crashes/statistics",
+}
