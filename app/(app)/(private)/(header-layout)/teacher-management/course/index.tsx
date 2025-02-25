@@ -46,6 +46,7 @@ function YourCourseScreen() {
       cost: "",
       language: "",
       id: "",
+      level: 0,
     },
   });
 
@@ -97,15 +98,17 @@ function YourCourseScreen() {
         cost: data.cost,
         description: data.description,
         language: data.language,
+        level: data.level,
       };
       const res = data.id
         ? await courseService.edit(request)
         : await courseService.create(request);
       CommonService.showToast("success", "Thành công");
       reset();
+      setModalVisible(false);
       setSearchRequest((prev) => ({ ...prev }));
     } catch (error) {
-      CommonService.showToast("error", "Thành công");
+      CommonService.showToast("error", "Đã xảy ra lỗi!");
     }
     dispatch(overlayLoaded());
   };
@@ -123,6 +126,7 @@ function YourCourseScreen() {
             setValue("description", data.description || "");
             setValue("language", data.language || "");
             setValue("name", data.name || "");
+            setValue("level", data.level || 0);
             toggleModal();
           }}
         />

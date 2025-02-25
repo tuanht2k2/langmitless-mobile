@@ -2,6 +2,7 @@ import color from "@/assets/styles/color";
 import { Icon } from "@rneui/themed";
 import React from "react";
 import {
+  ActivityIndicator,
   Image,
   ImageSourcePropType,
   StyleProp,
@@ -21,12 +22,13 @@ interface Props {
   color?: string;
   disabled?: boolean;
   style?: ViewStyle;
+  loading?: boolean;
 }
 
 function IconButtonComponent(props: Props) {
   return (
     <TouchableOpacity
-      disabled={props.disabled}
+      disabled={props.disabled || props.loading}
       onPress={props.onPress}
       style={{
         borderRadius: props.label ? 15 : 100,
@@ -40,33 +42,39 @@ function IconButtonComponent(props: Props) {
         ...props.style,
       }}
     >
-      {props.image && (
-        <Image
-          source={props.image}
-          style={{
-            height: props.size || 25,
-            width: props.size || 25,
-            objectFit: "contain",
-          }}
-        />
-      )}
-      {props.icon && (
-        <Icon
-          name={props.icon}
-          color={props.disabled ? color.textGrey3 : props.iconColor}
-          size={props.size || 25}
-        />
-      )}
-      {props.label && (
-        <Text
-          style={{
-            color: props.labelColor || color.textMain,
-            fontSize: props.size ? props.size / 2 : 15,
-            fontWeight: "500",
-          }}
-        >
-          {props.label}
-        </Text>
+      {props.loading ? (
+        <ActivityIndicator color={color.textMain} />
+      ) : (
+        <>
+          {props.image && (
+            <Image
+              source={props.image}
+              style={{
+                height: props.size || 25,
+                width: props.size || 25,
+                objectFit: "contain",
+              }}
+            />
+          )}
+          {props.icon && (
+            <Icon
+              name={props.icon}
+              color={props.disabled ? color.textGrey3 : props.iconColor}
+              size={props.size || 25}
+            />
+          )}
+          {props.label && (
+            <Text
+              style={{
+                color: props.labelColor || color.textMain,
+                fontSize: props.size ? props.size / 2 : 15,
+                fontWeight: "500",
+              }}
+            >
+              {props.label}
+            </Text>
+          )}
+        </>
       )}
     </TouchableOpacity>
   );

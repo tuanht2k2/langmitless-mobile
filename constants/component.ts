@@ -35,4 +35,8 @@ export namespace ComponentInterfaces {
     iconColor?: string;
     img?: ImageSourcePropType;
   }
+
+  export interface ITab {
+    title: string;
+  }
 }

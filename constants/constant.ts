@@ -31,3 +31,26 @@ export const LANGUAGES: ComponentInterfaces.IDropdownOption<string>[] = [
     img: JapFlag,
   },
 ];
+
+export const COURSE_LEVELS: ComponentInterfaces.IDropdownOption<number>[] = [
+  {
+    name: "Cơ bản",
+    code: 0,
+  },
+  {
+    name: "Trung cấp",
+    code: 1,
+  },
+  {
+    name: "Nâng cao",
+    code: 2,
+  },
+  {
+    name: "Chuyên sâu",
+    code: 3,
+  },
+  {
+    name: "Chuyên gia",
+    code: 4,
+  },
+];

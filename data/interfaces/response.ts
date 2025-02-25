@@ -71,6 +71,7 @@ export namespace ResponseInterfaces {
     description?: string;
     cost?: number;
     language?: string;
+    level?: number;
     members?: Interfaces.IAccount[];
     topics?: ITopicResponse[];
   }
@@ -85,5 +86,11 @@ export namespace ResponseInterfaces {
     id?: string;
     name?: string;
     language?: string;
+  }
+
+  export interface IChatbotResponse {
+    type?: "QA" | "COURSE" | "TEACHER";
+    message: string;
+    data?: [];
   }
 }

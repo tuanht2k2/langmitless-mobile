@@ -59,8 +59,11 @@ const color = {
   grey4: "#7f8c8d",
   grey5: "#4d5656",
 
-  yellow1: "#faf8bf",
-  yellow2: "#FFAD33",
+  yellow1: "#FAF8BF",
+  yellow2: "#F8E08A",
+  yellow3: "#F5C750",
+  yellow4: "#F2A92E",
+  yellow5: "#FFAD33",
 
   blue1: "#244f71",
 
@@ -70,7 +73,7 @@ const color = {
   extraLightOverlay: "#5a5a5a0d",
   extraBlueOverlay: "#002fff0f",
 
-  textWhite1: "#d3dede",
+  textWhite1: "#ffffff",
   textWhite2: "#fdfdfd",
   textBlack: "#000000",
   textBlack1: "#656565",
@@ -114,6 +117,13 @@ const color = {
   textSuccess3: "#27ae60",
   textSuccess4: "#1f844b",
   textSuccess5: "#155c35",
+
+  textYellow1: "#A68D2A",
+  textYellow2: "#8C6E14",
+  textYellow3: "#7A570F",
+  textYellow4: "#6B420A",
+  textYellow5: "#5A3005",
+
   textMain: "#2C1F50",
 
   background: "#F8F8FA",

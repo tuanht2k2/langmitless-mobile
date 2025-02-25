@@ -3,7 +3,7 @@ import React from "react";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import { ScrollView, TextInput, View } from "react-native";
 import DropdownComponent from "./Dropdown";
-import { LANGUAGES } from "@/constants/constant";
+import { COURSE_LEVELS, LANGUAGES } from "@/constants/constant";
 
 interface IProps {
   control: Control<any>;
@@ -12,6 +12,7 @@ interface IProps {
     description: string;
     cost: number;
     language: string;
+    level: number;
   }>;
 }
 
@@ -26,6 +27,14 @@ function CourseEditor(props: IProps) {
           control={props.control}
           errors={props.errors}
           name="language"
+        />
+        <DropdownComponent
+          options={COURSE_LEVELS}
+          placeholder="Chọn cấp độ"
+          placeholderStyle={{ color: color.textGrey3 }}
+          control={props.control}
+          errors={props.errors}
+          name="level"
         />
         <Controller
           control={props.control}

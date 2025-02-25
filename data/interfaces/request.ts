@@ -98,6 +98,7 @@ export namespace RequestInterfaces {
     language?: string;
     description?: string;
     cost?: number;
+    level?: number;
   }
 
   export interface IEditTopicRequest {
@@ -116,5 +117,10 @@ export namespace RequestInterfaces {
   export interface ISearchTagRequest {
     name?: string;
     language?: string;
+  }
+
+  export interface IChatBotRequest {
+    content: string;
+    type?: "COURSE" | "TEACHER" | "QA";
   }
 }
