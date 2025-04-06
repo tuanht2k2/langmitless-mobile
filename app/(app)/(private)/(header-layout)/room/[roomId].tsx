@@ -5,9 +5,9 @@ import { Interfaces } from "@/data/interfaces/model";
 import { RootState } from "@/redux/store";
 import roomService from "@/services/roomService";
 import getSocketClient from "@/utils/getSocketClient";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { ImageBackground, Modal, Text } from "react-native";
+import { AppState, ImageBackground, Modal, Text } from "react-native";
 import { View } from "react-native";
 import {
   mediaDevices,
@@ -24,6 +24,10 @@ import Stomp from "stompjs";
 import disconnectIcon from "@/assets/images/icons/disconnect.png";
 // @ts-ignore
 import noDataFoundImage from "@/assets/images/no_data_found.png";
+import ModalComponent from "@/components/Modal";
+import hireService from "@/services/hireService";
+import { ResponseInterfaces } from "@/data/interfaces/response";
+import { set } from "firebase/database";
 
 const configuration = {
   iceServers: [
@@ -42,6 +46,8 @@ function RoomScreen() {
   const [remoteStream, setRemoteStream] = useState<any | null>(null);
   const localPCRef = useRef<RTCPeerConnection | null>(null);
   const socketClientRef = useRef<Stomp.Client | null>(null);
+
+  const [endCall, setEndCall] = useState<boolean>(false);
 
   useEffect(() => {
     startLocalStream();
@@ -191,15 +197,6 @@ function RoomScreen() {
           roomService.sendWebRTCData(candidateData, socketClientRef.current);
         }
       });
-      // localPC.addEventListener("iceconnectionstatechange", () => {
-      //   alert("change");
-      //   console.log("ICE Connection State:", localPC.iceConnectionState);
-      //   if (localPC.iceConnectionState === "connected") {
-      //     console.log("P2P connection successful!");
-      //   } else if (localPC.iceConnectionState === "failed") {
-      //     console.error("P2P connection failed.");
-      //   }
-      // });
 
       localPCRef.current = localPC;
     } catch (error) {
@@ -233,9 +230,32 @@ function RoomScreen() {
     }
   };
 
+  const clearStream = () => {
+    if (localPCRef.current) {
+      localPCRef.current.close();
+      localPCRef.current = null;
+    }
+    if (localStream) {
+      localStream.getTracks().forEach((track: any) => {
+        track.stop();
+      });
+      setLocalStream(null);
+    }
+    if (remoteStream) {
+      remoteStream.getTracks().forEach((track: any) => {
+        track.stop();
+      });
+      setRemoteStream(null);
+    }
+  };
+
   useEffect(() => {
     if (!socketClientRef.current) return;
     setUpPeerConnection();
+
+    return () => {
+      // clearStream();
+    };
   }, [socketClientRef.current]);
 
   useEffect(() => {
@@ -262,6 +282,67 @@ function RoomScreen() {
         });
     };
   }, []);
+
+  const navigation = useNavigation();
+
+  const [hire, setHire] = useState<ResponseInterfaces.IHireResponse | null>(
+    null
+  );
+
+  // Handle app state changes
+  const handleGetHireDetails = async (id: string) => {
+    try {
+      const data: ResponseInterfaces.IHireResponse = await hireService.get(id);
+      if (data) setHire(data);
+    } catch (error) {
+      console.error("Error fetching hire details:", error);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+      setEndCall(true);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    if (!roomId) return;
+    handleGetHireDetails(roomId as string);
+
+    // const pingInterval = setInterval(() => {}, 10000);
+
+    return () => {
+      // clearInterval(pingInterval);
+    };
+  }, []);
+
+  const getTimeStatus = () => {
+    if (!hire || !hire.createdAt || !hire.totalTime) return 0; // 0: Lỗi; 1: Dưới 1/3 thời gian; 2: Trên 1/3 thời gian
+    const actualTime = new Date().getSeconds() - hire.createdAt.getSeconds();
+    const ratio = actualTime / hire.totalTime;
+    console.log("actualTime", actualTime);
+    console.log("hire.totalTime", hire.totalTime);
+    console.log("ratio", ratio);
+    return ratio < 0.33 ? 1 : 2;
+  };
+
+  const handleConfirmEndCall = () => {
+    try {
+      if (!hire) return;
+
+      clearStream();
+      if (socketClientRef.current) {
+        socketClientRef.current.disconnect(() => {
+          console.log("Web socket disconnected");
+        });
+      }
+    } catch (error) {
+      console.error("Error when handleConfirmEndCall:", error);
+    }
+  };
 
   // video call action view
   const [videoCallActionVisible, setVideoCallActionVisible] =
@@ -315,7 +396,14 @@ function RoomScreen() {
                 gap: 20,
               }}
             >
-              <IconButtonComponent color={color.blue1} image={disconnectIcon} />
+              <IconButtonComponent
+                color={color.blue1}
+                image={disconnectIcon}
+                onPress={() => {
+                  toggleVideoCallActionVisible();
+                  setEndCall(true);
+                }}
+              />
               <IconButtonComponent
                 icon="switch-camera"
                 iconColor={color.white1}
@@ -415,6 +503,47 @@ function RoomScreen() {
         </Text>
         <Button title="Bắt đầu" onClick={startCall} />
       </View> */}
+      <ModalComponent
+        visible={endCall}
+        titleStyle={{ color: color.red1 }}
+        title="Bạn có chắc chắn muốn kết thúc cuộc gọi không?"
+      >
+        <View
+          style={{
+            paddingVertical: 20,
+            gap: 20,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: color.blue1, fontSize: 17 }}>
+            Kết thúc cuộc gọi?
+          </Text>
+          {getTimeStatus() == 1 && (
+            <Text style={{ color: color.blue1, fontSize: 17 }}>
+              Cuộc gọi dưới 1/3 thời gian nên sẽ không được tính phí
+            </Text>
+          )}
+          <View
+            style={{
+              paddingVertical: 20,
+              gap: 20,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <Button title="Kết thúc" onClick={() => {}} />
+            <Button
+              title="Quay lại"
+              style={{ backgroundColor: color.primary4 }}
+              onClick={() => {
+                setEndCall(false);
+              }}
+            />
+          </View>
+        </View>
+      </ModalComponent>
     </ImageBackground>
   );
 }

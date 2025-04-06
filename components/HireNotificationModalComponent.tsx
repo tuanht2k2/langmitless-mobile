@@ -1,29 +1,19 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-} from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, Dimensions, Modal } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
-import { PanGestureHandler } from "react-native-gesture-handler";
-import { Icon } from "@rneui/themed";
 import color from "@/assets/styles/color";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { closeModal, clearHired } from "@/redux/reducers/globalSlide";
+import { clearHired } from "@/redux/reducers/globalSlide";
 import AvatarComponent from "./Avatar";
 import Button from "./Button";
 import hireService from "@/services/hireService";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import { useRouter } from "expo-router";
-// import { useNavigation } from "expo-router";
 
 const { height } = Dimensions.get("window");
 

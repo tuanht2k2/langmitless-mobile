@@ -24,6 +24,14 @@ const hireService = {
       handleError?.();
     }
   },
+
+  async get(id: string, handleError?: (error?: any) => void) {
+    try {
+      return apiService.get(`${HIRE_URL.BASE}/${id}`, null, handleError);
+    } catch (error) {
+      handleError?.();
+    }
+  },
 };
 
 export default hireService;

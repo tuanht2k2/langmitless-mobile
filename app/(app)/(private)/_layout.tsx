@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { loadAccount, login, logout } from "@/redux/reducers/authSlice";
 import accountService from "@/services/accountService";
-import { loaded, noticeHired } from "@/redux/reducers/globalSlide";
+import { clearHired, loaded, noticeHired } from "@/redux/reducers/globalSlide";
 import Toast from "react-native-toast-message";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
@@ -114,13 +114,15 @@ export default function PrivateLayout() {
   const hireListener = (hire: ResponseInterfaces.IHireResponse) => {
     if (!hire) return;
     if (account?.id === hire.teacher?.id) {
-      if (!hire.status) {
+      if (hire.status && hire.status === "PENDING") {
         dispatch(noticeHired(hire));
         // toggleHireNotificationAudio();
         return;
       }
       if (hire.status === "ACCEPTED") {
-        router.push(`/room/${hire.room?.id}`);
+        router.push(`/room/${hire.id}`);
+      } else {
+        dispatch(clearHired());
       }
     }
   };

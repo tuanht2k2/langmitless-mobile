@@ -61,7 +61,7 @@ export namespace ResponseInterfaces {
     teacher?: Interfaces.IUser;
     cost?: number;
     totalTime?: number;
-    status?: "ACCEPTED" | "REJECTED";
+    status?: "ACCEPTED" | "REJECTED" | "PENDING";
     room?: IRoomResponse;
   }
 
@@ -89,8 +89,8 @@ export namespace ResponseInterfaces {
   }
 
   export interface IChatbotResponse {
-    type?: "QA" | "COURSE" | "TEACHER";
     message: string;
-    data?: [];
+    courses?: ICourseResponse[];
+    type?: "ASK" | "ANSWER";
   }
 }
