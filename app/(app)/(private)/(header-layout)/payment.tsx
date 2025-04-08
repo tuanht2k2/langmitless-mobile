@@ -1,4 +1,4 @@
-import { ScrollView, Text, TextInput, View } from "react-native";
+import { Linking, ScrollView, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import Card from "@/components/Card";
 import { useSelector } from "react-redux";
@@ -18,6 +18,7 @@ import Button from "@/components/Button";
 import momoService from "@/services/momoService";
 import CommonService from "@/services/CommonService";
 import WebViewComponent from "@/components/WebView";
+import { WebViewNavigation } from "react-native-webview";
 
 function PaymentScreen() {
   const account = useSelector((state: RootState) => state.auth.account);
@@ -80,9 +81,35 @@ function PaymentScreen() {
     }
   };
 
+  const onShouldStartLoadWithRequest = (event: WebViewNavigation) => {
+    const rawUrl = event.url;
+    console.log("rawUrl", rawUrl);
+
+    if (rawUrl.startsWith("momo://")) {
+      const httpsIndex = rawUrl.indexOf("https://");
+
+      if (httpsIndex !== -1) {
+        const httpsUrl = rawUrl.substring(httpsIndex);
+
+        console.log("[Cleaned HTTPS URL]:", httpsUrl);
+
+        Linking.openURL(httpsUrl);
+
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   return (
     <View style={{ height: "100%", padding: 10 }}>
-      {webViewUrl && <WebViewComponent uri={webViewUrl} />}
+      {webViewUrl && (
+        <WebViewComponent
+          uri={webViewUrl}
+          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+        />
+      )}
       {!webViewUrl && (
         <ScrollView>
           <Card>

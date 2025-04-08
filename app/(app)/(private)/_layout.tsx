@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadAccount, login, logout } from "@/redux/reducers/authSlice";
 import accountService from "@/services/accountService";
 import { clearHired, loaded, noticeHired } from "@/redux/reducers/globalSlide";
-import Toast from "react-native-toast-message";
+import Toast, { ToastConfig } from "react-native-toast-message";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
 import useSocket from "@/utils/useSocket";
@@ -14,6 +14,8 @@ import { RootState } from "@/redux/store";
 import { Audio } from "expo-av";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import { AppState, AppStateStatus } from "react-native";
+import { ComponentInterfaces } from "@/constants/component";
+import ToastComponent from "@/components/ToastComponent";
 
 interface ITokenData {
   iss: string;
@@ -23,6 +25,10 @@ interface ITokenData {
   jti: string;
   id: string;
 }
+
+const toastConfig: ToastConfig = {
+  // customToast: (props : ComponentInterfaces.IToast) => <ToastComponent {...props} />
+};
 
 export default function PrivateLayout() {
   const dispatch = useDispatch();
@@ -97,7 +103,7 @@ export default function PrivateLayout() {
   }, []);
 
   const notice = (notification: ResponseInterfaces.INotificationResponse) => {
-    CommonService.showToast("error", "Thông báo", notification.message, false);
+    CommonService.showToast("info", "Thông báo", notification.message, false);
     playNotificationAudio();
   };
 

@@ -5,7 +5,7 @@ import { Interfaces } from "@/data/interfaces/model";
 import { RootState } from "@/redux/store";
 import roomService from "@/services/roomService";
 import getSocketClient from "@/utils/getSocketClient";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { AppState, ImageBackground, Modal, Text } from "react-native";
 import { View } from "react-native";
@@ -28,6 +28,9 @@ import ModalComponent from "@/components/Modal";
 import hireService from "@/services/hireService";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import { set } from "firebase/database";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import CommonService from "@/services/CommonService";
+import AvatarComponent from "@/components/Avatar";
 
 const configuration = {
   iceServers: [
@@ -292,8 +295,9 @@ function RoomScreen() {
   // Handle app state changes
   const handleGetHireDetails = async (id: string) => {
     try {
-      const data: ResponseInterfaces.IHireResponse = await hireService.get(id);
-      if (data) setHire(data);
+      const res: ResponseInterfaces.ICommonResponse<ResponseInterfaces.IHireResponse> =
+        await hireService.get(id);
+      if (res && res.data) setHire(res.data);
     } catch (error) {
       console.error("Error fetching hire details:", error);
     }
@@ -320,19 +324,32 @@ function RoomScreen() {
   }, []);
 
   const getTimeStatus = () => {
-    if (!hire || !hire.createdAt || !hire.totalTime) return 0; // 0: Lỗi; 1: Dưới 1/3 thời gian; 2: Trên 1/3 thời gian
-    const actualTime = new Date().getSeconds() - hire.createdAt.getSeconds();
+    if (!hire || !hire.createdAt || !hire.totalTime || !hire.createdAt)
+      return 0; // 0: Lỗi; 1: Dưới 1/3 thời gian; 2: Trên 1/3 thời gian
+
+    const actualTime =
+      (new Date().getSeconds() - new Date(hire.createdAt).getSeconds()) / 1000;
+
     const ratio = actualTime / hire.totalTime;
-    console.log("actualTime", actualTime);
-    console.log("hire.totalTime", hire.totalTime);
-    console.log("ratio", ratio);
     return ratio < 0.33 ? 1 : 2;
   };
 
-  const handleConfirmEndCall = () => {
+  const handleConfirmEndCall = async () => {
     try {
       if (!hire) return;
 
+      const request: RequestInterfaces.IEditHireRequest = {
+        id: roomId as string,
+        status: "ENDED",
+      };
+      const res: ResponseInterfaces.ICommonResponse<null> =
+        await hireService.updateStatus(request);
+      if (res.code !== 200) {
+        CommonService.showToast("error", res.message);
+        return;
+      }
+
+      setHire(res.data);
       clearStream();
       if (socketClientRef.current) {
         socketClientRef.current.disconnect(() => {
@@ -341,6 +358,10 @@ function RoomScreen() {
       }
     } catch (error) {
       console.error("Error when handleConfirmEndCall:", error);
+      CommonService.showToast(
+        "error",
+        "Có lỗi xảy ra trong quá trình kết thúc cuộc gọi. Vui lòng thử lại sau."
+      );
     }
   };
 
@@ -432,7 +453,18 @@ function RoomScreen() {
   };
 
   return (
-    <ImageBackground
+    // <ImageBackground
+    //   style={{
+    //     display: "flex",
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    //     flexDirection: "row",
+    //     height: "100%",
+    //     width: "100%",
+    //   }}
+    //   source={noDataFoundImage}
+    // >
+    <View
       style={{
         display: "flex",
         justifyContent: "center",
@@ -440,10 +472,10 @@ function RoomScreen() {
         flexDirection: "row",
         height: "100%",
         width: "100%",
+        backgroundColor: color.grey1,
       }}
-      source={noDataFoundImage}
     >
-      {remoteStream && (
+      {remoteStream && localStream && (
         <View
           style={{
             position: "relative",
@@ -487,64 +519,119 @@ function RoomScreen() {
             />
             <VideoCallActionView />
           </View>
+
+          <ModalComponent
+            visible={endCall}
+            titleStyle={{ color: color.red1 }}
+            title="Bạn có chắc chắn muốn kết thúc cuộc gọi không?"
+          >
+            <View
+              style={{
+                paddingVertical: 20,
+                gap: 20,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: color.blue1,
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                Kết thúc cuộc gọi?
+              </Text>
+              {getTimeStatus() == 1 && (
+                <Text
+                  style={{
+                    color: color.red3,
+                    fontSize: 17,
+                    textAlign: "center",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Cuộc gọi dưới 1/3 thời gian nên sẽ không được tính phí
+                </Text>
+              )}
+              <View
+                style={{
+                  paddingVertical: 20,
+                  gap: 20,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  title="Xác nhận"
+                  onClick={() => {
+                    handleConfirmEndCall();
+                  }}
+                />
+                <Button
+                  title="Quay lại"
+                  style={{ backgroundColor: color.primary4 }}
+                  onClick={() => {
+                    setEndCall(false);
+                  }}
+                />
+              </View>
+            </View>
+          </ModalComponent>
         </View>
       )}
-      {!remoteStream && (
+      {hire && hire.status !== "ENDED" && !remoteStream && (
         <View style={{ gap: 10 }}>
           <Text style={{ color: color.blue1, fontSize: 17 }}>
             Bắt đầu cuộc trò chuyện ngay
           </Text>
-          <Button title="Bắt đầu" onClick={startCall} />
-        </View>
-      )}
-      {/* <View style={{ gap: 10 }}>
-        <Text style={{ color: color.blue1, fontSize: 17 }}>
-          Bắt đầu cuộc trò chuyện ngay
-        </Text>
-        <Button title="Bắt đầu" onClick={startCall} />
-      </View> */}
-      <ModalComponent
-        visible={endCall}
-        titleStyle={{ color: color.red1 }}
-        title="Bạn có chắc chắn muốn kết thúc cuộc gọi không?"
-      >
-        <View
-          style={{
-            paddingVertical: 20,
-            gap: 20,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: color.blue1, fontSize: 17 }}>
-            Kết thúc cuộc gọi?
-          </Text>
-          {getTimeStatus() == 1 && (
-            <Text style={{ color: color.blue1, fontSize: 17 }}>
-              Cuộc gọi dưới 1/3 thời gian nên sẽ không được tính phí
-            </Text>
-          )}
           <View
             style={{
-              paddingVertical: 20,
-              gap: 20,
+              gap: 10,
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
             }}
           >
-            <Button title="Kết thúc" onClick={() => {}} />
-            <Button
-              title="Quay lại"
-              style={{ backgroundColor: color.primary4 }}
-              onClick={() => {
-                setEndCall(false);
-              }}
+            <AvatarComponent imageUrl={hire.teacher?.profileImage} size={70} />
+            <AvatarComponent
+              imageUrl={hire.createdBy?.profileImage}
+              size={70}
             />
           </View>
+          <Button title="Bắt đầu" onClick={startCall} />
         </View>
-      </ModalComponent>
-    </ImageBackground>
+      )}
+      {hire && hire.status === "ENDED" && (
+        <View style={{ gap: 10 }}>
+          <Text style={{ color: color.blue1, fontSize: 17 }}>
+            Cuộc gọi đã kết thúc
+          </Text>
+          <View
+            style={{
+              gap: 10,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <AvatarComponent imageUrl={hire.teacher?.profileImage} size={70} />
+            <AvatarComponent
+              imageUrl={hire.createdBy?.profileImage}
+              size={70}
+            />
+          </View>
+          <Button
+            title="Quay lại"
+            onClick={() => {
+              router.replace("/");
+            }}
+          />
+        </View>
+      )}
+      {/* </ImageBackground> */}
+    </View>
   );
 }
 

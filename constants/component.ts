@@ -39,4 +39,13 @@ export namespace ComponentInterfaces {
   export interface ITab {
     title: string;
   }
+
+  export interface IToast {
+    titleColor?: string;
+    contentColor?: string;
+    title: string;
+    content?: string;
+    onPress?: () => void;
+    autoHide?: boolean;
+  }
 }

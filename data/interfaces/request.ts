@@ -85,7 +85,7 @@ export namespace RequestInterfaces {
     id?: string;
     teacherId?: string;
     totalTime?: number;
-    status?: "ACCEPTED" | "REJECTED";
+    status?: "ACCEPTED" | "REJECTED" | "ENDED";
   }
 
   export interface ISearchCourseRequest extends ICommonSearchRequest {
