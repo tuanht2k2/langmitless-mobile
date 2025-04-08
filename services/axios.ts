@@ -31,6 +31,15 @@ export const getApiConfig = async () => {
   return config;
 };
 
+export const getWebsocketHeaders = async () => {
+  const token = await AsyncStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  return headers;
+};
+
 export const apiService = {
   post: async (url: string, body: any, handleError?: (error?: any) => void) => {
     const config = await getApiConfig();

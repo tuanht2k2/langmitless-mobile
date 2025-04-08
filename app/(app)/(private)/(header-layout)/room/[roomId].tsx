@@ -5,9 +5,9 @@ import { Interfaces } from "@/data/interfaces/model";
 import { RootState } from "@/redux/store";
 import roomService from "@/services/roomService";
 import getSocketClient from "@/utils/getSocketClient";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { ImageBackground, Modal, Text } from "react-native";
+import { AppState, ImageBackground, Modal, Text } from "react-native";
 import { View } from "react-native";
 import {
   mediaDevices,
@@ -24,6 +24,13 @@ import Stomp from "stompjs";
 import disconnectIcon from "@/assets/images/icons/disconnect.png";
 // @ts-ignore
 import noDataFoundImage from "@/assets/images/no_data_found.png";
+import ModalComponent from "@/components/Modal";
+import hireService from "@/services/hireService";
+import { ResponseInterfaces } from "@/data/interfaces/response";
+import { set } from "firebase/database";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import CommonService from "@/services/CommonService";
+import AvatarComponent from "@/components/Avatar";
 
 const configuration = {
   iceServers: [
@@ -42,6 +49,8 @@ function RoomScreen() {
   const [remoteStream, setRemoteStream] = useState<any | null>(null);
   const localPCRef = useRef<RTCPeerConnection | null>(null);
   const socketClientRef = useRef<Stomp.Client | null>(null);
+
+  const [endCall, setEndCall] = useState<boolean>(false);
 
   useEffect(() => {
     startLocalStream();
@@ -191,15 +200,6 @@ function RoomScreen() {
           roomService.sendWebRTCData(candidateData, socketClientRef.current);
         }
       });
-      // localPC.addEventListener("iceconnectionstatechange", () => {
-      //   alert("change");
-      //   console.log("ICE Connection State:", localPC.iceConnectionState);
-      //   if (localPC.iceConnectionState === "connected") {
-      //     console.log("P2P connection successful!");
-      //   } else if (localPC.iceConnectionState === "failed") {
-      //     console.error("P2P connection failed.");
-      //   }
-      // });
 
       localPCRef.current = localPC;
     } catch (error) {
@@ -233,9 +233,32 @@ function RoomScreen() {
     }
   };
 
+  const clearStream = () => {
+    if (localPCRef.current) {
+      localPCRef.current.close();
+      localPCRef.current = null;
+    }
+    if (localStream) {
+      localStream.getTracks().forEach((track: any) => {
+        track.stop();
+      });
+      setLocalStream(null);
+    }
+    if (remoteStream) {
+      remoteStream.getTracks().forEach((track: any) => {
+        track.stop();
+      });
+      setRemoteStream(null);
+    }
+  };
+
   useEffect(() => {
     if (!socketClientRef.current) return;
     setUpPeerConnection();
+
+    return () => {
+      // clearStream();
+    };
   }, [socketClientRef.current]);
 
   useEffect(() => {
@@ -262,6 +285,85 @@ function RoomScreen() {
         });
     };
   }, []);
+
+  const navigation = useNavigation();
+
+  const [hire, setHire] = useState<ResponseInterfaces.IHireResponse | null>(
+    null
+  );
+
+  // Handle app state changes
+  const handleGetHireDetails = async (id: string) => {
+    try {
+      const res: ResponseInterfaces.ICommonResponse<ResponseInterfaces.IHireResponse> =
+        await hireService.get(id);
+      if (res && res.data) setHire(res.data);
+    } catch (error) {
+      console.error("Error fetching hire details:", error);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+      setEndCall(true);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    if (!roomId) return;
+    handleGetHireDetails(roomId as string);
+
+    // const pingInterval = setInterval(() => {}, 10000);
+
+    return () => {
+      // clearInterval(pingInterval);
+    };
+  }, []);
+
+  const getTimeStatus = () => {
+    if (!hire || !hire.createdAt || !hire.totalTime || !hire.createdAt)
+      return 0; // 0: Lỗi; 1: Dưới 1/3 thời gian; 2: Trên 1/3 thời gian
+
+    const actualTime =
+      (new Date().getSeconds() - new Date(hire.createdAt).getSeconds()) / 1000;
+
+    const ratio = actualTime / hire.totalTime;
+    return ratio < 0.33 ? 1 : 2;
+  };
+
+  const handleConfirmEndCall = async () => {
+    try {
+      if (!hire) return;
+
+      const request: RequestInterfaces.IEditHireRequest = {
+        id: roomId as string,
+        status: "ENDED",
+      };
+      const res: ResponseInterfaces.ICommonResponse<null> =
+        await hireService.updateStatus(request);
+      if (res.code !== 200) {
+        CommonService.showToast("error", res.message);
+        return;
+      }
+
+      setHire(res.data);
+      clearStream();
+      if (socketClientRef.current) {
+        socketClientRef.current.disconnect(() => {
+          console.log("Web socket disconnected");
+        });
+      }
+    } catch (error) {
+      console.error("Error when handleConfirmEndCall:", error);
+      CommonService.showToast(
+        "error",
+        "Có lỗi xảy ra trong quá trình kết thúc cuộc gọi. Vui lòng thử lại sau."
+      );
+    }
+  };
 
   // video call action view
   const [videoCallActionVisible, setVideoCallActionVisible] =
@@ -315,7 +417,14 @@ function RoomScreen() {
                 gap: 20,
               }}
             >
-              <IconButtonComponent color={color.blue1} image={disconnectIcon} />
+              <IconButtonComponent
+                color={color.blue1}
+                image={disconnectIcon}
+                onPress={() => {
+                  toggleVideoCallActionVisible();
+                  setEndCall(true);
+                }}
+              />
               <IconButtonComponent
                 icon="switch-camera"
                 iconColor={color.white1}
@@ -344,7 +453,18 @@ function RoomScreen() {
   };
 
   return (
-    <ImageBackground
+    // <ImageBackground
+    //   style={{
+    //     display: "flex",
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    //     flexDirection: "row",
+    //     height: "100%",
+    //     width: "100%",
+    //   }}
+    //   source={noDataFoundImage}
+    // >
+    <View
       style={{
         display: "flex",
         justifyContent: "center",
@@ -352,10 +472,10 @@ function RoomScreen() {
         flexDirection: "row",
         height: "100%",
         width: "100%",
+        backgroundColor: color.grey1,
       }}
-      source={noDataFoundImage}
     >
-      {remoteStream && (
+      {remoteStream && localStream && (
         <View
           style={{
             position: "relative",
@@ -399,23 +519,119 @@ function RoomScreen() {
             />
             <VideoCallActionView />
           </View>
+
+          <ModalComponent
+            visible={endCall}
+            titleStyle={{ color: color.red1 }}
+            title="Bạn có chắc chắn muốn kết thúc cuộc gọi không?"
+          >
+            <View
+              style={{
+                paddingVertical: 20,
+                gap: 20,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: color.blue1,
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                Kết thúc cuộc gọi?
+              </Text>
+              {getTimeStatus() == 1 && (
+                <Text
+                  style={{
+                    color: color.red3,
+                    fontSize: 17,
+                    textAlign: "center",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Cuộc gọi dưới 1/3 thời gian nên sẽ không được tính phí
+                </Text>
+              )}
+              <View
+                style={{
+                  paddingVertical: 20,
+                  gap: 20,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  title="Xác nhận"
+                  onClick={() => {
+                    handleConfirmEndCall();
+                  }}
+                />
+                <Button
+                  title="Quay lại"
+                  style={{ backgroundColor: color.primary4 }}
+                  onClick={() => {
+                    setEndCall(false);
+                  }}
+                />
+              </View>
+            </View>
+          </ModalComponent>
         </View>
       )}
-      {!remoteStream && (
+      {hire && hire.status !== "ENDED" && !remoteStream && (
         <View style={{ gap: 10 }}>
           <Text style={{ color: color.blue1, fontSize: 17 }}>
             Bắt đầu cuộc trò chuyện ngay
           </Text>
+          <View
+            style={{
+              gap: 10,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <AvatarComponent imageUrl={hire.teacher?.profileImage} size={70} />
+            <AvatarComponent
+              imageUrl={hire.createdBy?.profileImage}
+              size={70}
+            />
+          </View>
           <Button title="Bắt đầu" onClick={startCall} />
         </View>
       )}
-      {/* <View style={{ gap: 10 }}>
-        <Text style={{ color: color.blue1, fontSize: 17 }}>
-          Bắt đầu cuộc trò chuyện ngay
-        </Text>
-        <Button title="Bắt đầu" onClick={startCall} />
-      </View> */}
-    </ImageBackground>
+      {hire && hire.status === "ENDED" && (
+        <View style={{ gap: 10 }}>
+          <Text style={{ color: color.blue1, fontSize: 17 }}>
+            Cuộc gọi đã kết thúc
+          </Text>
+          <View
+            style={{
+              gap: 10,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <AvatarComponent imageUrl={hire.teacher?.profileImage} size={70} />
+            <AvatarComponent
+              imageUrl={hire.createdBy?.profileImage}
+              size={70}
+            />
+          </View>
+          <Button
+            title="Quay lại"
+            onClick={() => {
+              router.replace("/");
+            }}
+          />
+        </View>
+      )}
+      {/* </ImageBackground> */}
+    </View>
   );
 }
 

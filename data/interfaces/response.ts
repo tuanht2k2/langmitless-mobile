@@ -47,6 +47,7 @@ export namespace ResponseInterfaces {
 
   export interface INotificationResponse {
     message?: string;
+    message2?: string;
   }
 
   export interface IRoomResponse extends Interfaces.IEntity {
@@ -61,7 +62,7 @@ export namespace ResponseInterfaces {
     teacher?: Interfaces.IUser;
     cost?: number;
     totalTime?: number;
-    status?: "ACCEPTED" | "REJECTED";
+    status?: "ACCEPTED" | "REJECTED" | "PENDING" | "ENDED";
     room?: IRoomResponse;
   }
 
@@ -89,8 +90,8 @@ export namespace ResponseInterfaces {
   }
 
   export interface IChatbotResponse {
-    type?: "QA" | "COURSE" | "TEACHER";
     message: string;
-    data?: [];
+    courses?: ICourseResponse[];
+    type?: "ASK" | "ANSWER";
   }
 }

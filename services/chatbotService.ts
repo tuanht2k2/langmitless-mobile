@@ -1,11 +1,10 @@
-import { RequestInterfaces } from "@/data/interfaces/request";
 import { apiService } from "./axios";
 import { CHATBOT_URL } from "./url";
 
 const chatbotService = {
-  async getResponse(request: RequestInterfaces.IChatBotRequest) {
+  async ask(message: string) {
     try {
-      return apiService.post(CHATBOT_URL.GET_RESPONSE, request);
+      return apiService.post(CHATBOT_URL.ASK, { message });
     } catch (error) {
       throw error;
     }
