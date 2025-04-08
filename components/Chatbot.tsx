@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import color from "@/assets/styles/color";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import ModalComponent from "./Modal";
 import Draggable from "react-native-draggable";
 import GlobalStyle from "@/assets/styles/globalStyles";
@@ -29,16 +29,22 @@ import { ResponseInterfaces } from "@/data/interfaces/response";
 import { set } from "firebase/database";
 import CommonService from "@/services/CommonService";
 import { useRouter } from "expo-router";
-import { Icon } from "@rneui/themed";
+import { Divider, Icon } from "@rneui/themed";
+import useSocket from "@/utils/useSocket";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import getSocketClient from "@/utils/getSocketClient";
+import Stomp from "stompjs";
+import { getApiConfig, getWebsocketHeaders } from "@/services/axios";
 
 const { height, width } = Dimensions.get("window");
 
 const TABS: ComponentInterfaces.ITab[] = [
   {
-    title: "Câu hỏi thường gặp",
+    title: "Tìm kiếm khóa học",
   },
   {
-    title: "Tìm kiếm khóa học",
+    title: "Câu hỏi thường gặp",
   },
   {
     title: "Tìm kiếm giáo viên",
@@ -47,6 +53,7 @@ const TABS: ComponentInterfaces.ITab[] = [
 
 function ChatbotComponent() {
   const router = useRouter();
+  const account = useSelector((state: RootState) => state.auth.account);
 
   const [modalVisible, setModalVisible] = useState(false);
   const hideModal = () => {
@@ -73,21 +80,28 @@ function ChatbotComponent() {
   const onSubmit = async (data: any) => {
     setSending(true);
 
-    const request: RequestInterfaces.IChatBotRequest = {
-      type: tabIndex === 0 ? "QA" : tabIndex === 1 ? "COURSE" : "TEACHER",
-      content: data.content,
-    };
     try {
-      const res = await chatbotService.getResponse(request);
-      if (res.data) {
-        setMessages((prev) => [...prev, { message: data.content }, res.data]);
+      if (!account?.id) return;
+      const res = await chatbotService.ask(data.content);
+      if (res && res.code) {
+        setMessages((prev) => [
+          { message: data.content, type: "ASK" },
+          ...prev,
+        ]);
+        setValue("content", "");
       }
-      setValue("content", "");
     } catch (error) {
       CommonService.showToast("error", "Có lỗi xảy ra");
+      console.error(error);
     }
     setSending(false);
   };
+
+  const handleChatbotResponse = (data: ResponseInterfaces.IChatbotResponse) => {
+    setMessages((prev) => [data, ...prev]);
+  };
+
+  useSocket(`/topic/chatbot/${account?.id}/messages`, handleChatbotResponse);
 
   const CourseDetails = (course: ResponseInterfaces.ICourseResponse) => {
     const navigateToCourse = (id: string) => {
@@ -169,15 +183,21 @@ function ChatbotComponent() {
             tabs={TABS}
             styles={{ paddingHorizontal: 10 }}
           />
+          <Divider
+            style={{
+              backgroundColor: color.grey2,
+            }}
+          />
           <ScrollView>
-            <View style={{ flex: 1, padding: 10, height: "100%" }}>
+            <View style={{ flex: 1, padding: 10 }}>
               {messages.map((message, index) => (
                 <View
                   key={index}
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: message.type ? "flex-start" : "flex-end",
+                    justifyContent:
+                      message.type !== "ASK" ? "flex-start" : "flex-end",
                     marginBottom: 10,
                   }}
                 >
@@ -186,9 +206,8 @@ function ChatbotComponent() {
                       maxWidth: "70%",
                       padding: 10,
                       borderRadius: 10,
-                      backgroundColor: message.type
-                        ? color.primary1
-                        : color.pink3,
+                      backgroundColor:
+                        message.type !== "ASK" ? color.primary3 : color.pink3,
                       gap: 5,
                     }}
                   >
@@ -202,13 +221,9 @@ function ChatbotComponent() {
                         {message.message}
                       </Text>
                     )}
-                    {message.data && message.data.length > 0 && (
-                      // <ScrollView
-                      //   horizontal
-                      //   showsHorizontalScrollIndicator={false}
-                      // >
+                    {message.courses && message.courses.length > 0 && (
                       <View style={{ gap: 5 }}>
-                        {message.data.map((item: any, index) => (
+                        {message.courses.map((item: any, index) => (
                           <View
                             key={index}
                             style={{
@@ -221,13 +236,10 @@ function ChatbotComponent() {
                               marginVertical: 5,
                             }}
                           >
-                            {message.type === "COURSE" && (
-                              <CourseDetails {...item} />
-                            )}
+                            <CourseDetails {...item} />
                           </View>
                         ))}
                       </View>
-                      // </ScrollView>
                     )}
                   </View>
                 </View>
@@ -286,9 +298,9 @@ function ChatbotComponent() {
             <IconButtonComponent
               icon={"send"}
               onPress={handleSubmit(onSubmit)}
-              disabled={!watch("content").trim()}
+              disabled={!watch("content").trim() || sending}
               iconColor={color.textPrimary3}
-              loading={sending}
+              // loading={sending}
             />
           </View>
         </View>

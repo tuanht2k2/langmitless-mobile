@@ -10,13 +10,15 @@ const CommonService = {
     type: "success" | "error" | "info",
     text1: string = "",
     text2: string = "",
-    autoHide: boolean = true
+    autoHide: boolean = true,
+    onPress: () => void = () => {}
   ) => {
     Toast.show({
       type: type,
       text1: text1,
       text2: text2,
       autoHide,
+      onPress: onPress,
     });
   },
   uriListToFiles: async (

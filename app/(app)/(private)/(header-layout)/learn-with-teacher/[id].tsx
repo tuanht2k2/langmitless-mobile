@@ -18,6 +18,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
+import { set } from "react-hook-form";
 
 function RoomScreen() {
   const { id } = useLocalSearchParams();
@@ -25,6 +26,7 @@ function RoomScreen() {
 
   const account = useSelector((state: RootState) => state.auth.account);
   const dispatch = useDispatch();
+  const [hireResponse, setHireResponse] = useState<boolean>(false);
 
   const [teacherData, setTeacherData] = useState<Interfaces.IUser>({});
   const [loading, setLoading] = useState<boolean>(true);
@@ -42,13 +44,22 @@ function RoomScreen() {
   };
 
   const teacherListener = (hire: ResponseInterfaces.IHireResponse) => {
-    if (!hire.status || hire.createdBy?.id !== account?.id) return;
-    dispatch(overlayLoaded());
-    if (hire.status === "ACCEPTED") {
-      router.replace(`/room/${hire.room?.id}`);
+    if (
+      !hire.status ||
+      hire.status === "PENDING" ||
+      hire.createdBy?.id !== account?.id
+    ) {
       return;
     }
-    CommonService.showToast("info", "Giáo viên đã từ chối bạn!");
+    setHireResponse(true);
+    dispatch(overlayLoaded());
+
+    if (hire.status === "ACCEPTED") {
+      router.replace(`/room/${hire.id}`);
+      return;
+    } else if (hire.status === "REJECTED") {
+      CommonService.showToast("info", "Giáo viên đã từ chối bạn!");
+    }
   };
 
   useSocket(`/topic/teachers/${id}`, teacherListener);
@@ -64,7 +75,12 @@ function RoomScreen() {
         teacherId,
         totalTime,
       };
-      await hireService.create(request, showError);
+      const res: ResponseInterfaces.ICommonResponse<Object> =
+        await hireService.create(request, showError);
+      if (res.code != 200) {
+        dispatch(overlayLoaded());
+        showError(res.message);
+      }
     } catch (error) {
       dispatch(overlayLoaded());
       showError("Giáo viên đang bận, vui lòng thử lại sau!");

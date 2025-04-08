@@ -91,6 +91,7 @@ export enum QUESTION_URL {
 }
 
 export enum CHATBOT_URL {
-  BASE = "/chatbot",
+  BASE = "/business/chatbot",
   GET_RESPONSE = "/chatbot/get-response",
+  ASK = "/business/chatbot/ask",
 }
