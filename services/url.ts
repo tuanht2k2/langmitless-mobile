@@ -95,3 +95,8 @@ export enum CHATBOT_URL {
   GET_RESPONSE = "/chatbot/get-response",
   ASK = "/business/chatbot/ask",
 }
+
+export enum OTP_URL {
+  GET = "/otp/get",
+  VERIFY = "/otp/verify",
+}

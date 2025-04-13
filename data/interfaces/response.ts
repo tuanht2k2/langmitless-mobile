@@ -94,4 +94,10 @@ export namespace ResponseInterfaces {
     courses?: ICourseResponse[];
     type?: "ASK" | "ANSWER";
   }
+
+  export interface IOtpResponse {
+    correct: boolean;
+    remainSent: number;
+    retryTime: number;
+  }
 }

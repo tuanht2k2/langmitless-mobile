@@ -123,4 +123,8 @@ export namespace RequestInterfaces {
     content: string;
     type?: "COURSE" | "TEACHER" | "QA";
   }
+
+  export interface IOtpRequest {
+    otp: string;
+  }
 }

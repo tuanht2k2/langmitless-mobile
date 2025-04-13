@@ -36,7 +36,7 @@ const MENU: ComponentInterfaces.IMenuItem[] = [
   },
   {
     name: "Chuyển tiền",
-    to: "/payment/success",
+    to: "/banking",
     iconColor: color.primary3,
     labelColor: color.textMain,
     icon: "move-down",
