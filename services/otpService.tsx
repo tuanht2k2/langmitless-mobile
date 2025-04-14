@@ -10,7 +10,7 @@ const questionService = {
       throw error;
     }
   },
-  async verify(request: RequestInterfaces.IEditCourseRequest) {
+  async verify(request: RequestInterfaces.IOtpRequest) {
     try {
       return apiService.post(OTP_URL.VERIFY, request);
     } catch (error) {

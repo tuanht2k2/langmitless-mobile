@@ -96,8 +96,8 @@ export namespace ResponseInterfaces {
   }
 
   export interface IOtpResponse {
-    correct: boolean;
-    remainSent: number;
-    retryTime: number;
+    correct?: boolean;
+    remainSent?: number;
+    retryTime?: number;
   }
 }

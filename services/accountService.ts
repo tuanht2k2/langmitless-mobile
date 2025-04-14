@@ -23,6 +23,9 @@ const accountService = {
       config
     );
   },
+  async findByPhone(request: RequestInterfaces.ISearchAccountByPhoneNumbers) {
+    return apiService.post(ACCOUNT_URL.FIND_BY_PHONE, request);
+  },
   async becomeATeacher(request: RequestInterfaces.IEditAccountRequest) {
     return apiService.post(ACCOUNT_URL.BECOME_A_TEACHER, request);
   },

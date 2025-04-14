@@ -127,4 +127,13 @@ export namespace RequestInterfaces {
   export interface IOtpRequest {
     otp: string;
   }
+
+  export interface IEditPaymentRequest {
+    id?: string;
+    recever?: string;
+    amount?: number;
+    description?: string;
+    status?: "INIT" | "CANCEL" | "DONE";
+    type?: "DEPOSIT" | "PAYMENT" | "TRANSFER";
+  }
 }

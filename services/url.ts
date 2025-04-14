@@ -9,6 +9,7 @@ export enum ACCOUNT_URL {
   BASE = "accounts",
   SEARCH = "/accounts/search",
   SEARCH_BY_PHONE_NUMBERS = "/accounts/search-by-phone-numbers",
+  FIND_BY_PHONE = "/accounts/find-by-phone",
   BECOME_A_TEACHER = "/accounts/become-a-teacher",
   UPDATE_STATUS = "/accounts/update-status",
 }
@@ -99,4 +100,8 @@ export enum CHATBOT_URL {
 export enum OTP_URL {
   GET = "/otp/get",
   VERIFY = "/otp/verify",
+}
+
+export enum PAYMENT_URL {
+  CREATE = "/transfer/create",
 }
