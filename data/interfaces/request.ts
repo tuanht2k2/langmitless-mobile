@@ -136,4 +136,8 @@ export namespace RequestInterfaces {
     status?: "INIT" | "CANCEL" | "DONE";
     type?: "DEPOSIT" | "PAYMENT" | "TRANSFER";
   }
+
+  export interface ISearchHireHistoryRequest {
+    accountId?: string;
+  }
 }

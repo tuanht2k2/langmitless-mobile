@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 //@ts-ignore
 import bankingIcon from "@/assets/images/icons/banking.png";
 import paymentService from "@/services/paymentService";
+import { useRouter } from "expo-router";
 
 interface IConfirmModal {
   receiver: Interfaces.IUser;
@@ -45,9 +46,11 @@ function BankingScreen() {
   });
 
   const [btnLoading, setBtnLoading] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(true);
+  const [otpVerified, setOtpVerified] = useState(false);
   const [confirmModalData, setConfirmModalData] =
     useState<IConfirmModal | null>(null);
+
+  const router = useRouter();
 
   const showConfirmModal = async (data: any) => {
     try {
@@ -61,7 +64,7 @@ function BankingScreen() {
 
       const res: ResponseInterfaces.ICommonResponse<Interfaces.IUser> =
         await accountService.findByPhone(request);
-
+      setBtnLoading(false);
       if (res.code !== 200) {
         CommonService.showToast("error", res.message);
         return;
@@ -74,9 +77,9 @@ function BankingScreen() {
       });
     } catch (error) {
       console.log("Error:", error);
+      setBtnLoading(false);
       CommonService.showToast("error", "Đã có lỗi xảy ra");
     }
-    setBtnLoading(false);
   };
 
   const handleBanking = async () => {
@@ -93,14 +96,12 @@ function BankingScreen() {
       };
       const res: ResponseInterfaces.ICommonResponse<null> =
         await paymentService.create(request);
-      console.log("res ne", res);
       setBtnLoading(false);
       if (res.code !== 200) {
         CommonService.showToast("error", res.message);
         return;
-      } else {
-        CommonService.showToast("success", "Chuyển khoản thành công");
       }
+      router.replace("/");
     } catch (error) {
       CommonService.showToast("error", "Đã có lỗi xảy ra");
       setBtnLoading(false);

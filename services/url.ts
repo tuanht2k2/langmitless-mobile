@@ -12,6 +12,7 @@ export enum ACCOUNT_URL {
   FIND_BY_PHONE = "/accounts/find-by-phone",
   BECOME_A_TEACHER = "/accounts/become-a-teacher",
   UPDATE_STATUS = "/accounts/update-status",
+  SEARCH_HIRE_HISTORY = "/accounts/search-hire-history",
 }
 
 export enum POST_URL {

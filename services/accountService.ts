@@ -32,6 +32,11 @@ const accountService = {
   async updateStatus(request: RequestInterfaces.IEditAccountStatusRequest) {
     return apiService.post(ACCOUNT_URL.UPDATE_STATUS, request);
   },
+  async searchHireHistory(
+    request: RequestInterfaces.ISearchHireHistoryRequest
+  ) {
+    return apiService.post(ACCOUNT_URL.SEARCH_HIRE_HISTORY, request);
+  },
 };
 
 export default accountService;

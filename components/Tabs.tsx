@@ -27,7 +27,7 @@ function Tabs(props: IProps) {
             key={index}
             style={{
               backgroundColor:
-                props.activeIndex === index ? color.pink3 : color.white1,
+                props.activeIndex === index ? color.blue1 : color.white1,
               paddingVertical: 10,
               paddingHorizontal: 20,
               borderRadius: 15,
@@ -38,7 +38,8 @@ function Tabs(props: IProps) {
           >
             <Text
               style={{
-                color: props.activeIndex === index ? color.white1 : color.pink3,
+                color:
+                  props.activeIndex === index ? color.yellow1 : color.pink3,
                 fontSize: 16,
               }}
             >

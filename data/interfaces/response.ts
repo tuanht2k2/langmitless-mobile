@@ -64,6 +64,7 @@ export namespace ResponseInterfaces {
     totalTime?: number;
     status?: "ACCEPTED" | "REJECTED" | "PENDING" | "ENDED";
     room?: IRoomResponse;
+    actualTime?: number;
   }
 
   export interface ICourseResponse extends Interfaces.IEntity {
