@@ -46,9 +46,9 @@ const TABS: ComponentInterfaces.ITab[] = [
   {
     title: "Câu hỏi thường gặp",
   },
-  {
-    title: "Tìm kiếm giáo viên",
-  },
+  // {
+  //   title: "Tìm kiếm giáo viên",
+  // },
 ];
 
 function ChatbotComponent() {
@@ -82,14 +82,12 @@ function ChatbotComponent() {
 
     try {
       if (!account?.id) return;
+      setMessages((prev) => [...prev, { message: data.content, type: "ASK" }]);
+      setValue("content", "");
       const res = await chatbotService.ask(data.content);
-      if (res && res.code) {
-        setMessages((prev) => [
-          { message: data.content, type: "ASK" },
-          ...prev,
-        ]);
-        setValue("content", "");
-      }
+      // if (res && res.code) {
+
+      // }
     } catch (error) {
       CommonService.showToast("error", "Có lỗi xảy ra");
       console.error(error);
@@ -98,7 +96,7 @@ function ChatbotComponent() {
   };
 
   const handleChatbotResponse = (data: ResponseInterfaces.IChatbotResponse) => {
-    setMessages((prev) => [data, ...prev]);
+    setMessages((prev) => [...prev, data]);
   };
 
   useSocket(`/topic/chatbot/${account?.id}/messages`, handleChatbotResponse);
@@ -172,80 +170,84 @@ function ChatbotComponent() {
       >
         <View
           style={{
-            gap: 10,
-            backgroundColor: color.white2,
             flex: 1,
           }}
         >
-          <Tabs
-            activeIndex={tabIndex}
-            onChange={setTabIndex}
-            tabs={TABS}
-            styles={{ paddingHorizontal: 10 }}
-          />
-          <Divider
+          <View>
+            <Tabs
+              activeIndex={tabIndex}
+              onChange={setTabIndex}
+              tabs={TABS}
+              styles={{ paddingHorizontal: 10 }}
+            />
+          </View>
+
+          <ScrollView
             style={{
-              backgroundColor: color.grey2,
+              flex: 1,
+              backgroundColor: color.grey1,
+              margin: 10,
+              borderRadius: 10,
             }}
-          />
-          <ScrollView>
-            <View style={{ flex: 1, padding: 10 }}>
-              {messages.map((message, index) => (
+            contentContainerStyle={{ padding: 10 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {messages.map((message, index) => (
+              <View
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent:
+                    message.type !== "ASK" ? "flex-start" : "flex-end",
+                  marginBottom: 10,
+                }}
+              >
                 <View
-                  key={index}
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent:
-                      message.type !== "ASK" ? "flex-start" : "flex-end",
-                    marginBottom: 10,
+                    maxWidth: "70%",
+                    padding: 10,
+                    borderRadius: 10,
+                    backgroundColor:
+                      message.type !== "ASK" ? color.primary3 : color.pink3,
+                    gap: 5,
                   }}
                 >
-                  <View
-                    style={{
-                      maxWidth: "70%",
-                      padding: 10,
-                      borderRadius: 10,
-                      backgroundColor:
-                        message.type !== "ASK" ? color.primary3 : color.pink3,
-                      gap: 5,
-                    }}
-                  >
-                    {message.message && (
-                      <Text
-                        style={{
-                          color: color.textWhite1,
-                          fontSize: 16,
-                        }}
-                      >
-                        {message.message}
-                      </Text>
-                    )}
-                    {message.courses && message.courses.length > 0 && (
-                      <View style={{ gap: 5 }}>
-                        {message.courses.map((item: any, index) => (
-                          <View
-                            key={index}
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              alignItems: "center",
-                              padding: 5,
-                              backgroundColor: color.white1,
-                              borderRadius: 5,
-                              marginVertical: 5,
-                            }}
-                          >
-                            <CourseDetails {...item} />
-                          </View>
-                        ))}
-                      </View>
-                    )}
-                  </View>
+                  {message.message && (
+                    <Text
+                      style={{
+                        color: color.textWhite1,
+                        fontSize: 16,
+                      }}
+                    >
+                      {message.message}
+                    </Text>
+                  )}
+                  {message.courses && message.courses.length > 0 && (
+                    <View style={{ gap: 5 }}>
+                      {message.courses.map((item: any, index) => (
+                        <View
+                          key={index}
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            padding: 5,
+                            backgroundColor: color.white1,
+                            borderRadius: 5,
+                            marginVertical: 5,
+                          }}
+                        >
+                          <CourseDetails {...item} />
+                        </View>
+                      ))}
+                    </View>
+                  )}
                 </View>
-              ))}
-            </View>
+              </View>
+            ))}
           </ScrollView>
+
           <View
             style={{
               ...GlobalStyle.horizontalFlex,
@@ -263,10 +265,9 @@ function ChatbotComponent() {
               render={({ field: { onChange, onBlur, value } }) => (
                 <View
                   style={{
-                    display: "flex",
+                    flex: 1,
                     flexDirection: "row",
                     alignItems: "center",
-                    flex: 1,
                     borderWidth: 1,
                     borderColor: color.grey2,
                     borderRadius: 7,
@@ -275,16 +276,13 @@ function ChatbotComponent() {
                   <TextInput
                     placeholder="Bạn cần hỗ trợ gì?"
                     placeholderTextColor={color.textGrey3}
-                    style={[
-                      {
-                        // height: 50,
-                        backgroundColor: "#fff",
-                        paddingHorizontal: 15,
-                        borderRadius: 8,
-                        fontSize: 15,
-                        flex: 1,
-                      },
-                    ]}
+                    style={{
+                      backgroundColor: "#fff",
+                      paddingHorizontal: 15,
+                      borderRadius: 8,
+                      fontSize: 15,
+                      flex: 1,
+                    }}
                     autoCapitalize="none"
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -300,7 +298,6 @@ function ChatbotComponent() {
               onPress={handleSubmit(onSubmit)}
               disabled={!watch("content").trim() || sending}
               iconColor={color.textPrimary3}
-              // loading={sending}
             />
           </View>
         </View>
