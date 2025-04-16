@@ -23,11 +23,19 @@ const accountService = {
       config
     );
   },
+  async findByPhone(request: RequestInterfaces.ISearchAccountByPhoneNumbers) {
+    return apiService.post(ACCOUNT_URL.FIND_BY_PHONE, request);
+  },
   async becomeATeacher(request: RequestInterfaces.IEditAccountRequest) {
     return apiService.post(ACCOUNT_URL.BECOME_A_TEACHER, request);
   },
   async updateStatus(request: RequestInterfaces.IEditAccountStatusRequest) {
     return apiService.post(ACCOUNT_URL.UPDATE_STATUS, request);
+  },
+  async searchHireHistory(
+    request: RequestInterfaces.ISearchHireHistoryRequest
+  ) {
+    return apiService.post(ACCOUNT_URL.SEARCH_HIRE_HISTORY, request);
   },
 };
 
