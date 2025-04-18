@@ -35,9 +35,14 @@ function RoomScreen() {
 
   const getTeacherData = async (id: string) => {
     try {
-      const res = await accountService.getAccount(id);
-      if (res.data) setTeacherData(res.data?.data);
+      const request: RequestInterfaces.ISearchHireHistoryRequest = {
+        accountId: id,
+      };
+      const res: ResponseInterfaces.ICommonResponse<Interfaces.IUser> =
+        await accountService.searchHireHistory(request);
       setLoading(false);
+      if (res && res.data) setTeacherData(res.data);
+      console.log("res.data", res.data);
     } catch (error) {
       setLoading(false);
     }
@@ -111,16 +116,73 @@ function RoomScreen() {
           <ScrollView style={{}}>
             <Card styles={{ display: "flex", flexDirection: "row", gap: 20 }}>
               <AvatarComponent imageUrl={teacherData.profileImage} size={100} />
-              <View>
+              <View style={{ display: "flex", justifyContent: "center" }}>
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: 19,
                     fontWeight: "bold",
                     color: color.blue1,
                   }}
                 >
                   {teacherData.name}
                 </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: color.blue1,
+                  }}
+                >
+                  Giá tiền thuê:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: color.blue1,
+                  }}
+                >
+                  {teacherData.cost} VND/h
+                </Text>
+              </View>
+            </Card>
+            <Card styles={{ padding: 10, marginTop: 10 }}>
+              <Text style={{ fontSize: 17 }}>Lịch sử được thuê</Text>
+              <View style={{ gap: 10, marginTop: 10 }}>
+                {teacherData.hireHistory &&
+                  teacherData.hireHistory
+                    .filter(
+                      (hire: ResponseInterfaces.IHireResponse) =>
+                        hire.actualTime
+                    )
+                    .map((hire: ResponseInterfaces.IHireResponse, index) => (
+                      <View
+                        key={index}
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 5,
+                          borderWidth: 1,
+                          borderColor: color.grey1,
+                          borderRadius: 10,
+                          padding: 10,
+                        }}
+                      >
+                        <Text style={{ width: 20 }}>{index + 1}</Text>
+                        <AvatarComponent
+                          imageUrl={hire.createdBy?.profileImage}
+                        />
+                        <Text style={{ fontWeight: "bold" }}>
+                          {hire.createdBy?.name}
+                        </Text>
+                        <Text style={{ color: color.grey4 }}>
+                          Đã thuê{" "}
+                          {hire.actualTime
+                            ? Math.floor((hire.actualTime * 100) / 3600) / 100
+                            : 0}
+                          h
+                        </Text>
+                      </View>
+                    ))}
               </View>
             </Card>
           </ScrollView>

@@ -19,6 +19,10 @@ const ROUTES: IRoute[] = [
     title: "Thanh toán thành công",
   },
   {
+    name: "banking",
+    title: "Chuyển tiền",
+  },
+  {
     name: "payment-query",
     title: "Truy vấn giao dịch",
   },

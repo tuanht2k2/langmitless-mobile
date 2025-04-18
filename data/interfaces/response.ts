@@ -64,6 +64,7 @@ export namespace ResponseInterfaces {
     totalTime?: number;
     status?: "ACCEPTED" | "REJECTED" | "PENDING" | "ENDED";
     room?: IRoomResponse;
+    actualTime?: number;
   }
 
   export interface ICourseResponse extends Interfaces.IEntity {
@@ -95,6 +96,12 @@ export namespace ResponseInterfaces {
     type?: "ASK" | "ANSWER";
   }
 
+  export interface IOtpResponse {
+    correct?: boolean;
+    remainSent?: number;
+    retryTime?: number;
+  }
+
   export interface IQuestionResponse extends Interfaces.IEntity {
     id?: string;
     courseId?: string;
@@ -108,6 +115,6 @@ export namespace ResponseInterfaces {
   export interface IOptionResponse {
     id: string;
     content: string;
-    correct: boolean; 
+    correct: boolean;
   }
 }

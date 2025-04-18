@@ -21,6 +21,7 @@ export namespace Interfaces {
   export interface IUser extends IAccount {
     balance?: number;
     cost?: number;
+    hireHistory?: ResponseInterfaces.IHireResponse[];
   }
 
   export interface IMultipartFile {

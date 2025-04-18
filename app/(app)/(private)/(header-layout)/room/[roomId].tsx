@@ -625,6 +625,7 @@ function RoomScreen() {
           <Button
             title="Quay lại"
             onClick={() => {
+              console.log("go baclk to home");
               router.replace("/");
             }}
           />
