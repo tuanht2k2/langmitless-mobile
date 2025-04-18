@@ -123,4 +123,29 @@ export namespace RequestInterfaces {
     content: string;
     type?: "COURSE" | "TEACHER" | "QA";
   }
+
+  export interface ITopicsSearchRequest extends ICommonSearchRequest {
+    topicId?: string
+  }
+
+  export interface IMultipleChoiceRequest {
+    topicId?: string,
+    type?:"MultipleChoice" | "Pronunciation",
+    content:string,
+    options:IOptionRequest[];
+  }
+  export interface IOptionRequest{
+    content:string,
+    correct:boolean
+  }
+
+  export interface IQuestionSearchRequest extends ICommonSearchRequest {
+    topicId?: string
+  }
+
+  export interface IPronunciationRequest {
+    topicId?: string,
+    content:string,
+    audioSample:Blob,
+  }
 }

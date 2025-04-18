@@ -94,4 +94,20 @@ export namespace ResponseInterfaces {
     courses?: ICourseResponse[];
     type?: "ASK" | "ANSWER";
   }
+
+  export interface IQuestionResponse extends Interfaces.IEntity {
+    id?: string;
+    courseId?: string;
+    type?: string;
+    content?: string;
+    audioSample?: string | null;
+    option?: IOptionResponse[] | null;
+    members?: Interfaces.IAccount[];
+    topics?: ITopicResponse[];
+  }
+  export interface IOptionResponse {
+    id: string;
+    content: string;
+    correct: boolean; 
+  }
 }

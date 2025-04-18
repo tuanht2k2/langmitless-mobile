@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="541a91a8-f002-44a9-a5b2-a6bd7f55336f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/teacher-management/question/[topicId].tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/topics/[topicsId].tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/topics/_layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/QuestionEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/QuestionList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/QuestionMultipleChoiceEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/QuestionPronunciationEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/TopicListByCourse.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contexts/questionContext/QuestionProvider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contexts/questionContext/questionContext.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contexts/questionContext/useQuestion.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/teacher-management/course/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/teacher-management/course/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/teacher.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(app)/(private)/(header-layout)/teacher.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(app)/(private)/(tab-layout)/topic.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(app)/(private)/(tab-layout)/topic.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TopicList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TopicList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/interfaces/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/data/interfaces/request.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/interfaces/response.ts" beforeDir="false" afterPath="$PROJECT_DIR$/data/interfaces/response.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/reset-project.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/reset-project.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/questionService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/questionService.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/topicService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/topicService.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/url.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/url.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/hlong/question" />
+                    <option name="lastUsedInstant" value="1744643390" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1744643389" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2uyQnd30DljEqO3eSVB3gE8ZihA" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/hlong/question&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\dell\\Desktop\\projectNative\\langmitless-mobile\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.19416.2" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="541a91a8-f002-44a9-a5b2-a6bd7f55336f" name="Changes" comment="" />
+      <created>1743218503775</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743218503775</updated>
+      <workItem from="1743218509086" duration="3387000" />
+      <workItem from="1743222156707" duration="1427000" />
+      <workItem from="1743224663143" duration="6109000" />
+      <workItem from="1743237844638" duration="1690000" />
+      <workItem from="1743347132784" duration="36000" />
+      <workItem from="1743595405414" duration="2148000" />
+      <workItem from="1744639558162" duration="56606000" />
+      <workItem from="1744852488497" duration="396000" />
+      <workItem from="1744854162320" duration="23151000" />
+      <workItem from="1744898410414" duration="28361000" />
+      <workItem from="1744982216551" duration="3699000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -21,10 +21,10 @@ interface IRoute {
 const MENU: ComponentInterfaces.IMenuItem[] = [
   // {
   //   name: "Topic",
-  //   to: "/topic",
+  //   to: "/topics",
   //   iconColor: color.danger3,
   //   labelColor: color.textMain,
-  //   icon: "topic",
+  //   icon: "topics",
   // },
   {
     name: "Khóa học",
