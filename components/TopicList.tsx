@@ -18,6 +18,7 @@ import CommonService from "@/services/CommonService";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import topicService from "@/services/topicService";
 import { useDispatch } from "react-redux";
+import {router} from "expo-router";
 
 interface IProps {
   data: ResponseInterfaces.ITopicResponse[];
@@ -164,11 +165,11 @@ function TopicList(props: IProps) {
                 {editable && (
                   <View style={{ ...GlobalStyle.horizontalFlex, gap: 3 }}>
                     <IconButtonComponent
-                      icon="visibility"
-                      size={18}
+                      icon="chevron-right"
+                      size={20}
                       iconColor={color.pink3}
                       onPress={() => {
-                        // router.push(`/course/${data.id}`);
+                        router.push(`/teacher-management/question/${item.id}`);
                       }}
                     />
                   </View>

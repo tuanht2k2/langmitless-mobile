@@ -54,6 +54,10 @@ const ROUTES: IRoute[] = [
     name: "teacher-management/course/index",
     title: "Khóa học của bạn",
   },
+  {
+    name: "teacher-management/question/[topicId]",
+    title: "Danh sách câu hỏi",
+  },
 ];
 
 export default function HeaderLayout() {
