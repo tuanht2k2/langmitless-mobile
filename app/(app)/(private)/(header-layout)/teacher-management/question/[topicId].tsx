@@ -18,6 +18,7 @@ import {Feather} from "@expo/vector-icons";
 import ModalComponent from "@/components/Modal";
 import CommonService from "@/services/CommonService";
 import QuestionEditor from "@/components/QuestionEditor";
+import QuestionMultipleChoiceUpdate from "@/components/QuestionMultipleChoiceUpdate";
 
 interface IProps {
     data: ResponseInterfaces.ITopicResponse[];
@@ -29,9 +30,10 @@ function YourQuestionScreen(props: IProps) {
     const {topicId} = useLocalSearchParams();
     const loading = useSelector((state: RootState) => state.global.isOverlayLoading);
     const dispatch = useDispatch();
-    const router = useRouter();
     const [questions, setQuestion] = useState<ResponseInterfaces.IQuestionResponse[]>([]);
     const [filteredQuestions, setFilteredQuestions] = useState<ResponseInterfaces.IQuestionResponse[]>([]);
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);  // Modal chỉnh sửa
+    const [editQuestion, setEditQuestion] = useState<ResponseInterfaces.IQuestionResponse | null>(null);
     const [searchRequest, setSearchRequest] =
         useState<RequestInterfaces.IQuestionSearchRequest>({
             page: 0,
@@ -88,11 +90,49 @@ function YourQuestionScreen(props: IProps) {
         );
         setFilteredQuestions(filtered);
     };
+    const handleDeleteQuestion = async (questionId: string | undefined) => {
+        if (!questionId) return;
 
+        try {
+            dispatch(overlayLoading());
+            await questionService.deleteQuestion(questionId);
+            const updatedQuestions = questions.filter((q) => q.id !== questionId);
+            setQuestion(updatedQuestions);
+            CommonService.showToast("success", "Xoá thành công");
+            setFilteredQuestions(updatedQuestions);
+        } catch (error) {
+            console.error("Failed to delete question:", error);
+        } finally {
+            dispatch(overlayLoaded());
+        }
+    };
+    const handleUpdateQuestionMultipleChoice = async (questionId: string, updatedData: RequestInterfaces.IMultipleChoiceRequestUpdate) => {
+        if (!questionId) return;
 
+        try {
+            dispatch(overlayLoading());
+
+            await questionService.updateQuestionMultipleChoice(questionId, updatedData);
+
+            CommonService.showToast("success", "Cập nhật thành công");
+
+            // Cập nhật lại danh sách câu hỏi
+            await getData(searchRequest);
+
+            // Đóng modal
+            setIsEditModalVisible(false);
+            setEditQuestion(null);
+        } catch (error) {
+            console.error("❌ Lỗi cập nhật câu hỏi:", error);
+            CommonService.showToast("error", "Có lỗi xảy ra khi cập nhật câu hỏi");
+        } finally {
+            dispatch(overlayLoaded());
+        }
+    };
     useEffect(() => {
         getData(searchRequest);
     }, []);
+
     return (
         <>
             <View
@@ -154,7 +194,7 @@ function YourQuestionScreen(props: IProps) {
                         />
                     </View>
                     {!loading && (
-                        <Text style={{ padding: 5, width: "100%" }}>
+                        <Text style={{padding: 5, width: "100%"}}>
                             Tất cả: {filteredQuestions.length}
                         </Text>
                     )}
@@ -182,15 +222,24 @@ function YourQuestionScreen(props: IProps) {
                             data={filteredQuestions}
                             style={{padding: 1}}
                             actionBody={(item) => (
-                                <Feather
-                                    name="chevron-right"
-                                    size={22}
-                                    color={color.primary3}
-                                    style={{paddingRight:5}}
-                                    onPress={() => {
-                                        router.push(`/topics/${item.id}`);
-                                    }}
-                                />
+                                <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+                                    <Feather
+                                        name="trash-2"
+                                        size={20}
+                                        color="red"
+                                        onPress={() => handleDeleteQuestion(item.id)}
+                                    />
+                                    <Feather
+                                        name="edit"
+                                        size={22}
+                                        color="blue"
+                                        style={{paddingRight: 10}}
+                                        onPress={() => {
+                                            setEditQuestion(item);
+                                            setIsEditModalVisible(true);
+                                        }}
+                                    />
+                                </View>
                             )}
                         />
                     )}
@@ -209,6 +258,27 @@ function YourQuestionScreen(props: IProps) {
                             getData(searchRequest);
                             setModalVisible(false);
                         }}/>
+                    </View>
+                </ModalComponent>
+                <ModalComponent
+                    visible={isEditModalVisible}
+                    onClose={() => {
+                        setIsEditModalVisible(false);  // Đóng modal chỉnh sửa
+                        setEditQuestion(null);  // Reset câu hỏi đang chỉnh sửa
+                    }}
+                    icon="help-outline"
+                    title="Chỉnh sửa câu hỏi"
+                    showHeader
+                >
+                    <View style={{padding: 10, gap: 10}}>
+                        <QuestionMultipleChoiceUpdate
+                            question={editQuestion ? [editQuestion] : []}
+                            onBack={() => {
+                                setIsEditModalVisible(false);
+                                setEditQuestion(null);
+                            }}
+                            onSubmit={(updatedData) => handleUpdateQuestionMultipleChoice(editQuestion?.id!, updatedData)}
+                        />
                     </View>
                 </ModalComponent>
             </View>

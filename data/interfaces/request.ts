@@ -165,4 +165,15 @@ export namespace RequestInterfaces {
     content:string,
     audioSample:Blob,
   }
+
+  export interface IMultipleChoiceRequestUpdate {
+    type?:"MultipleChoice" | "Pronunciation",
+    content:string,
+    options:IOptionRequest[];
+  }
+  export interface IOptionRequest{
+    content:string,
+    correct:boolean
+  }
+
 }

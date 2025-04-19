@@ -1,4 +1,4 @@
-import {RequestInterfaces} from "@/data/interfaces/request";
+import { RequestInterfaces} from "@/data/interfaces/request";
 import { apiService } from "./axios";
 import {COURSE_URL, QUESTION_URL_V2, TOPIC_URL} from "./url";
 
@@ -59,7 +59,24 @@ const questionService = {
     }catch (error){
       throw error;
     }
-  }
+  },
+
+  async deleteQuestion(questionId: string | undefined){
+    try{
+      return apiService.delete(`${QUESTION_URL_V2.BASE}/${questionId}`)
+    }catch (error){
+      throw error;
+    }
+  },
+
+  async updateQuestionMultipleChoice(questionId:string | undefined,request:RequestInterfaces.IMultipleChoiceRequestUpdate){
+    try{
+       return apiService.post(`${QUESTION_URL_V2.BASE}/multiple-choice/update/${questionId}`,request)
+    }catch (error){
+      throw error;
+    }
+  },
+
 };
 
 export default questionService;
