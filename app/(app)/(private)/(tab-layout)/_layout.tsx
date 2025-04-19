@@ -1,15 +1,12 @@
 import { Tabs, useRouter } from "expo-router";
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { Button, Dialog, Icon } from "@rneui/themed";
-import { logout } from "@/redux/reducers/authSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import AvatarComponent from "@/components/Avatar";
 import color from "@/assets/styles/color";
 
@@ -32,8 +29,11 @@ interface ITab {
 
 const TABS: ITab[] = [
   { name: "index", title: "Trang chủ", icon: "home" },
-  { name: "learn-with-teacher", title: "Học cùng giáo viên", icon: "videocam" },
-  { name: "topic", title: "Khóa học", icon: "cellular" },
+  {
+    name: "learn-with-teacher",
+    title: "Bắt đầu học tập",
+    icon: "cellular",
+  },
   { name: "account", title: "Tôi", icon: "person-circle" },
 ];
 

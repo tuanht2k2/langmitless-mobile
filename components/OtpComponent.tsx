@@ -147,6 +147,16 @@ function OtpComponent(props: IProps) {
           height: "100%",
         }}
       >
+        <Text
+          style={{
+            color: color.pink3,
+            fontWeight: 500,
+            fontSize: 16,
+            textAlign: "center",
+          }}
+        >
+          Nhập mã OTP được gửi về email của bạn
+        </Text>
         <Image source={otpImg} style={{ height: 200, objectFit: "contain" }} />
         <View
           style={{
@@ -164,9 +174,6 @@ function OtpComponent(props: IProps) {
             }}
             placeholder="******"
           />
-          <Text style={{ color: color.grey3, fontWeight: 500 }}>
-            Nhập mã OTP được gửi về email bạn đã đăng ký
-          </Text>
           <View
             style={{
               display: "flex",

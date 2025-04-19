@@ -54,3 +54,22 @@ export const COURSE_LEVELS: ComponentInterfaces.IDropdownOption<number>[] = [
     code: 4,
   },
 ];
+
+export const COURSE_PRICE: ComponentInterfaces.IDropdownOption<string>[] = [
+  {
+    name: "Miễn phí",
+    code: "FREE",
+  },
+  {
+    name: "0 - 200.000VND",
+    code: "CHEAP",
+  },
+  {
+    name: "200.000VND - 500.000VND",
+    code: "MEDIUM",
+  },
+  {
+    name: "Trên 500.000VND",
+    code: "EXPENSIVE",
+  },
+];

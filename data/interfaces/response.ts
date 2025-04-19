@@ -76,6 +76,7 @@ export namespace ResponseInterfaces {
     level?: number;
     members?: Interfaces.IAccount[];
     topics?: ITopicResponse[];
+    isMember?: boolean;
   }
 
   export interface ITopicResponse extends Interfaces.IEntity {
