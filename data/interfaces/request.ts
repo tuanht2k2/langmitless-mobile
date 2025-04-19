@@ -140,4 +140,16 @@ export namespace RequestInterfaces {
   export interface ISearchHireHistoryRequest {
     accountId?: string;
   }
+
+  export interface IBuyCourseRequest {
+    courseId?: string;
+  }
+
+  export interface IStudentSearchCourseRequest {
+    name?: string;
+    description?: string;
+    price?: "FREE" | "CHEAP" | "MEDIUM" | "";
+    language?: string;
+    level?: string;
+  }
 }
