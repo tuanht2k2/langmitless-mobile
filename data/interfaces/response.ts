@@ -76,6 +76,7 @@ export namespace ResponseInterfaces {
     level?: number;
     members?: Interfaces.IAccount[];
     topics?: ITopicResponse[];
+    isMember?: boolean;
   }
 
   export interface ITopicResponse extends Interfaces.IEntity {
@@ -100,5 +101,21 @@ export namespace ResponseInterfaces {
     correct?: boolean;
     remainSent?: number;
     retryTime?: number;
+  }
+
+  export interface IQuestionResponse extends Interfaces.IEntity {
+    id?: string;
+    courseId?: string;
+    type?: string;
+    content?: string;
+    audioSample?: string | null;
+    option?: IOptionResponse[] | null;
+    members?: Interfaces.IAccount[];
+    topics?: ITopicResponse[];
+  }
+  export interface IOptionResponse {
+    id: string;
+    content: string;
+    correct: boolean;
   }
 }

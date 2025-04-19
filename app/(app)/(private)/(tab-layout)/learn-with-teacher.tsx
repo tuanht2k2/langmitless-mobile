@@ -1,9 +1,12 @@
 import color from "@/assets/styles/color";
 import GlobalStyle from "@/assets/styles/globalStyles";
 import AvatarComponent from "@/components/Avatar";
+import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FullScreenLoadingComponent from "@/components/FullScreenActivityIndicator";
 import ListSkeleton from "@/components/ListSkeleton";
+import Tabs from "@/components/Tabs";
+import { ComponentInterfaces } from "@/constants/component";
 import { Interfaces } from "@/data/interfaces/model";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import accountService from "@/services/accountService";
@@ -13,6 +16,18 @@ import { Link, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+
+const TABS: ComponentInterfaces.ITab[] = [
+  {
+    title: "Tìm kiếm khóa học",
+  },
+  {
+    title: "Câu hỏi thường gặp",
+  },
+  // {
+  //   title: "Tìm kiếm giáo viên",
+  // },
+];
 
 function LearnWithTeacherScreen() {
   const [teachers, setTeachers] = useState<Interfaces.IUser[]>([]);
@@ -58,6 +73,12 @@ function LearnWithTeacherScreen() {
     router.push(`/learn-with-teacher/${id}`);
   };
 
+  const handleSearchCourses = () => {
+    router.push("/courses");
+  };
+
+  const [tabIndex, setTabIndex] = useState(0);
+
   return (
     <>
       {loading ? (
@@ -67,7 +88,7 @@ function LearnWithTeacherScreen() {
           <ScrollView style={{}}>
             <Card styles={{ gap: 10 }}>
               <Text style={{ fontWeight: "bold", color: color.textMain }}>
-                Danh sách giáo viên
+                Học 1vs1 cùng giáo viên
               </Text>
               {teachersLoading ? (
                 <ListSkeleton length={4} hasCircle />
@@ -149,6 +170,19 @@ function LearnWithTeacherScreen() {
                   ))}
                 </View>
               )}
+            </Card>
+            <Card styles={{ marginTop: 10 }}>
+              <Text style={{ marginBottom: 20 }}>Học thông qua bài tập</Text>
+              <Button title="Tìm khóa học" onClick={handleSearchCourses} />
+              {/* <Tabs
+                activeIndex={tabIndex}
+                onChange={setTabIndex}
+                tabs={TABS}
+                styles={{ paddingHorizontal: 10 }}
+              />
+              <View>
+                {tabIndex == 0 && <Button title=""/>}
+              </View> */}
             </Card>
           </ScrollView>
         </View>

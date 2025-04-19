@@ -80,11 +80,17 @@ export enum TAG_URL {
 export enum COURSE_URL {
   BASE = "/courses",
   SEARCH = "/courses/search",
+  STUDENT_SEARCH = "/courses/student-search",
+  BUY = "/courses/buy",
 }
 
 export enum TOPIC_URL {
   BASE = "/topics",
   SEARCH = "/topics/search",
+}
+
+export enum QUESTION_URL_V2 {
+  BASE = "/question",
 }
 
 export enum QUESTION_URL {

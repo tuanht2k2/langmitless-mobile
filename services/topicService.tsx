@@ -31,6 +31,13 @@ const topicService = {
       throw error;
     }
   },
+  async getTopicByCourse(request:RequestInterfaces.ITopicsRequest){
+      try{
+        return apiService.post(`${TOPIC_URL.BASE}/get-all`,request)
+      }catch (error){
+        throw error
+      }
+  }
 };
 
 export default topicService;

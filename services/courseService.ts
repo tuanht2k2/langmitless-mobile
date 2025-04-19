@@ -31,6 +31,20 @@ const courseService = {
       throw error;
     }
   },
+  async buy(request: RequestInterfaces.IBuyCourseRequest) {
+    try {
+      return apiService.post(COURSE_URL.BUY, request);
+    } catch (error) {
+      throw error;
+    }
+  },
+  async studentSearch(request: RequestInterfaces.IStudentSearchCourseRequest) {
+    try {
+      return apiService.post(COURSE_URL.STUDENT_SEARCH, request);
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default courseService;

@@ -23,6 +23,7 @@ interface IProps {
   placeholderStyle?: StyleProp<TextStyle>;
   size?: number;
   filter?: boolean;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 function DropdownComponent(props: IProps) {

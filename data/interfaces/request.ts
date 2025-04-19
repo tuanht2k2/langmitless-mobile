@@ -140,4 +140,51 @@ export namespace RequestInterfaces {
   export interface ISearchHireHistoryRequest {
     accountId?: string;
   }
+
+  export interface IBuyCourseRequest {
+    courseId?: string;
+  }
+
+  export interface IStudentSearchCourseRequest {
+    name?: string;
+    description?: string;
+    price?: "FREE" | "CHEAP" | "MEDIUM" | "";
+    language?: string;
+    level?: string;
+  }
+
+  export interface ITopicsSearchRequest extends ICommonSearchRequest {
+    topicId?: string;
+  }
+
+  export interface IMultipleChoiceRequest {
+    topicId?: string;
+    type?: "MultipleChoice" | "Pronunciation";
+    content: string;
+    options: IOptionRequest[];
+  }
+  export interface IOptionRequest {
+    content: string;
+    correct: boolean;
+  }
+
+  export interface IQuestionSearchRequest extends ICommonSearchRequest {
+    topicId?: string;
+  }
+
+  export interface IPronunciationRequest {
+    topicId?: string;
+    content: string;
+    audioSample: Blob;
+  }
+
+  export interface IMultipleChoiceRequestUpdate {
+    type?: "MultipleChoice" | "Pronunciation";
+    content: string;
+    options: IOptionRequest[];
+  }
+  export interface IOptionRequest {
+    content: string;
+    correct: boolean;
+  }
 }

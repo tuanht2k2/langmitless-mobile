@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import CommonService from "@/services/CommonService";
 import GlobalStyle from "@/assets/styles/globalStyles";
@@ -11,6 +11,12 @@ import { useCourse } from "@/contexts";
 import color from "@/assets/styles/color";
 import Card from "@/components/Card";
 import TopicList from "@/components/TopicList";
+import Button from "@/components/Button";
+import ModalComponent from "@/components/Modal";
+import OtpComponent from "@/components/OtpComponent";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import { ResponseInterfaces } from "@/data/interfaces/response";
+import courseService from "@/services/courseService";
 
 function Course() {
   const { courseId } = useLocalSearchParams();
@@ -22,6 +28,29 @@ function Course() {
   useEffect(() => {
     getCourseDetails(courseId as string);
   }, []);
+
+  const [buyModalVisible, setBuyModalVisible] = useState<boolean>(false);
+
+  const handleBuyCourse = async () => {
+    try {
+      if (!courseId) return;
+
+      const request: RequestInterfaces.IBuyCourseRequest = {
+        courseId: courseId as string,
+      };
+
+      const res: ResponseInterfaces.ICommonResponse<null> =
+        await courseService.buy(request);
+      if (res.code != 200) {
+        CommonService.showToast("error", "Đã xảy ra lỗi!");
+        return;
+      }
+      setBuyModalVisible(false);
+    } catch (error) {
+      setBuyModalVisible(false);
+      CommonService.showToast("error", "Đã xảy ra lỗi!");
+    }
+  };
 
   return (
     <View style={GlobalStyle.background}>
@@ -74,6 +103,13 @@ function Course() {
                 <Text style={{ color: color.textGrey4, fontSize: 13 }}>
                   {CommonService.getFormattedISO(course.createdAt)}
                 </Text>
+                <Text style={{ color: color.textGrey4, fontSize: 13 }}>
+                  Giá tiền:
+                  <Text style={{ color: color.pink3, fontWeight: "bold" }}>
+                    {` ${course.cost}`}
+                  </Text>{" "}
+                  VNĐ
+                </Text>
               </View>
             </Card>
             <Card>
@@ -85,6 +121,40 @@ function Course() {
           </View>
         </ScrollView>
       )}
+      {course && !course.isMember && course.createdBy?.id != account?.id && (
+        <Button
+          title={`${course.cost} VNĐ`}
+          style={{ margin: 10 }}
+          onClick={() => {
+            if ((account?.balance || 0) < (course.cost || 0)) {
+              CommonService.showToast(
+                "error",
+                "Bạn không đủ tiền để mua khóa học này"
+              );
+            } else {
+              setBuyModalVisible(true);
+            }
+          }}
+        />
+      )}
+      {course && course.isMember && course.createdBy?.id != account?.id && (
+        <Button title={"Bắt đầu"} style={{ margin: 10 }} onClick={() => {}} />
+      )}
+      <ModalComponent
+        title="Xác nhận OTP"
+        onClose={() => {
+          setBuyModalVisible(false);
+        }}
+        visible={buyModalVisible}
+        style={{ height: "95%" }}
+      >
+        <OtpComponent
+          otpVerified={!buyModalVisible}
+          setOtpVerified={() => {
+            handleBuyCourse();
+          }}
+        />
+      </ModalComponent>
     </View>
   );
 }
