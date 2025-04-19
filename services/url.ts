@@ -89,6 +89,10 @@ export enum TOPIC_URL {
   SEARCH = "/topics/search",
 }
 
+export enum QUESTION_URL_V2 {
+  BASE = "/question",
+}
+
 export enum QUESTION_URL {
   BASE = "/questions",
   SEARCH = "/questions/search",
