@@ -3,8 +3,9 @@ import GlobalStyle from "@/assets/styles/globalStyles";
 import {ResponseInterfaces} from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
 import React from "react";
-import {Image, ScrollView, Text, View, ViewStyle} from "react-native";
+import { ScrollView, Text, View, ViewStyle} from "react-native";
 import {Feather} from "@expo/vector-icons";
+
 
 interface IProps {
     data: ResponseInterfaces.IQuestionResponse[];
