@@ -43,7 +43,6 @@ function PaymentScreen() {
 
   const {
     control,
-    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -160,18 +159,11 @@ function PaymentScreen() {
                     value: 10000,
                     message: "Số tiền tối thiểu là 10.000VND",
                   },
-                  // max: {
-                  //   value: account?.balance || 0,
-                  //   message: "Số dư của bạn không đủ",
-                  // },
                   validate: (value) => {
                     const numValue = Number(value);
                     if (isNaN(numValue)) {
                       return "Số tiền phải là một số hợp lệ";
                     }
-                    // if (numValue > (account?.balance || 0)) {
-                    //   return "Số dư của bạn không đủ";
-                    // }
                     if (numValue < 10000) {
                       return "Số tiền tối thiểu là 10.000VND";
                     }

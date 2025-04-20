@@ -187,4 +187,9 @@ export namespace RequestInterfaces {
     content: string;
     correct: boolean;
   }
+
+  export interface IAskAboutCourseRequest {
+    message: string;
+    courseId: string;
+  }
 }

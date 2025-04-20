@@ -14,8 +14,6 @@ import { RootState } from "@/redux/store";
 import { Audio } from "expo-av";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import { AppState, AppStateStatus } from "react-native";
-import { ComponentInterfaces } from "@/constants/component";
-import ToastComponent from "@/components/ToastComponent";
 
 interface ITokenData {
   iss: string;
@@ -25,10 +23,6 @@ interface ITokenData {
   jti: string;
   id: string;
 }
-
-const toastConfig: ToastConfig = {
-  // customToast: (props : ComponentInterfaces.IToast) => <ToastComponent {...props} />
-};
 
 export default function PrivateLayout() {
   const dispatch = useDispatch();
@@ -151,8 +145,8 @@ export default function PrivateLayout() {
           animation: "slide_from_right",
         }}
       >
-        <Stack.Screen name="(header-layout)" options={{ headerShown: false }} />
         <Stack.Screen name="(tab-layout)" options={{ headerShown: false }} />
+        <Stack.Screen name="(header-layout)" options={{ headerShown: false }} />
       </Stack>
       <Toast />
     </>
