@@ -21,28 +21,28 @@ import ChatbotComponent from "@/components/Chatbot";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const linking = {
-  prefixes: ["engfinity://", "https://engfinity.com"],
-  config: {
-    screens: {
-      "(private)": {
-        initialRouteName: "(tab-layout)",
-        screens: {
-          "(tab-layout)": {
-            screens: {
-              Home: "/",
-            },
-          },
-          "(header-layout)": {
-            screens: {
-              Payment: "/payment",
-            },
-          },
-        },
-      },
-    },
-  },
-};
+// const linking = {
+//   prefixes: ["engfinity://", "https://engfinity.com"],
+//   config: {
+//     screens: {
+//       "(private)": {
+//         initialRouteName: "(tab-layout)",
+//         screens: {
+//           "(tab-layout)": {
+//             screens: {
+//               Home: "/",
+//             },
+//           },
+//           "(header-layout)": {
+//             screens: {
+//               Payment: "/payment",
+//             },
+//           },
+//         },
+//       },
+//     },
+//   },
+// };
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -64,23 +64,17 @@ export default function RootLayout() {
       <Provider store={store}>
         <LoadingLayout>
           <GestureHandlerRootView>
-            <NavigationContainer linking={linking} independent>
-              <Stack
-                screenOptions={{
-                  presentation: "card",
-                  animation: "slide_from_right",
-                }}
-              >
-                <Stack.Screen
-                  name="(private)"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(public)"
-                  options={{ headerShown: false }}
-                />
-              </Stack>
-            </NavigationContainer>
+            {/* <NavigationContainer linking={linking} independent> */}
+            <Stack
+              screenOptions={{
+                presentation: "card",
+                animation: "slide_from_right",
+              }}
+            >
+              <Stack.Screen name="(private)" options={{ headerShown: false }} />
+              <Stack.Screen name="(public)" options={{ headerShown: false }} />
+            </Stack>
+            {/* </NavigationContainer> */}
             <ChatbotComponent />
             <OverlayActivityIndicator />
             <HireNotificationModalComponent />

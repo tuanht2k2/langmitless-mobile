@@ -145,8 +145,8 @@ export default function PrivateLayout() {
           animation: "slide_from_right",
         }}
       >
-        <Stack.Screen name="(tab-layout)" options={{ headerShown: false }} />
         <Stack.Screen name="(header-layout)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tab-layout)" options={{ headerShown: false }} />
       </Stack>
       <Toast />
     </>
