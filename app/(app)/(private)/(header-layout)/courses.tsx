@@ -20,7 +20,11 @@ import CourseList from "@/components/CourseList";
 import IconButtonComponent from "@/components/IconButton";
 import GlobalStyle from "@/assets/styles/globalStyles";
 import CommonService from "@/services/CommonService";
-import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
+import {
+  askChatbotAboutCourse,
+  overlayLoaded,
+  overlayLoading,
+} from "@/redux/reducers/globalSlide";
 import { useRouter } from "expo-router";
 
 function TopicScreen() {
@@ -82,6 +86,14 @@ function TopicScreen() {
           iconColor={color.pink3}
           onPress={() => {
             router.push(`/course/${data.id}`);
+          }}
+        />
+        <IconButtonComponent
+          icon="support-agent"
+          size={18}
+          iconColor={color.pink3}
+          onPress={() => {
+            dispatch(askChatbotAboutCourse(data));
           }}
         />
       </View>

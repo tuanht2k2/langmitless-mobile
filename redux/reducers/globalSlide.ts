@@ -6,13 +6,15 @@ interface GlobalState {
   isOverlayLoading: boolean;
   hireNotification: ResponseInterfaces.IHireResponse | null;
   chatbotVisible: boolean;
+  course: ResponseInterfaces.ICourseResponse | null;
 }
 
 const initialState: GlobalState = {
   isLoading: true,
   isOverlayLoading: false,
   hireNotification: null,
-  chatbotVisible: true,
+  chatbotVisible: false,
+  course: null,
 };
 
 const globalSlice = createSlice({
@@ -46,6 +48,16 @@ const globalSlice = createSlice({
     hideChatbot(state) {
       state.chatbotVisible = false;
     },
+    askChatbotAboutCourse(
+      state,
+      action: PayloadAction<ResponseInterfaces.ICourseResponse>
+    ) {
+      state.chatbotVisible = true;
+      state.course = action.payload;
+    },
+    clearCourse(state) {
+      state.course = null;
+    },
   },
 });
 
@@ -56,5 +68,9 @@ export const {
   overlayLoading,
   noticeHired,
   clearHired,
+  askChatbotAboutCourse,
+  clearCourse,
+  showChatbot,
+  hideChatbot,
 } = globalSlice.actions;
 export default globalSlice.reducer;
