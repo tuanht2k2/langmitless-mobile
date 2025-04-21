@@ -152,7 +152,7 @@ function Course() {
 
             router.push({
               pathname: "/member/AnswerQuestion",
-              params: { topicId: selectedTopicId }, // 👈 Gửi topicId tại đây
+              params: { topicId: selectedTopicId },
             });
           }}
         />
