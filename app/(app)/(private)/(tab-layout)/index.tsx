@@ -1,4 +1,4 @@
-import { Link, useRouter } from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,7 @@ import {
   ScrollView,
   ImageBackground,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
 
 import { Icon } from "@rneui/themed";
@@ -25,33 +25,65 @@ import color from "@/assets/styles/color";
 // @ts-ignore
 import backgroundImg from "@/assets/images/bgr_1.jpg";
 import GlobalStyle from "@/assets/styles/globalStyles";
-
-const MENU: ComponentInterfaces.IMenuItem[] = [
-  {
-    name: "Nạp tiền",
-    to: "/payment",
-    iconColor: color.danger3,
-    labelColor: color.textMain,
-    icon: "payments",
-  },
-  {
-    name: "Chuyển tiền",
-    to: "/banking",
-    iconColor: color.primary3,
-    labelColor: color.textMain,
-    icon: "move-down",
-  },
-  {
-    name: "Truy vấn",
-    to: "/payment/query",
-    iconColor: color.warning3,
-    labelColor: color.textMain,
-    icon: "query-stats",
-  },
-];
+import CommonService from "@/services/CommonService";
+import accountService from "@/services/accountService";
+import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
+import { loadAccount } from "@/redux/reducers/authSlice";
 
 export default function HomeScreen() {
   const account = useSelector((state: RootState) => state.auth.account);
+  const dispatch = useDispatch();
+
+  const getAccountDetail = async () => {
+    try {
+      if (!account || !account.id) return;
+      dispatch(overlayLoading());
+      const res = await accountService.getAccount(account.id);
+      dispatch(overlayLoaded());
+      const data = res.data?.data;
+      if (data) {
+        dispatch(loadAccount(data));
+        console.log(data);
+      }
+    } catch (error) {
+      console.log(
+        "An error happened when HomeScreen - getAccountDetail",
+        error
+      );
+      CommonService.showToast("error", "Đã xảy ra lỗi!");
+      dispatch(overlayLoaded());
+    }
+  };
+
+  const MENU: ComponentInterfaces.IMenuItem[] = [
+    {
+      name: "Nạp tiền",
+      to: "/payment",
+      iconColor: color.danger3,
+      labelColor: color.textMain,
+      icon: "payments",
+    },
+    {
+      name: "Chuyển tiền",
+      to: "/banking",
+      iconColor: color.primary3,
+      labelColor: color.textMain,
+      icon: "move-down",
+    },
+    {
+      name: "Truy vấn",
+      to: "/payment/query",
+      iconColor: color.warning3,
+      labelColor: color.textMain,
+      icon: "query-stats",
+    },
+    {
+      iconColor: color.warning3,
+      labelColor: color.textMain,
+      icon: "data-usage",
+      onClick: getAccountDetail,
+    },
+  ];
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -173,29 +205,3 @@ export default function HomeScreen() {
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  createPostWrapper: {
-    marginTop: 5,
-    padding: 10,
-    paddingVertical: 20,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 15,
-    backgroundColor: color.white1,
-    shadowColor: color.black1,
-    shadowOffset: { width: 300, height: 20 },
-    shadowOpacity: 1,
-    shadowRadius: 4,
-    position: "relative",
-  },
-  createPostButton: {
-    fontSize: 17,
-    borderRadius: 15,
-    padding: 10,
-    flex: 1,
-    paddingLeft: 20,
-    backgroundColor: color.grey5,
-  },
-});

@@ -1,5 +1,6 @@
 {
   "expo": {
+    "deepLinking": true,
     "name": "engfinity",
     "slug": "engfinity",
     "version": "1.0.0",

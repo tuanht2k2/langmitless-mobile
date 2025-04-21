@@ -9,11 +9,10 @@ interface IProps {
 function WebViewComponent(props: IProps) {
   return (
     <WebView
+      originWhitelist={["*"]}
       style={{ width: "100%", height: "100%" }}
       source={{ uri: props.uri }}
-      onShouldStartLoadWithRequest={
-        props.onShouldStartLoadWithRequest || undefined
-      }
+      onShouldStartLoadWithRequest={props.onShouldStartLoadWithRequest}
     />
   );
 }
