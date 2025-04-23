@@ -173,9 +173,13 @@ export namespace RequestInterfaces {
   }
 
   export interface IPronunciationRequest {
-    topicId?: string;
+    topicId: string;
     content: string;
-    audioSample: Blob;
+    audioSample: {
+      uri:string;
+      name:string;
+      type:string;
+    };
   }
 
   export interface IMultipleChoiceRequestUpdate {
@@ -186,6 +190,15 @@ export namespace RequestInterfaces {
   export interface IOptionRequest {
     content: string;
     correct: boolean;
+  }
+  export interface IPronunciationRequestUpdate{
+    questionId: string;
+    content: string;
+    audioSample: {
+      uri:string;
+      name:string;
+      type:string;
+    };
   }
 
   export interface IAskAboutCourseRequest {
