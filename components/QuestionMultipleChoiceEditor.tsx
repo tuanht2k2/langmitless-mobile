@@ -4,7 +4,6 @@ import {RequestInterfaces} from "@/data/interfaces/request";
 import {Controller, useForm} from "react-hook-form";
 import {CheckBox, color} from "@rneui/base";
 import GlobalStyle from "@/assets/styles/globalStyles";
-import {useNavigation} from "expo-router";
 
 
 interface IProps {
@@ -84,7 +83,6 @@ function QuestionMultipleChoiceEditor({onSubmit, onBack}: IProps) {
                     </Text>
                 )}
 
-                {/* Các lựa chọn */}
                 {options.map((option, index) => (
                     <View key={index} style={{gap: 5}}>
                         <TextInput

@@ -100,9 +100,20 @@ function QuestionMultipleChoiceUpdate({question, onBack, onSubmit}: IProps) {
                     </View>
                 ))}
 
-                <View style={{ marginTop: 20, gap: 10 }}>
-                    <Button title="Lưu chỉnh sửa" onPress={handleSubmit(handleFormSubmit)} />
-                    <Button title="Quay lại" onPress={onBack} color="#ccc" />
+                <View
+                  style={{
+                      marginTop: 20,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                  }}
+                >
+                    <View style={{ flex: 1, marginRight: 8 }}>
+                        <Button title="Lưu" onPress={handleSubmit(handleFormSubmit)} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Button title="Quay lại" onPress={onBack} color="#ccc" />
+                    </View>
                 </View>
             </View>
         </ScrollView>
