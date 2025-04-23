@@ -5,11 +5,13 @@ export const ApiInstance = axios.create({
   baseURL:
     process.env.EXPO_PUBLIC_BASE_URL?.replace(/['";]/g, "") ||
     "http://localhost:8080/api/v1/",
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "X-Custom-Header": "foobar",
+
   },
 });
+
 
 export const FptAiApiInstance = axios.create({
   baseURL:
@@ -51,6 +53,7 @@ export const apiService = {
       throw error;
     }
   },
+
 
   get: async (
     url: string,
@@ -122,4 +125,29 @@ export const apiService = {
       throw error;
     }
   },
+
+  postFormV2: async (
+    url: string,
+    formData: FormData,
+    handleError?: (error?: any) => void
+  ) => {
+    const token = await AsyncStorage.getItem("token");
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data", // ⬅️ thêm dòng này
+      },
+    };
+
+    try {
+      const response = await ApiInstance.post(url, formData, config);
+      return response.data;
+    } catch (error) {
+      handleError?.(error);
+      throw error;
+    }
+  },
+
+
 };
