@@ -200,4 +200,9 @@ export namespace RequestInterfaces {
       type:string;
     };
   }
+
+  export interface IAskAboutCourseRequest {
+    message: string;
+    courseId: string;
+  }
 }

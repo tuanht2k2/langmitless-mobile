@@ -23,19 +23,20 @@ import chatbotIcon from "@/assets/images/icons/chatbot.png";
 import { Controller, useForm } from "react-hook-form";
 import Tabs from "./Tabs";
 import { ComponentInterfaces } from "@/constants/component";
-import { RequestInterfaces } from "@/data/interfaces/request";
 import chatbotService from "@/services/chatbotService";
 import { ResponseInterfaces } from "@/data/interfaces/response";
-import { set } from "firebase/database";
 import CommonService from "@/services/CommonService";
 import { useRouter } from "expo-router";
-import { Divider, Icon } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
 import useSocket from "@/utils/useSocket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import getSocketClient from "@/utils/getSocketClient";
-import Stomp from "stompjs";
-import { getApiConfig, getWebsocketHeaders } from "@/services/axios";
+import {
+  askChatbotAboutCourse,
+  clearCourse,
+  hideChatbot,
+  showChatbot,
+} from "@/redux/reducers/globalSlide";
 
 const { height, width } = Dimensions.get("window");
 
@@ -53,14 +54,19 @@ const TABS: ComponentInterfaces.ITab[] = [
 
 function ChatbotComponent() {
   const router = useRouter();
+  const visible = useSelector(
+    (state: RootState) => state.global.chatbotVisible
+  );
   const account = useSelector((state: RootState) => state.auth.account);
+  const course = useSelector((state: RootState) => state.global.course);
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
+
   const hideModal = () => {
-    setModalVisible(false);
+    dispatch(hideChatbot());
   };
   const showModal = () => {
-    setModalVisible(true);
+    dispatch(showChatbot());
   };
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -84,10 +90,15 @@ function ChatbotComponent() {
       if (!account?.id) return;
       setMessages((prev) => [...prev, { message: data.content, type: "ASK" }]);
       setValue("content", "");
-      const res = await chatbotService.ask(data.content);
-      // if (res && res.code) {
-
-      // }
+      const res = course
+        ? await chatbotService.askAbountCourse({
+            courseId: course.id || "",
+            message: data.content,
+          })
+        : await chatbotService.ask(data.content);
+      if (res && res.code != 200) {
+        CommonService.showToast("error", "Có lỗi xảy ra");
+      }
     } catch (error) {
       CommonService.showToast("error", "Có lỗi xảy ra");
       console.error(error);
@@ -103,20 +114,21 @@ function ChatbotComponent() {
 
   const CourseDetails = (course: ResponseInterfaces.ICourseResponse) => {
     const navigateToCourse = (id: string) => {
-      // router.push
+      router.push(`/course/${id}`);
     };
 
     return (
       <View>
         <Text style={{ fontWeight: "semibold", color: color.textPink3 }}>
-          Tên khóa học:{" "}
           <Text style={{ fontWeight: "bold" }}>{course.name}</Text>
         </Text>
-        <Text>
+        <Text style={{ fontWeight: "bold", color: color.textGrey3 }}>
           Mô tả:{" "}
-          <Text style={{ color: color.textGrey4 }}>{course.description}</Text>
+          <Text style={{ color: color.textMain, fontWeight: "400" }}>
+            {course.description}
+          </Text>
         </Text>
-        <Text>
+        <Text style={{ fontWeight: "bold", color: color.textGrey3 }}>
           Giá tiền:{" "}
           <Text style={{ color: color.textYellow2 }}>{course.cost}</Text>
         </Text>
@@ -128,25 +140,54 @@ function ChatbotComponent() {
           />
           <Text>{CommonService.getCourseLanguage(course.language)?.name}</Text>
         </View>
-        <TouchableOpacity
+        <View
           style={{
-            padding: 5,
+            display: "flex",
             flexDirection: "row",
-            alignItems: "center",
+            gap: 3,
             justifyContent: "center",
-            gap: 5,
-            borderColor: color.pink3,
-            borderWidth: 1,
-            marginTop: 5,
-            borderRadius: 5,
-          }}
-          onPress={() => {
-            navigateToCourse(course.id as string);
           }}
         >
-          <Text style={{ color: color.textPink3 }}>Xem chi tiết</Text>
-          <Icon name="visibility" size={20} color={color.textPink3} />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              padding: 5,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              borderColor: color.primary3,
+              borderWidth: 1,
+              marginTop: 5,
+              borderRadius: 5,
+            }}
+            onPress={() => {
+              hideModal();
+              navigateToCourse(course.id as string);
+            }}
+          >
+            <Text style={{ color: color.textPink3 }}>Xem chi tiết</Text>
+            <Icon name="visibility" size={20} color={color.textPink3} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              padding: 5,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              borderColor: color.pink3,
+              borderWidth: 1,
+              marginTop: 5,
+              borderRadius: 5,
+            }}
+            onPress={() => {
+              dispatch(askChatbotAboutCourse(course));
+            }}
+          >
+            <Text style={{ color: color.textPrimary3 }}>Tìm hiểu thêm</Text>
+            <Icon name="support-agent" size={20} color={color.textPrimary3} />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -161,7 +202,7 @@ function ChatbotComponent() {
         onShortPressRelease={showModal}
       />
       <ModalComponent
-        visible={modalVisible}
+        visible={visible}
         style={{ height: "100%" }}
         showHeader
         title="Trợ lý ảo"
@@ -180,6 +221,29 @@ function ChatbotComponent() {
               tabs={TABS}
               styles={{ paddingHorizontal: 10 }}
             />
+            {course && (
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontSize: 16, color: color.grey4 }}>
+                  Bạn đang tìm hiểu về:{" "}
+                  <Text style={{ fontWeight: "500", color: color.pink3 }}>
+                    {course.name}
+                  </Text>
+                </Text>
+                <IconButtonComponent
+                  icon="close"
+                  onPress={() => {
+                    dispatch(clearCourse());
+                  }}
+                />
+              </View>
+            )}
           </View>
 
           <ScrollView
@@ -206,11 +270,7 @@ function ChatbotComponent() {
                 <View
                   style={{
                     maxWidth: "70%",
-                    padding: 10,
-                    borderRadius: 10,
-                    backgroundColor:
-                      message.type !== "ASK" ? color.primary3 : color.pink3,
-                    gap: 5,
+                    // gap: 5,
                   }}
                 >
                   {message.message && (
@@ -218,6 +278,10 @@ function ChatbotComponent() {
                       style={{
                         color: color.textWhite1,
                         fontSize: 16,
+                        backgroundColor:
+                          message.type !== "ASK" ? color.primary3 : color.pink3,
+                        padding: 10,
+                        borderRadius: 10,
                       }}
                     >
                       {message.message}
@@ -234,8 +298,10 @@ function ChatbotComponent() {
                             alignItems: "center",
                             padding: 5,
                             backgroundColor: color.white1,
-                            borderRadius: 5,
+                            borderRadius: 10,
                             marginVertical: 5,
+                            borderWidth: 1,
+                            borderColor: color.primary3,
                           }}
                         >
                           <CourseDetails {...item} />

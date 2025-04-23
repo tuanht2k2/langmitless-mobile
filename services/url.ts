@@ -102,6 +102,7 @@ export enum CHATBOT_URL {
   BASE = "/business/chatbot",
   GET_RESPONSE = "/chatbot/get-response",
   ASK = "/business/chatbot/ask",
+  ASK_ABOUT_COURSE = "/business/chatbot/ask-about-course",
 }
 
 export enum OTP_URL {

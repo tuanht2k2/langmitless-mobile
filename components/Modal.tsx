@@ -14,6 +14,9 @@ import {
 } from "react-native";
 import { ViewStyle } from "react-native";
 import IconButtonComponent from "./IconButton";
+import { useRouter } from "expo-router";
+import { useDispatch } from "react-redux";
+import { hideChatbot } from "@/redux/reducers/globalSlide";
 
 interface IProps {
   visible?: boolean;
@@ -32,6 +35,14 @@ interface IProps {
 
 function ModalComponent(props: IProps) {
   const { visible, animationType, onClose, children, style } = props;
+
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const navigateToHome = () => {
+    dispatch(hideChatbot());
+    router.replace("/");
+  };
 
   return (
     <Modal
@@ -64,6 +75,11 @@ function ModalComponent(props: IProps) {
                       borderColor: color.pink3,
                     }}
                   >
+                    <IconButtonComponent
+                      icon="home"
+                      iconColor={color.pink3}
+                      onPress={navigateToHome}
+                    />
                     {props.icon && (
                       <Icon name={props.icon} color={color.yellow2} />
                     )}
