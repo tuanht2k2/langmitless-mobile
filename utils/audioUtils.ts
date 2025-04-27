@@ -29,18 +29,24 @@ export const pickAudioFile = async (
 };
 
 export const playAudio = async (
-  uri: string ,
+  uri: string | null | undefined,
   currentSound: Audio.Sound | null,
   setSound: (sound: Audio.Sound) => void
 ) => {
   try {
+    // Kiểm tra uri hợp lệ trước khi sử dụng
+    if (!uri) {
+      console.warn("URI audio không hợp lệ");
+      return;
+    }
+
     if (currentSound) {
       await currentSound.unloadAsync();
     }
 
-    const {sound: newSound} = await Audio.Sound.createAsync(
-      {uri},
-      {shouldPlay: true}
+    const { sound: newSound } = await Audio.Sound.createAsync(
+      { uri }, // Giờ đây uri chắc chắn là string
+      { shouldPlay: true }
     );
 
     setSound(newSound);
