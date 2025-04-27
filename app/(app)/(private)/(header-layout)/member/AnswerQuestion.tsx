@@ -1,116 +1,308 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { useLocalSearchParams } from "expo-router";
-import color from "@/assets/styles/color";
-import GlobalStyle from "@/assets/styles/globalStyles";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {View, Text, TouchableOpacity, Dimensions} from "react-native";
+import {useLocalSearchParams, useNavigation} from "expo-router";
+import {RequestInterfaces} from "@/data/interfaces/request";
+import {overlayLoaded, overlayLoading} from "@/redux/reducers/globalSlide";
+import questionService from "@/services/questionService";
+import {useDispatch} from "react-redux";
+import {ResponseInterfaces} from "@/data/interfaces/response";
+import {Audio} from "expo-av";
+import Carousel from "react-native-reanimated-carousel/src/Carousel";
+import answerService from "@/services/answerService";
+import AnswerQuestionItem from "@/components/AnswerQuestionItem";
+import IAnswerPronunciationScore = ResponseInterfaces.IAnswerPronunciationScore;
+import toastComponent from "@/components/ToastComponent";
+import CommonService from "@/services/CommonService";
 
+const screenWidth = Dimensions.get("window").width;
+interface IQuestionScoreResult {
+  pronunciationScore: number;
+  score: number;
+}
 function AnswerQuestion() {
-  const { topicId } = useLocalSearchParams();
+  const {topicId} = useLocalSearchParams();
+  const dispatch = useDispatch();
+  const [questions, setQuestion] = useState<ResponseInterfaces.IQuestionResponse[]>([]);
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const [hasRecordingPermission, setHasRecordingPermission] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  // @ts-ignore
+  const carouselRef = useRef<Carousel<any>>(null);
+  const [hasChecked, setHasChecked] = useState(false);
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [playbackSound, setPlaybackSound] = useState<Audio.Sound | null>(null);
+  const [pronunciationResults, setPronunciationResults] = useState<Record<string, IAnswerPronunciationScore>>({});
+  const [audioUris, setAudioUris] = useState<Record<string, string>>({});
+  const [questionScores, setQuestionScores] = useState<Record<string, IQuestionScoreResult>>({});
+  const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
+  const navigation = useNavigation();
 
-  // Fake danh sách câu hỏi
-  const questions = [
-    {
-      id: "q1",
-      questionText: "What is the capital of France?",
-      options: ["Berlin", "Madrid", "Paris", "Rome"],
+
+  const [searchRequest, setSearchRequest] =
+    useState<RequestInterfaces.IQuestionSearchRequest>({
+      page: 0,
+      pageSize: 1000,
+      sortBy: "name",
+      sortDir: "ASC",
+      keyword: "",
+      topicId: (topicId ?? "") as string,
+    });
+
+  const getData = useCallback(
+    async (request: RequestInterfaces.IQuestionSearchRequest) => {
+      try {
+        dispatch(overlayLoading());
+        const res = await questionService.getListQuestionByTopic(request);
+        if (res.data && res.data.length > 0) {
+          setQuestion(res.data);
+        }
+        dispatch(overlayLoaded());
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+        dispatch(overlayLoaded());
+      }
     },
-    {
-      id: "q2",
-      questionText: "Which planet is known as the Red Planet?",
-      options: ["Earth", "Venus", "Mars", "Jupiter"],
-    },
-  ];
+    []
+  );
 
-  const [answers, setAnswers] = useState<{ [key: string]: string | null }>({});
+  useEffect(() => {
+    getData(searchRequest);
+  }, [searchRequest]);
 
-  const handleSelect = (questionId: string, option: string) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: option }));
+  // console.log(questions[activeSlide])
+  const handleSelectOption = (questionId: string | undefined, optionId: string) => {
+    if (!questionId) return;
+    setSelectedOptions(prev => ({
+      ...prev,
+      [questionId]: optionId,
+    }));
+    console.log(`Selected option: ${optionId} for question: ${questionId}`);
   };
 
+    const startRecording = async () => {
+    try {
+      const permission = await Audio.requestPermissionsAsync();
+      if (!permission.granted) {
+        setHasRecordingPermission(false);
+        return;
+      }
+
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      const newRecording = new Audio.Recording();
+      await newRecording.prepareToRecordAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      await newRecording.startAsync();
+      setRecording(newRecording);
+    } catch (err) {
+      console.error("Failed to start recording", err);
+    }
+  };
+
+  const stopRecording = async () => {
+    try {
+      if (!recording) return;
+
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
+      if (uri) {
+        const currentQuestionId = questions[activeSlide]?.id;
+        if (currentQuestionId) {
+          setAudioUris(prev => ({
+            ...prev,
+            [currentQuestionId]: uri
+          }));
+        }
+      }
+      setRecording(null);
+    } catch (err) {
+      console.error("Failed to stop recording", err);
+    }
+  };
+
+  const handleGoToPrev = () => {
+    if (activeSlide > 0) {
+      setActiveSlide(activeSlide - 1);
+      carouselRef.current?.prev();
+      setHasChecked(false);
+    }
+  };
+
+  const handleGoToNext = () => {
+    if (activeSlide < questions.length - 1) {
+      setActiveSlide(activeSlide + 1);
+      carouselRef.current?.next();
+      setHasChecked(false);
+    } else {
+      navigation.goBack();
+    }
+  };
+
+  const handleCheckAnswer = async () => {
+    const currentQuestion = questions[activeSlide];
+    dispatch(overlayLoading());
+    try {
+      if (currentQuestion.type === "Pronunciation") {
+        const currentAudioUri = audioUris[currentQuestion.id as string];
+        if (!currentAudioUri) {
+          dispatch(overlayLoaded());
+          CommonService.showToast("error", "Không được rồi !! ", "Bạn phải ghi âm đã ");
+          return;
+        }
+        if(currentAudioUri){
+          const answerRequest: RequestInterfaces.IAnswerQuestionPronunciation = {
+            topicId: topicId as string,
+            questionId: currentQuestion.id as string,
+            answerFile: {
+              uri: currentAudioUri,
+              name: `recording_${Date.now()}.mp3`,
+              type: 'audio/mp3'
+            }
+          };
+
+          const response = await answerService.answerQuestionPronunciation(answerRequest);
+          setPronunciationResults(prev => ({
+            ...prev,
+            [currentQuestion.id as string]: response.data
+          }));
+
+          setQuestionScores(prev => ({
+            ...prev,
+            [currentQuestion.id as string]: {
+              pronunciationScore: response.data.pronunciationScore,
+              score: response.data.score
+            }
+          }));
+        }
+      }
+      else if (currentQuestion.type === "MultipleChoice" && selectedOptions[currentQuestion.id as string]) {
+        const answerRequest: RequestInterfaces.IAnswerQuestionMultipleChoice = {
+          topicId: topicId as string,
+          questionId: currentQuestion.id as string,
+          answeredText: selectedOptions[currentQuestion.id as string]
+        };
+
+        const response = await answerService.answerQuestionMultipleChoice(answerRequest);
+        setPronunciationResults(prev => ({
+          ...prev,
+          [currentQuestion.id as string]: response.data
+        }));
+
+
+        setQuestionScores(prev => ({
+          ...prev,
+          [currentQuestion.id as string]: {
+            pronunciationScore: 0,
+            score: response.data.score
+          }
+        }));
+      }
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+    } finally {
+      dispatch(overlayLoaded());
+      setHasChecked(true);
+    }
+  };
+
+  const fetchQuestionScores = useCallback(async () => {
+    try {
+      const scores: Record<string, IQuestionScoreResult> = {};
+
+      for (const question of questions) {
+        if (question.id && selectedOptions[question.id]) {
+          try {
+            const request: RequestInterfaces.IQuestionScore = {
+              topicId: topicId as string,
+              questionId: question.id
+            };
+
+            const response = await answerService.getScoreByQuestion(request);
+
+            if (response.data) {
+              scores[question.id] = {
+                pronunciationScore: response.data.pronunciationScore || 0,
+                score: response.data.score || 0
+              };
+            }
+          } catch (error) {
+            console.error(`Error fetching score for question ${question.id}:`, error);
+          }
+        }
+      }
+
+      setQuestionScores(prev => ({ ...prev, ...scores }));
+    } catch (error) {
+      console.error("Error fetching question scores:", error);
+    }
+  }, [questions, topicId, selectedOptions]);
+
+
+  useEffect(() => {
+    if (questions.length > 0) {
+      fetchQuestionScores();
+    }
+  }, [questions, fetchQuestionScores]);
+
+  const renderQuestionItem = ({ item, index }: { item: ResponseInterfaces.IQuestionResponse; index: number }) => (
+    <AnswerQuestionItem
+      item={item}
+      index={index}
+      selectedOption={selectedOptions[item.id as string]}
+      recording={recording !== null}
+      audioUri={audioUris[item.id as string] || null}
+      sound={sound}
+      playbackSound={playbackSound}
+      hasChecked={hasChecked || !!questionScores[item.id as string]}
+      questionScores={questionScores}
+      activeSlide={activeSlide}
+      questionsLength={questions.length}
+      pronunciationResult={pronunciationResults[item.id as string] || null}
+      handleSelectOption={handleSelectOption}
+      startRecording={startRecording}
+      stopRecording={stopRecording}
+      handleGoToPrev={handleGoToPrev}
+      handleGoToNext={handleGoToNext}
+      handleCheckAnswer={handleCheckAnswer}
+      setSound={setSound}
+      setPlaybackSound={setPlaybackSound}
+      isLastQuestion={activeSlide === questions.length - 1}
+    />
+
+  );
+
   return (
-    <ScrollView style={{ padding: 16 }}>
-      <View style={{ gap: 20 }}>
-        {questions.map((question, index) => {
-          const selectedOption = answers[question.id];
-
-          return (
-            <View
-              key={question.id}
-              style={{
-                borderRadius: 12,
-                backgroundColor: "#fff",
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
-                elevation: 2,
-                padding: 16,
-                gap: 10,
-              }}
-            >
-              <Text
-                style={{
-                  ...GlobalStyle.mainText,
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  color: color.textMain,
-                }}
-              >
-                Câu {index + 1}: {question.questionText}
-              </Text>
-
-              {question.options.map((option, idx) => {
-                const isSelected = selectedOption === option;
-
-                return (
-                  <TouchableOpacity
-                    key={idx}
-                    onPress={() => handleSelect(question.id, option)}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingVertical: 10,
-                      paddingHorizontal: 12,
-                      borderWidth: 1,
-                      borderColor: isSelected ? color.pink3 : "#ddd",
-                      borderRadius: 8,
-                      backgroundColor: isSelected ? color.pink1 : "#f9f9f9",
-                      gap: 10,
-                    }}
-                  >
-                    <View
-                      style={{
-                        height: 20,
-                        width: 20,
-                        borderRadius: 10,
-                        borderWidth: 2,
-                        borderColor: isSelected ? color.pink3 : "#aaa",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {isSelected && (
-                        <View
-                          style={{
-                            height: 10,
-                            width: 10,
-                            borderRadius: 5,
-                            backgroundColor: color.pink3,
-                          }}
-                        />
-                      )}
-                    </View>
-                    <Text style={{ ...GlobalStyle.mainText, flex: 1 }}>
-                      {option}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          );
-        })}
+    <View style={{
+      flex: 1,
+      justifyContent: 'center',
+    }}>
+      <View style={{
+        height: '70%',
+        justifyContent: 'center',
+      }}>
+        <Carousel
+          ref={carouselRef}
+          data={questions}
+          renderItem={renderQuestionItem}
+          width={screenWidth}
+          onSnapToItem={(index: React.SetStateAction<number>) => setActiveSlide(index)}
+          enabled={false}
+          style={{
+            flex: 1,
+          }}
+        />
+        <View style={{
+          alignItems: "center",
+          paddingVertical: 16,
+        }}>
+          <Text style={{fontSize: 16}}>Câu {activeSlide + 1}/{questions.length}</Text>
+        </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 

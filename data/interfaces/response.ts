@@ -1,4 +1,4 @@
-import { Interfaces } from "./model";
+import {Interfaces} from "./model";
 
 export namespace ResponseInterfaces {
   export interface ICommonResponse<T> {
@@ -113,9 +113,20 @@ export namespace ResponseInterfaces {
     members?: Interfaces.IAccount[];
     topics?: ITopicResponse[];
   }
+
   export interface IOptionResponse {
     id: string;
     content: string;
     correct: boolean;
+  }
+
+  export interface IAnswerPronunciationScore {
+    pronunciationScore: number;
+    score: number;
+  }
+
+  export interface IQuestionScore{
+    pronunciationScore: number;
+    score: number;
   }
 }

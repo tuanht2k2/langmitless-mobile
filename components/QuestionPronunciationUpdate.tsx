@@ -8,6 +8,7 @@ import { Audio } from 'expo-av';
 import {ResponseInterfaces} from "@/data/interfaces/response";
 import {RequestInterfaces} from "@/data/interfaces/request";
 import GlobalStyle from "@/assets/styles/globalStyles";
+import {pickAudioFile, playAudio} from "@/utils/audioUtils";
 
 interface IProps {
   question: ResponseInterfaces.IQuestionResponse;
@@ -30,44 +31,6 @@ export default function QuestionPronunciationUpdate({ question, onBack, onSubmit
     }
   }, [question]);
 
-  const pickAudioFile = async () => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "audio/*",
-        copyToCacheDirectory: true,
-        multiple: false,
-      });
-
-      if (!result.canceled && result.assets.length > 0) {
-        const file = result.assets[0];
-        setAudioSample({
-          uri: file.uri,
-          name: file.name,
-          type: file.mimeType || "audio/mpeg",
-        });
-
-        console.log("Đã chọn file mới:", file.uri);
-      }
-    } catch (error) {
-      console.error("Lỗi khi chọn file âm thanh:", error);
-    }
-  };
-
-  const playAudio = async (uri: string) => {
-    try {
-      if (sound) {
-        await sound.unloadAsync();
-      }
-
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri },
-        { shouldPlay: true }
-      );
-      setSound(newSound);
-    } catch (error) {
-      console.error("Lỗi khi phát audio:", error);
-    }
-  };
 
 
   const onFormSubmit = handleSubmit((data) => {
@@ -80,14 +43,18 @@ export default function QuestionPronunciationUpdate({ question, onBack, onSubmit
 
   return (
     <View style={{ padding: 16 }}>
-      {/*<Text style={{ marginBottom: 8 }}>Nội dung câu hỏi</Text>*/}
       { question.audioSample && (
         <View>
           <Text style={[GlobalStyle.mainText, { fontWeight: "bold" }]}>
             File mẫu phát âm:
           </Text>
           <TouchableOpacity
-            onPress={pickAudioFile}
+            onPress={() =>
+              pickAudioFile((audio) => {
+                setAudioSample(audio);
+                setValue("audioSample", audio);
+              })
+            }
             style={{
               borderWidth: 1,
               borderColor: "gray",
@@ -104,7 +71,8 @@ export default function QuestionPronunciationUpdate({ question, onBack, onSubmit
               {(audioSample?.uri || question.audioSample) && (
                 <Button
                   title="▶"
-                  onPress={() => playAudio(audioSample?.uri || question.audioSample)}
+                  onPress={() =>
+                    playAudio(audioSample?.uri || question.audioSample, sound, (newSound) => setSound(newSound))}
                 />
               )}
             </View>
