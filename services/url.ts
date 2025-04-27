@@ -113,3 +113,7 @@ export enum OTP_URL {
 export enum PAYMENT_URL {
   CREATE = "/transfer/create",
 }
+
+export enum ANSWER_URL {
+  BASE= "answer"
+}
