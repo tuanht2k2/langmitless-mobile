@@ -32,7 +32,7 @@ const color = {
   warning1: "#fff3d4",
   warning2: "#ffdca0",
   warning3: "#f39c12",
-  warning4: "#ba7610",
+  warning4: "#FF7043",
   warning5: "#7f500b",
 
   success1: "#e6f5e9",
@@ -47,6 +47,7 @@ const color = {
   white4: "#f5f5f5",
   white5: "#eeeeee",
 
+  black: "#333333",
   black1: "#eaeaea",
   black2: "#bcbcbc",
   black3: "#7f7f7f",
@@ -115,7 +116,7 @@ const color = {
   textWarning1: "#fff3d4",
   textWarning2: "#ffdca0",
   textWarning3: "#f39c12",
-  textWarning4: "#ba7610",
+  textWarning4: "#FF7043",
   textWarning5: "#7f500b",
 
   textSuccess1: "#e6f5e9",

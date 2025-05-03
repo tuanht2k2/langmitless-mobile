@@ -4,16 +4,14 @@ import {
   ScrollView,
   Text,
   TextInput,
-  Touchable,
   TouchableOpacity,
   View,
 } from "react-native";
 
 import color from "@/assets/styles/color";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import ModalComponent from "./Modal";
 import Draggable from "react-native-draggable";
-import GlobalStyle from "@/assets/styles/globalStyles";
 import IconButtonComponent from "./IconButton";
 
 //@ts-ignore
@@ -21,15 +19,13 @@ import emptyImage from "@/assets/images/no_result.png";
 //@ts-ignore
 import messengerIcon from "@/assets/images/icons/messenger.png";
 import { Controller, useForm } from "react-hook-form";
-import Tabs from "./Tabs";
-import { ComponentInterfaces } from "@/constants/component";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
-import { router, useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
   hideMessenger,
+  hideMessengerButton,
   openMessenger,
   overlayLoaded,
   overlayLoading,
@@ -43,6 +39,9 @@ const { height, width } = Dimensions.get("window");
 function MessengerModal() {
   const visible = useSelector(
     (state: RootState) => state.global.messengerVisible
+  );
+  const buttonVisible = useSelector(
+    (state: RootState) => state.global.messengerButtonVisible
   );
   const account = useSelector((state: RootState) => state.auth.account);
   const messengerId = useSelector(
@@ -64,6 +63,9 @@ function MessengerModal() {
   };
   const showModal = () => {
     dispatch(showMessenger());
+  };
+  const hideButton = () => {
+    dispatch(hideMessengerButton());
   };
 
   const { control, setValue, watch, handleSubmit } = useForm({
@@ -131,27 +133,30 @@ function MessengerModal() {
 
   return (
     <Fragment>
-      <Draggable
-        x={width - 70}
-        y={height - 300}
-        renderSize={50}
-        onShortPressRelease={showModal}
-        children={
-          <View style={{ position: "relative", width: 50, height: 50 }}>
-            <Image
-              source={messengerIcon}
-              style={{ width: "100%", height: "100%" }}
-            />
-            <IconButtonComponent
-              icon="close"
-              style={{ position: "absolute", top: -5, right: -5, padding: 0 }}
-              iconColor={color.pink3}
-              color={color.white1}
-              size={20}
-            />
-          </View>
-        }
-      />
+      {buttonVisible && (
+        <Draggable
+          x={width - 70}
+          y={height - 300}
+          renderSize={50}
+          onShortPressRelease={showModal}
+          children={
+            <View style={{ position: "relative", width: 50, height: 50 }}>
+              <Image
+                source={messengerIcon}
+                style={{ width: "100%", height: "100%" }}
+              />
+              <IconButtonComponent
+                icon="close"
+                style={{ position: "absolute", top: -5, right: -5, padding: 0 }}
+                iconColor={color.pink3}
+                color={color.white1}
+                size={20}
+                onPress={hideButton}
+              />
+            </View>
+          }
+        />
+      )}
       <ModalComponent
         visible={visible}
         style={{ height: "100%", gap: 10 }}

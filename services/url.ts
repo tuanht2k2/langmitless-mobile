@@ -33,7 +33,7 @@ export enum MESSENGER_URL {
   BASE = "/messengers",
   DETAILS = "/business/messengers/details",
   FIND_BY_MEMBERS = "/messengers/find-by-members",
-  FIND_PERSONAL = "/business/messengers/find-personal-messenger",
+  FIND_PERSONAL_WITH_ANOTHER = "/business/messengers/find-personal-messenger",
   SEARCH_BY_ACCOUNT = "/business/messengers/search",
 }
 

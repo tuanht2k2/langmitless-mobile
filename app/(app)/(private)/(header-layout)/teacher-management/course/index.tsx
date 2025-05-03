@@ -70,7 +70,6 @@ function YourCourseScreen() {
         dispatch(overlayLoading());
         const res = await courseService.search(request);
         if (res.data && res.data.length > 0) setCourses(res.data);
-          console.log("res",res.data)
         dispatch(overlayLoaded());
       } catch (error) {
         dispatch(overlayLoaded());

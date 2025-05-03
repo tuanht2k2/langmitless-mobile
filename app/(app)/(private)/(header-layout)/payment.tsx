@@ -82,15 +82,12 @@ function PaymentScreen() {
 
   const onShouldStartLoadWithRequest = (event: WebViewNavigation) => {
     const rawUrl = event.url;
-    console.log("rawUrl", rawUrl);
 
     if (rawUrl.startsWith("momo://")) {
       const httpsIndex = rawUrl.indexOf("https://");
 
       if (httpsIndex !== -1) {
         const httpsUrl = rawUrl.substring(httpsIndex);
-
-        console.log("[Cleaned HTTPS URL]:", httpsUrl);
 
         Linking.openURL(httpsUrl);
 

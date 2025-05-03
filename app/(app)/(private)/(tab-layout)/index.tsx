@@ -24,10 +24,20 @@ import color from "@/assets/styles/color";
 
 // @ts-ignore
 import backgroundImg from "@/assets/images/bgr_1.jpg";
+// @ts-ignore
+import messengerIcon from "@/assets/images/icons/messenger.png";
+// @ts-ignore
+import chatbotIcon from "@/assets/images/icons/chatbot.png";
+
 import GlobalStyle from "@/assets/styles/globalStyles";
 import CommonService from "@/services/CommonService";
 import accountService from "@/services/accountService";
-import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
+import {
+  overlayLoaded,
+  overlayLoading,
+  showChatbot,
+  showMessenger,
+} from "@/redux/reducers/globalSlide";
 import { loadAccount } from "@/redux/reducers/authSlice";
 
 export default function HomeScreen() {
@@ -43,7 +53,6 @@ export default function HomeScreen() {
       const data = res.data?.data;
       if (data) {
         dispatch(loadAccount(data));
-        console.log(data);
       }
     } catch (error) {
       console.log(
@@ -72,7 +81,6 @@ export default function HomeScreen() {
     },
     {
       name: "Truy vấn",
-      to: "/payment/query",
       iconColor: color.warning3,
       labelColor: color.textMain,
       icon: "query-stats",
@@ -82,6 +90,24 @@ export default function HomeScreen() {
       labelColor: color.textMain,
       icon: "data-usage",
       onClick: getAccountDetail,
+    },
+    {
+      name: "Trò chuyện",
+      iconColor: color.warning3,
+      labelColor: color.textMain,
+      img: messengerIcon,
+      onClick: () => {
+        dispatch(showMessenger());
+      },
+    },
+    {
+      name: "Chatbot",
+      iconColor: color.warning3,
+      labelColor: color.textMain,
+      img: chatbotIcon,
+      onClick: () => {
+        dispatch(showChatbot());
+      },
     },
   ];
 
@@ -161,6 +187,7 @@ export default function HomeScreen() {
                     flexDirection: "row",
                     gap: 20,
                     padding: 5,
+                    flexWrap: "wrap",
                   }}
                 >
                   {MENU.map((item, index) => (

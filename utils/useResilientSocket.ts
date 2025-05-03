@@ -2,6 +2,7 @@ import Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import { useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
+import socketManager from "@/singleton/SocketManager";
 
 const useResilientSocket = (
   topic: string,
@@ -49,15 +50,16 @@ const useResilientSocket = (
       }
     );
 
+    socketManager.addClient(client);
     clientRef.current = client;
   };
 
   const disconnectSocket = () => {
+    if (clientRef.current) socketManager.removeClient(clientRef.current);
     if (clientRef.current && clientRef.current.connected) {
       clientRef.current.disconnect(() => {
         setConnected(false);
         onDisconnect?.();
-        console.log("WebSocket disconnected");
       });
     }
   };

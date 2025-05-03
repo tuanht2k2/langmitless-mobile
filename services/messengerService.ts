@@ -9,6 +9,11 @@ const messengerService = {
   async findMessengersByAccount() {
     return apiService.post(`${MESSENGER_URL.SEARCH_BY_ACCOUNT}`, null);
   },
+  async findMessengerWithAnother(anotherAccountId: string) {
+    return apiService.post(`${MESSENGER_URL.FIND_PERSONAL_WITH_ANOTHER}`, {
+      id: anotherAccountId,
+    });
+  },
 };
 
 export default messengerService;

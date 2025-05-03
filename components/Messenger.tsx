@@ -29,6 +29,7 @@ import HorizontalDivider from "./HorizontalDivider";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import useSocket from "@/utils/useSocket";
 import useResilientSocket from "@/utils/useResilientSocket";
+import Card from "./Card";
 
 const { width } = Dimensions.get("window");
 
@@ -332,57 +333,59 @@ function Messenger() {
           </ScrollView>
 
           {/* Input box at bottom */}
-          <HorizontalDivider />
-          <MessageImagePicker />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: color.white1,
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              padding: 5,
-            }}
-          >
-            <Controller
-              control={control}
-              name="content"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    borderWidth: 1,
-                    borderColor: color.grey2,
-                    borderRadius: 7,
-                    paddingHorizontal: 10,
-                  }}
-                >
-                  <TextInput
-                    placeholder="Nhập tin nhắn..."
-                    placeholderTextColor={color.textGrey3}
+          {/* <HorizontalDivider /> */}
+          <Card>
+            <MessageImagePicker />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: color.white1,
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+                padding: 5,
+              }}
+            >
+              <Controller
+                control={control}
+                name="content"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <View
                     style={{
                       flex: 1,
-                      fontSize: 15,
-                      paddingVertical: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      borderWidth: 1,
+                      borderColor: color.grey2,
+                      borderRadius: 7,
+                      paddingHorizontal: 10,
                     }}
-                    autoCapitalize="none"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    multiline
-                  />
-                </View>
-              )}
-            />
-            <IconButtonComponent
-              icon={"send"}
-              onPress={handleSubmit(onSubmit)}
-              disabled={(!watch("content").trim() && !image) || sending}
-              iconColor={color.textPrimary3}
-            />
-          </View>
+                  >
+                    <TextInput
+                      placeholder="Nhập tin nhắn..."
+                      placeholderTextColor={color.textGrey3}
+                      style={{
+                        flex: 1,
+                        fontSize: 15,
+                        paddingVertical: 5,
+                      }}
+                      autoCapitalize="none"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      multiline
+                    />
+                  </View>
+                )}
+              />
+              <IconButtonComponent
+                icon={"send"}
+                onPress={handleSubmit(onSubmit)}
+                disabled={(!watch("content").trim() && !image) || sending}
+                iconColor={color.textPrimary3}
+              />
+            </View>
+          </Card>
         </Fragment>
       )}
     </View>
