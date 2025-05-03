@@ -5,6 +5,7 @@ import GlobalStyle from "@/assets/styles/globalStyles";
 import color from "@/assets/styles/color";
 import * as DocumentPicker from "expo-document-picker";
 import {RequestInterfaces} from "@/data/interfaces/request";
+import {pickAudioFile} from "@/utils/audioUtils";
 
 
 interface IProps {
@@ -32,32 +33,6 @@ function QuestionPronunciationEditor({ onSubmit, onBack }: IProps) {
   });
 
   const selectedAudio = watch("audioSample");
-
-  const pickAudioFile = async () => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "audio/*",
-        copyToCacheDirectory: true,
-        multiple: false,
-      });
-
-      if (!result.canceled && result.assets.length > 0) {
-        const file = result.assets[0];
-
-        setValue("audioSample", {
-          uri: file.uri,
-          name: file.name,
-          type: file.mimeType || "audio/mpeg",
-        });
-
-        console.log("Đã chọn file:", file.uri);
-      }
-    } catch (error) {
-      console.error("Lỗi khi chọn file âm thanh:", error);
-    }
-  };
-
-
 
   const onSubmitHandler = async (data: Omit<FormData, "topicId">) => {
     try {
@@ -114,7 +89,7 @@ function QuestionPronunciationEditor({ onSubmit, onBack }: IProps) {
       )}
 
       <TouchableOpacity
-        onPress={pickAudioFile}
+        onPress={() => pickAudioFile((audio) => setValue("audioSample", audio))}
         style={{
           borderWidth: 1,
           borderColor: color.primary1,

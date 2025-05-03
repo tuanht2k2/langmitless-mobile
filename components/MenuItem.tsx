@@ -31,7 +31,7 @@ function MenuItem(props: ComponentInterfaces.IMenuItem) {
       {props.img && (
         <Image
           source={props.img}
-          style={{ height: 40, width: 40, objectFit: "contain" }}
+          style={{ height: 25, width: 25, objectFit: "contain" }}
         />
       )}
       {props.icon && <Icon name={props.icon || ""} color={props.iconColor} />}

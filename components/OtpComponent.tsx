@@ -98,7 +98,6 @@ function OtpComponent(props: IProps) {
   };
 
   const handleVerifyResponse = async (ver: ResponseInterfaces.IOtpResponse) => {
-    console.log("ver", ver);
     if (!ver) return;
     if (!ver.remainSent && !ver.retryTime) {
       setNotiTitle("Bạn đã gửi lại OTP 5 lần, vui lòng thử lại sau 1 tiếng");

@@ -17,8 +17,15 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
+import {
+  openMessenger,
+  overlayLoaded,
+  overlayLoading,
+} from "@/redux/reducers/globalSlide";
 import { set } from "react-hook-form";
+import Divider from "@/components/Divider";
+import useResilientSocket from "@/utils/useResilientSocket";
+import messengerService from "@/services/messengerService";
 
 function RoomScreen() {
   const { id } = useLocalSearchParams();
@@ -42,7 +49,6 @@ function RoomScreen() {
         await accountService.searchHireHistory(request);
       setLoading(false);
       if (res && res.data) setTeacherData(res.data);
-      console.log("res.data", res.data);
     } catch (error) {
       setLoading(false);
     }
@@ -53,9 +59,8 @@ function RoomScreen() {
       !hire.status ||
       hire.status === "PENDING" ||
       hire.createdBy?.id !== account?.id
-    ) {
+    )
       return;
-    }
     setHireResponse(true);
     dispatch(overlayLoaded());
 
@@ -67,7 +72,7 @@ function RoomScreen() {
     }
   };
 
-  useSocket(`/topic/teachers/${id}`, teacherListener);
+  useResilientSocket(`/topic/teachers/${id}`, teacherListener);
 
   const showError = (error = "Đã xảy ra lỗi!") => {
     CommonService.showToast("error", error);
@@ -98,6 +103,27 @@ function RoomScreen() {
     return () => {};
   }, []);
 
+  const navigateMessenger = async () => {
+    if (!teacherData) return;
+    dispatch(overlayLoading());
+    try {
+      const res: ResponseInterfaces.ICommonResponse<ResponseInterfaces.IMessengerResponse> =
+        await messengerService.findMessengerWithAnother(
+          teacherData.id as string
+        );
+      dispatch(overlayLoaded());
+
+      if (!res || !res.data || res.code !== 200) {
+        showError();
+      }
+      dispatch(openMessenger(res.data.id as string));
+    } catch (error) {
+      console.error("An error occurred when navigateMessenger: ", error);
+      showError();
+      dispatch(overlayLoaded());
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -113,37 +139,68 @@ function RoomScreen() {
             height: "100%",
           }}
         >
-          <ScrollView style={{}}>
-            <Card styles={{ display: "flex", flexDirection: "row", gap: 20 }}>
-              <AvatarComponent imageUrl={teacherData.profileImage} size={100} />
-              <View style={{ display: "flex", justifyContent: "center" }}>
+          <ScrollView>
+            <Card
+              styles={{
+                flexDirection: "row",
+                alignItems: "center",
+                padding: 15,
+                backgroundColor: color.white1,
+                borderRadius: 12,
+              }}
+            >
+              <AvatarComponent imageUrl={teacherData.profileImage} size={80} />
+              <View style={{ flex: 1, marginLeft: 15 }}>
                 <Text
                   style={{
-                    fontSize: 19,
-                    fontWeight: "bold",
-                    color: color.blue1,
+                    fontSize: 18,
+                    fontWeight: "700",
+                    color: color.textMain,
                   }}
                 >
+                  {" "}
                   {teacherData.name}
                 </Text>
                 <Text
-                  style={{
-                    fontSize: 16,
-                    color: color.blue1,
-                  }}
+                  style={{ fontSize: 15, color: color.grey3, marginTop: 4 }}
                 >
-                  Giá tiền thuê:
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: color.blue1,
-                  }}
-                >
-                  {teacherData.cost} VND/h
+                  {" "}
+                  {teacherData.cost} đ/h
                 </Text>
               </View>
+
+              <View style={{ alignItems: "flex-end" }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "500",
+                    color: color.warning4,
+                    textDecorationLine: "underline",
+                    marginBottom: 4,
+                  }}
+                >
+                  Liên hệ
+                </Text>
+                <Text style={{ color: color.grey3, fontSize: 14 }}>
+                  {teacherData.phoneNumber}
+                </Text>
+                <View style={{ flexDirection: "row", marginTop: 6 }}>
+                  <IconButtonComponent
+                    icon="mail"
+                    iconColor={color.warning4}
+                    size={24}
+                    onPress={navigateMessenger}
+                  />
+                  <IconButtonComponent
+                    icon="call"
+                    iconColor={color.success3}
+                    size={24}
+                    style={{ marginLeft: 8 }}
+                  />
+                </View>
+              </View>
             </Card>
+
             <Card styles={{ padding: 10, marginTop: 10 }}>
               <Text style={{ fontSize: 17 }}>Lịch sử được thuê</Text>
               <View style={{ gap: 10, marginTop: 10 }}>
