@@ -30,10 +30,7 @@ import { useRouter } from "expo-router";
 function TopicScreen() {
   const {
     control,
-    setValue,
     handleSubmit,
-    reset,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {

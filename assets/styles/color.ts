@@ -65,6 +65,12 @@ const color = {
   yellow4: "#F2A92E",
   yellow5: "#FFAD33",
 
+  purple1: "#E9D6FF",
+  purple2: "#D2A8FF",
+  purple3: "#BB7EFF",
+  purple4: "#9F54E6",
+  purple5: "#7A1BFF",
+
   blue1: "#244f71",
 
   transparent: "#ff000000",

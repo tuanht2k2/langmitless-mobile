@@ -1,5 +1,5 @@
 import color from "@/assets/styles/color";
-import { closeModal } from "@/redux/reducers/globalSlide";
+// import { closeModal } from "@/redux/reducers/globalSlide";
 import { useRouter } from "expo-router";
 
 import React from "react";
@@ -20,8 +20,10 @@ export default function AvatarComponent(props: AvatarProps) {
 
   const handleNavigation = () => {
     if (!props.accountUrl) return;
+
+    //@ts-ignore
     router.push(`/account/${props.accountUrl}`);
-    dispatch(closeModal());
+    // dispatch(closeModal());
   };
 
   return (

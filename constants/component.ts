@@ -37,7 +37,8 @@ export namespace ComponentInterfaces {
   }
 
   export interface ITab {
-    title: string;
+    title?: string;
+    image?: ImageSourcePropType;
   }
 
   export interface IToast {

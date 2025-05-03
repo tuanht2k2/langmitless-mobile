@@ -6,6 +6,8 @@ interface GlobalState {
   isOverlayLoading: boolean;
   hireNotification: ResponseInterfaces.IHireResponse | null;
   chatbotVisible: boolean;
+  messengerVisible: boolean;
+  messengerId: string;
   course: ResponseInterfaces.ICourseResponse | null;
 }
 
@@ -14,6 +16,8 @@ const initialState: GlobalState = {
   isOverlayLoading: false,
   hireNotification: null,
   chatbotVisible: false,
+  messengerVisible: false,
+  messengerId: "",
   course: null,
 };
 
@@ -58,6 +62,18 @@ const globalSlice = createSlice({
     clearCourse(state) {
       state.course = null;
     },
+    showMessenger(state) {
+      state.messengerVisible = true;
+    },
+    hideMessenger(state) {
+      state.messengerVisible = false;
+    },
+    openMessenger(state, action: PayloadAction<string>) {
+      state.messengerId = action.payload;
+    },
+    closeMessenger(state) {
+      state.messengerId = "";
+    },
   },
 });
 
@@ -72,5 +88,9 @@ export const {
   clearCourse,
   showChatbot,
   hideChatbot,
+  showMessenger,
+  hideMessenger,
+  openMessenger,
+  closeMessenger,
 } = globalSlice.actions;
 export default globalSlice.reducer;

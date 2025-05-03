@@ -55,7 +55,8 @@ export namespace RequestInterfaces {
 
   export interface IEditMessageRequest {
     messengerId: string;
-    content: string;
+    content?: string;
+    files?: any;
   }
 
   export interface ISearchMessageRequest {
@@ -176,9 +177,9 @@ export namespace RequestInterfaces {
     topicId: string;
     content: string;
     audioSample: {
-      uri:string;
-      name:string;
-      type:string;
+      uri: string;
+      name: string;
+      type: string;
     };
   }
 
@@ -191,13 +192,13 @@ export namespace RequestInterfaces {
     content: string;
     correct: boolean;
   }
-  export interface IPronunciationRequestUpdate{
+  export interface IPronunciationRequestUpdate {
     questionId: string;
     content: string;
     audioSample: {
-      uri:string;
-      name:string;
-      type:string;
+      uri: string;
+      name: string;
+      type: string;
     };
   }
 

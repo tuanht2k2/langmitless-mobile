@@ -8,10 +8,8 @@ export const ApiInstance = axios.create({
   timeout: 30000,
   headers: {
     "X-Custom-Header": "foobar",
-
   },
 });
-
 
 export const FptAiApiInstance = axios.create({
   baseURL:
@@ -54,7 +52,6 @@ export const apiService = {
     }
   },
 
-
   get: async (
     url: string,
     params?: any,
@@ -96,21 +93,6 @@ export const apiService = {
     }
   },
 
-  postForm: async (
-    url: string,
-    formData: FormData,
-    handleError?: (error?: any) => void
-  ) => {
-    const config = await getApiConfig();
-    try {
-      const response = await ApiInstance.post(url, formData, config);
-      return response.data;
-    } catch (error) {
-      handleError?.(error);
-      throw error;
-    }
-  },
-
   putForm: async (
     url: string,
     formData: FormData,
@@ -126,7 +108,7 @@ export const apiService = {
     }
   },
 
-  postFormV2: async (
+  postForm: async (
     url: string,
     formData: FormData,
     handleError?: (error?: any) => void
@@ -136,7 +118,7 @@ export const apiService = {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data", // ⬅️ thêm dòng này
+        "Content-Type": "multipart/form-data",
       },
     };
 
@@ -148,6 +130,4 @@ export const apiService = {
       throw error;
     }
   },
-
-
 };

@@ -270,7 +270,6 @@ function ChatbotComponent() {
                 <View
                   style={{
                     maxWidth: "70%",
-                    // gap: 5,
                   }}
                 >
                   {message.message && (

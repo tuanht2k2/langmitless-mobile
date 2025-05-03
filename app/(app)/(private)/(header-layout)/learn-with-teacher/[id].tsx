@@ -19,6 +19,7 @@ import { ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 import { set } from "react-hook-form";
+import Divider from "@/components/Divider";
 
 function RoomScreen() {
   const { id } = useLocalSearchParams();
@@ -114,34 +115,60 @@ function RoomScreen() {
           }}
         >
           <ScrollView style={{}}>
-            <Card styles={{ display: "flex", flexDirection: "row", gap: 20 }}>
+            <Card
+              styles={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 20,
+              }}
+            >
               <AvatarComponent imageUrl={teacherData.profileImage} size={100} />
-              <View style={{ display: "flex", justifyContent: "center" }}>
+              <View style={{ display: "flex" }}>
                 <Text
                   style={{
-                    fontSize: 19,
-                    fontWeight: "bold",
-                    color: color.blue1,
+                    fontSize: 16,
+                    fontWeight: "700",
+                    color: color.textMain,
                   }}
                 >
                   {teacherData.name}
                 </Text>
+
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: color.grey4,
+                  }}
+                >
+                  {teacherData.cost} đ/h
+                </Text>
+              </View>
+              <Divider direction="VERTICAL" />
+              <View style={{}}>
                 <Text
                   style={{
                     fontSize: 16,
-                    color: color.blue1,
+                    fontWeight: "400",
+                    color: color.textMain,
+                    textDecorationStyle: "solid",
+                    textDecorationLine: "underline",
                   }}
                 >
-                  Giá tiền thuê:
+                  Liên hệ
                 </Text>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: color.blue1,
-                  }}
-                >
-                  {teacherData.cost} VND/h
+                <Text style={{ color: color.grey4 }}>
+                  {teacherData.phoneNumber}
                 </Text>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <IconButtonComponent
+                    icon="mail"
+                    iconColor={color.primary4}
+                  ></IconButtonComponent>
+                  <IconButtonComponent
+                    icon="call"
+                    iconColor={color.success3}
+                  ></IconButtonComponent>
+                </View>
               </View>
             </Card>
             <Card styles={{ padding: 10, marginTop: 10 }}>
