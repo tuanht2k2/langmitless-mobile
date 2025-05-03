@@ -1,4 +1,4 @@
-import {Interfaces} from "./model";
+import { Interfaces } from "./model";
 
 export namespace RequestInterfaces {
   export interface IIndentifyRequest {
@@ -55,7 +55,8 @@ export namespace RequestInterfaces {
 
   export interface IEditMessageRequest {
     messengerId: string;
-    content: string;
+    content?: string;
+    files?: any;
   }
 
   export interface ISearchMessageRequest {
@@ -216,7 +217,7 @@ export namespace RequestInterfaces {
       uri: string;
       name: string;
       type: string;
-    }
+    };
   }
 
   export interface IAnswerQuestionMultipleChoice {

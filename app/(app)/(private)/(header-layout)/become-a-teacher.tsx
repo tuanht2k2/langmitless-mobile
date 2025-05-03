@@ -96,7 +96,6 @@ function BecomeATeacher() {
       };
       const res = await accountService.becomeATeacher(request);
       setLoading(false);
-      console.log(res);
       if (!res) CommonService.showToast("error", "Đã xảy ra lỗi!");
 
       dispatch(loadAccount(res.data));

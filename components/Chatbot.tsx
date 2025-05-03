@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import color from "@/assets/styles/color";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useState } from "react";
 import ModalComponent from "./Modal";
 import Draggable from "react-native-draggable";
 import GlobalStyle from "@/assets/styles/globalStyles";
@@ -28,15 +28,16 @@ import { ResponseInterfaces } from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
 import { useRouter } from "expo-router";
 import { Icon } from "@rneui/themed";
-import useSocket from "@/utils/useSocket";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
   askChatbotAboutCourse,
   clearCourse,
   hideChatbot,
+  hideChatbotButton,
   showChatbot,
 } from "@/redux/reducers/globalSlide";
+import useResilientSocket from "@/utils/useResilientSocket";
 
 const { height, width } = Dimensions.get("window");
 
@@ -47,9 +48,6 @@ const TABS: ComponentInterfaces.ITab[] = [
   {
     title: "Câu hỏi thường gặp",
   },
-  // {
-  //   title: "Tìm kiếm giáo viên",
-  // },
 ];
 
 function ChatbotComponent() {
@@ -57,6 +55,10 @@ function ChatbotComponent() {
   const visible = useSelector(
     (state: RootState) => state.global.chatbotVisible
   );
+  const buttonVisible = useSelector(
+    (state: RootState) => state.global.chatbotButtonVisible
+  );
+
   const account = useSelector((state: RootState) => state.auth.account);
   const course = useSelector((state: RootState) => state.global.course);
 
@@ -67,6 +69,9 @@ function ChatbotComponent() {
   };
   const showModal = () => {
     dispatch(showChatbot());
+  };
+  const hideButton = () => {
+    dispatch(hideChatbotButton());
   };
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -110,7 +115,10 @@ function ChatbotComponent() {
     setMessages((prev) => [...prev, data]);
   };
 
-  useSocket(`/topic/chatbot/${account?.id}/messages`, handleChatbotResponse);
+  useResilientSocket(
+    `/topic/chatbot/${account?.id}/messages`,
+    handleChatbotResponse
+  );
 
   const CourseDetails = (course: ResponseInterfaces.ICourseResponse) => {
     const navigateToCourse = (id: string) => {
@@ -194,13 +202,30 @@ function ChatbotComponent() {
 
   return (
     <Fragment>
-      <Draggable
-        x={width - 70}
-        y={height - 160}
-        imageSource={chatbotIcon}
-        renderSize={60}
-        onShortPressRelease={showModal}
-      />
+      {buttonVisible && (
+        <Draggable
+          x={width - 70}
+          y={height - 160}
+          children={
+            <View style={{ position: "relative", width: 50, height: 50 }}>
+              <Image
+                source={chatbotIcon}
+                style={{ width: "100%", height: "100%" }}
+              />
+              <IconButtonComponent
+                icon="close"
+                style={{ position: "absolute", top: -5, right: -5, padding: 0 }}
+                iconColor={color.pink3}
+                color={color.white1}
+                size={20}
+                onPress={hideButton}
+              />
+            </View>
+          }
+          renderSize={60}
+          onShortPressRelease={showModal}
+        />
+      )}
       <ModalComponent
         visible={visible}
         style={{ height: "100%" }}
@@ -270,7 +295,6 @@ function ChatbotComponent() {
                 <View
                   style={{
                     maxWidth: "70%",
-                    // gap: 5,
                   }}
                 >
                   {message.message && (

@@ -31,15 +31,16 @@ export enum REACTION_URL {
 
 export enum MESSENGER_URL {
   BASE = "/messengers",
+  DETAILS = "/business/messengers/details",
   FIND_BY_MEMBERS = "/messengers/find-by-members",
-  FIND_PERSONAL_BY_MEMBERS = "/messengers/find-personal-by-members",
-  SEARCH = "/messengers/search",
-  SEARCH_BY_ACCOUNT = "/messengers/search-by-account",
+  FIND_PERSONAL_WITH_ANOTHER = "/business/messengers/find-personal-messenger",
+  SEARCH_BY_ACCOUNT = "/business/messengers/search",
 }
 
 export enum MESSAGE_URL {
   BASE = "/messages",
   SEARCH = "/messages/search",
+  CREATE = "/business/messages/create",
 }
 
 export enum RELATIONSHIP_URL {

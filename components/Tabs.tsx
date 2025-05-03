@@ -3,6 +3,7 @@ import React from "react";
 import color from "@/assets/styles/color";
 import { ComponentInterfaces } from "@/constants/component";
 import {
+  Image,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -45,6 +46,7 @@ function Tabs(props: IProps) {
             >
               {tab.title}
             </Text>
+            {tab.image && <Image source={tab.image} width={30} height={30} />}
           </TouchableOpacity>
         ))}
       </View>
