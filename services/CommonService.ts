@@ -21,6 +21,9 @@ const CommonService = {
       onPress: onPress,
     });
   },
+  showError: () => {
+    CommonService.showToast("error", "Đã xảy ra lỗi");
+  },
   uriListToFiles: async (
     uriList: string[]
   ): Promise<Interfaces.IMultipartFile[]> => {

@@ -5,15 +5,22 @@ import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { loadAccount, login, logout } from "@/redux/reducers/authSlice";
 import accountService from "@/services/accountService";
-import { clearHired, loaded, noticeHired } from "@/redux/reducers/globalSlide";
-import Toast, { ToastConfig } from "react-native-toast-message";
+import {
+  clearHired,
+  hideChatbotButton,
+  hideMessengerButton,
+  loaded,
+  noticeHired,
+} from "@/redux/reducers/globalSlide";
+import Toast from "react-native-toast-message";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import CommonService from "@/services/CommonService";
-import useSocket from "@/utils/useSocket";
 import { RootState } from "@/redux/store";
 import { Audio } from "expo-av";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import { AppState, AppStateStatus } from "react-native";
+import useResilientSocket from "@/utils/useResilientSocket";
+import socketManager from "@/singleton/SocketManager";
 
 interface ITokenData {
   iss: string;
@@ -62,6 +69,10 @@ export default function PrivateLayout() {
 
   const handleLogout = () => {
     AsyncStorage.clear().then(() => {
+      dispatch(hideMessengerButton());
+      dispatch(hideChatbotButton());
+      socketManager.disconnectAll();
+
       dispatch(logout());
       dispatch(loaded());
       router.replace("/login");
@@ -127,8 +138,8 @@ export default function PrivateLayout() {
     }
   };
 
-  useSocket(`/topic/${account?.id}/notifications`, notice);
-  useSocket(`/topic/teachers/${account?.id}`, hireListener);
+  useResilientSocket(`/topic/${account?.id}/notifications`, notice);
+  useResilientSocket(`/topic/teachers/${account?.id}`, hireListener);
 
   useEffect(() => {
     if (!account) return;

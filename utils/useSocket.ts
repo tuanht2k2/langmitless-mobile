@@ -1,6 +1,7 @@
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import { useEffect, useState } from "react";
+import socketManager from "@/singleton/SocketManager";
 
 const useSocket = (
   topic: string,
@@ -28,6 +29,7 @@ const useSocket = (
         setConnected(false);
       }
     );
+    socketManager.addClient(client);
     setClient(client);
 
     return () => {
@@ -35,7 +37,7 @@ const useSocket = (
         client.disconnect(() => {
           setConnected(false);
           onDisconnect?.();
-          console.log("Disconnected");
+          socketManager.removeClient(client);
         });
       }
     };

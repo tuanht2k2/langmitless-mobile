@@ -53,7 +53,6 @@ export default function LoginScreen() {
       .then((res: any) => {
         const resData = res.data?.data;
         const token = resData?.token;
-        console.log("data1", token);
         if (token) {
           AsyncStorage.setItem("token", token);
           dispatch(login());

@@ -28,21 +28,21 @@ export namespace ResponseInterfaces {
 
   export interface IMessengerResponse {
     id?: string;
-    createdAt?: Date;
     updatedAt?: Date;
-    createdBy: Interfaces.IUser;
     name?: string;
     type?: "GROUP" | "PERSONAL" | "CHATBOT";
+    image?: string;
     members?: Interfaces.IUser[];
+    messages?: IMessageResponse[];
   }
 
   export interface IMessageResponse {
     id: string;
+    messengerId?: string;
     createdAt?: Date;
-    updatedAt?: Date;
     createdBy?: Interfaces.IUser;
     content?: string;
-    messenger?: string;
+    fileUrl?: string;
   }
 
   export interface INotificationResponse {

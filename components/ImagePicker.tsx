@@ -3,7 +3,7 @@ import { Image } from "@rneui/base";
 import { Button, Icon } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { ActivityIndicator, Alert, Text, View, ViewStyle } from "react-native";
+import { Alert, Text, View, ViewStyle } from "react-native";
 import React from "react";
 import color from "@/assets/styles/color";
 
@@ -118,39 +118,6 @@ export function ImagePickerComponent(props: IProps) {
           />
         </View>
       )}
-
-      {/* <View style={{ ...GlobalStyle.horizontalButtonGroup, marginTop: 20 }}>
-        {props.onCancel && (
-          <Button
-            buttonStyle={{
-              ...GlobalStyle.xsBorderRadius,
-              borderColor: "white",
-            }}
-            color={color.primary4}
-            onPress={props.onCancel}
-            type="outline"
-          >
-            <Text style={{ color: "white" }}>Quay lại</Text>
-          </Button>
-        )}
-        {props.onSubmit && (
-          <Button
-            disabled={!image || props.loading}
-            buttonStyle={{ ...GlobalStyle.xsBorderRadius, minWidth: 80 }}
-            onPress={() => {
-              props.onSubmit?.(image);
-            }}
-          >
-            {props.loading ? (
-              <ActivityIndicator />
-            ) : (
-              <Text style={{ color: color.textWhite2, fontWeight: "bold" }}>
-                Xác nhận
-              </Text>
-            )}
-          </Button>
-        )}
-      </View> */}
     </View>
   );
 }
