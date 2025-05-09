@@ -1,41 +1,45 @@
-import {RequestInterfaces} from "@/data/interfaces/request";
-import {apiService} from "./axios";
-import {ANSWER_URL} from "@/services/url";
-
+import { RequestInterfaces } from "@/data/interfaces/request";
+import { apiService } from "./axios";
+import { ANSWER_URL } from "@/services/url";
 
 const answerService = {
-
-  answerQuestionPronunciation(request: RequestInterfaces.IAnswerQuestionPronunciation) {
+  answerQuestionPronunciation(
+    request: RequestInterfaces.IAnswerQuestionPronunciation
+  ) {
     try {
       const formData = new FormData();
-      formData.append("topicId", request.topicId)
-      formData.append("questionId", request.questionId)
+      formData.append("topicId", request.topicId);
+      formData.append("questionId", request.questionId);
       formData.append("answerFile", {
         uri: request.answerFile.uri,
         name: request.answerFile.name,
         type: request.answerFile.type,
-      } as any)
-      return apiService.postFormV2(`${ANSWER_URL.BASE}/Pronunciation`, formData);
+      } as any);
+      return apiService.postForm(`${ANSWER_URL.BASE}/Pronunciation`, formData);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   },
 
-  answerQuestionMultipleChoice(request: RequestInterfaces.IAnswerQuestionMultipleChoice) {
+  answerQuestionMultipleChoice(
+    request: RequestInterfaces.IAnswerQuestionMultipleChoice
+  ) {
     try {
-      return apiService.post(`${ANSWER_URL.BASE}/MultipleChoice`, request)
+      return apiService.post(`${ANSWER_URL.BASE}/MultipleChoice`, request);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   },
 
-  getScoreByQuestion(request:RequestInterfaces.IQuestionScore){
+  getScoreByQuestion(request: RequestInterfaces.IQuestionScore) {
     try {
-      return apiService.post(`${ANSWER_URL.BASE}/get-score-by-question`,request)
-    }catch (error){
-      console.log(error)
+      return apiService.post(
+        `${ANSWER_URL.BASE}/get-score-by-question`,
+        request
+      );
+    } catch (error) {
+      console.log(error);
     }
-  }
-
-}
+  },
+};
 export default answerService;

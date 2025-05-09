@@ -19,26 +19,26 @@ interface IRoute {
 }
 
 const MENU: ComponentInterfaces.IMenuItem[] = [
-  // {
-  //   name: "Topic",
-  //   to: "/topics",
-  //   iconColor: color.danger3,
-  //   labelColor: color.textMain,
-  //   icon: "topics",
-  // },
   {
     name: "Khóa học",
     to: "/teacher-management/course",
     iconColor: color.danger3,
-    labelColor: color.textMain,
+    labelColor: color.textGrey4,
     icon: "school",
   },
   {
-    name: "Kết nối",
-    to: "/payment/success",
-    iconColor: color.primary3,
-    labelColor: color.textMain,
-    icon: "join-right",
+    name: "Rút tiền",
+    to: "/withdrawal-request",
+    iconColor: color.yellow4,
+    labelColor: color.textGrey4,
+    icon: "payments",
+  },
+  {
+    name: "Thẻ tín dụng",
+    to: "/credit-card",
+    iconColor: color.blue1,
+    labelColor: color.textGrey4,
+    icon: "credit-score",
   },
 ];
 function TeacherScreen() {

@@ -49,6 +49,7 @@ function OtpComponent(props: IProps) {
         return;
       }
       setVerifyResponse(data);
+      console.log(data);
       if (data.correct) {
         props.setOtpVerified(true);
       }
