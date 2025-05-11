@@ -1,5 +1,5 @@
 import * as DocumentPicker from "expo-document-picker";
-import {Audio} from "expo-av";
+import { Audio } from "expo-av";
 import React from "react";
 
 export const pickAudioFile = async (
@@ -21,7 +21,6 @@ export const pickAudioFile = async (
       };
 
       onPicked(audio);
-      console.log("Đã chọn file mới:", file.uri);
     }
   } catch (error) {
     console.error("Lỗi khi chọn file âm thanh:", error);
@@ -54,4 +53,3 @@ export const playAudio = async (
     console.error("Lỗi khi phát audio:", error);
   }
 };
-

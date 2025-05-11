@@ -18,8 +18,8 @@ import CommonService from "@/services/CommonService";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import topicService from "@/services/topicService";
 import { useDispatch } from "react-redux";
-import {router} from "expo-router";
-import {CheckBox} from "@rneui/base";
+import { router } from "expo-router";
+import { CheckBox } from "@rneui/base";
 
 interface IProps {
   data: ResponseInterfaces.ITopicResponse[];
@@ -201,7 +201,7 @@ function TopicListMember(props: IProps) {
         onClose={() => {
           setModalVisible(false);
         }}
-        icon="token"
+        // icon="token"
         title="Tạo chủ đề mới"
         showHeader
       >

@@ -1,12 +1,12 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import {View, Text, TouchableOpacity, Dimensions} from "react-native";
-import {useLocalSearchParams, useNavigation} from "expo-router";
-import {RequestInterfaces} from "@/data/interfaces/request";
-import {overlayLoaded, overlayLoading} from "@/redux/reducers/globalSlide";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { View, Text, TouchableOpacity, Dimensions } from "react-native";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 import questionService from "@/services/questionService";
-import {useDispatch} from "react-redux";
-import {ResponseInterfaces} from "@/data/interfaces/response";
-import {Audio} from "expo-av";
+import { useDispatch } from "react-redux";
+import { ResponseInterfaces } from "@/data/interfaces/response";
+import { Audio } from "expo-av";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import answerService from "@/services/answerService";
 import AnswerQuestionItem from "@/components/AnswerQuestionItem";
@@ -20,9 +20,11 @@ interface IQuestionScoreResult {
   score: number;
 }
 function AnswerQuestion() {
-  const {topicId} = useLocalSearchParams();
+  const { topicId } = useLocalSearchParams();
   const dispatch = useDispatch();
-  const [questions, setQuestion] = useState<ResponseInterfaces.IQuestionResponse[]>([]);
+  const [questions, setQuestion] = useState<
+    ResponseInterfaces.IQuestionResponse[]
+  >([]);
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
   const [hasRecordingPermission, setHasRecordingPermission] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -31,12 +33,17 @@ function AnswerQuestion() {
   const [hasChecked, setHasChecked] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [playbackSound, setPlaybackSound] = useState<Audio.Sound | null>(null);
-  const [pronunciationResults, setPronunciationResults] = useState<Record<string, IAnswerPronunciationScore>>({});
+  const [pronunciationResults, setPronunciationResults] = useState<
+    Record<string, IAnswerPronunciationScore>
+  >({});
   const [audioUris, setAudioUris] = useState<Record<string, string>>({});
-  const [questionScores, setQuestionScores] = useState<Record<string, IQuestionScoreResult>>({});
-  const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
+  const [questionScores, setQuestionScores] = useState<
+    Record<string, IQuestionScoreResult>
+  >({});
+  const [selectedOptions, setSelectedOptions] = useState<{
+    [key: string]: string;
+  }>({});
   const navigation = useNavigation();
-
 
   const [searchRequest, setSearchRequest] =
     useState<RequestInterfaces.IQuestionSearchRequest>({
@@ -70,16 +77,19 @@ function AnswerQuestion() {
   }, [searchRequest]);
 
   // console.log(questions[activeSlide])
-  const handleSelectOption = (questionId: string | undefined, optionId: string) => {
+  const handleSelectOption = (
+    questionId: string | undefined,
+    optionId: string
+  ) => {
     if (!questionId) return;
-    setSelectedOptions(prev => ({
+    setSelectedOptions((prev) => ({
       ...prev,
       [questionId]: optionId,
     }));
     console.log(`Selected option: ${optionId} for question: ${questionId}`);
   };
 
-    const startRecording = async () => {
+  const startRecording = async () => {
     try {
       const permission = await Audio.requestPermissionsAsync();
       if (!permission.granted) {
@@ -112,9 +122,9 @@ function AnswerQuestion() {
       if (uri) {
         const currentQuestionId = questions[activeSlide]?.id;
         if (currentQuestionId) {
-          setAudioUris(prev => ({
+          setAudioUris((prev) => ({
             ...prev,
-            [currentQuestionId]: uri
+            [currentQuestionId]: uri,
           }));
         }
       }
@@ -150,55 +160,67 @@ function AnswerQuestion() {
         const currentAudioUri = audioUris[currentQuestion.id as string];
         if (!currentAudioUri) {
           dispatch(overlayLoaded());
-          CommonService.showToast("error", "Không được rồi !! ", "Bạn phải ghi âm đã ");
+          CommonService.showToast(
+            "error",
+            "Không được rồi !! ",
+            "Bạn phải ghi âm đã "
+          );
           return;
         }
-        if(currentAudioUri){
-          const answerRequest: RequestInterfaces.IAnswerQuestionPronunciation = {
-            topicId: topicId as string,
-            questionId: currentQuestion.id as string,
-            answerFile: {
-              uri: currentAudioUri,
-              name: `recording_${Date.now()}.mp3`,
-              type: 'audio/mp3'
-            }
-          };
+        if (currentAudioUri) {
+          const answerRequest: RequestInterfaces.IAnswerQuestionPronunciation =
+            {
+              topicId: topicId as string,
+              questionId: currentQuestion.id as string,
+              answerFile: {
+                uri: currentAudioUri,
+                name: `recording_${Date.now()}.mp3`,
+                type: "audio/mp3",
+              },
+            };
 
-          const response = await answerService.answerQuestionPronunciation(answerRequest);
-          setPronunciationResults(prev => ({
+          console.log("answerRequest", answerRequest);
+          const response = await answerService.answerQuestionPronunciation(
+            answerRequest
+          );
+          console.log(response);
+          setPronunciationResults((prev) => ({
             ...prev,
-            [currentQuestion.id as string]: response.data
+            [currentQuestion.id as string]: response.data,
           }));
 
-          setQuestionScores(prev => ({
+          setQuestionScores((prev) => ({
             ...prev,
             [currentQuestion.id as string]: {
               pronunciationScore: response.data.pronunciationScore,
-              score: response.data.score
-            }
+              score: response.data.score,
+            },
           }));
         }
-      }
-      else if (currentQuestion.type === "MultipleChoice" && selectedOptions[currentQuestion.id as string]) {
+      } else if (
+        currentQuestion.type === "MultipleChoice" &&
+        selectedOptions[currentQuestion.id as string]
+      ) {
         const answerRequest: RequestInterfaces.IAnswerQuestionMultipleChoice = {
           topicId: topicId as string,
           questionId: currentQuestion.id as string,
-          answeredText: selectedOptions[currentQuestion.id as string]
+          answeredText: selectedOptions[currentQuestion.id as string],
         };
 
-        const response = await answerService.answerQuestionMultipleChoice(answerRequest);
-        setPronunciationResults(prev => ({
+        const response = await answerService.answerQuestionMultipleChoice(
+          answerRequest
+        );
+        setPronunciationResults((prev) => ({
           ...prev,
-          [currentQuestion.id as string]: response.data
+          [currentQuestion.id as string]: response.data,
         }));
 
-
-        setQuestionScores(prev => ({
+        setQuestionScores((prev) => ({
           ...prev,
           [currentQuestion.id as string]: {
             pronunciationScore: 0,
-            score: response.data.score
-          }
+            score: response.data.score,
+          },
         }));
       }
     } catch (error) {
@@ -218,7 +240,7 @@ function AnswerQuestion() {
           try {
             const request: RequestInterfaces.IQuestionScore = {
               topicId: topicId as string,
-              questionId: question.id
+              questionId: question.id,
             };
 
             const response = await answerService.getScoreByQuestion(request);
@@ -226,21 +248,23 @@ function AnswerQuestion() {
             if (response.data) {
               scores[question.id] = {
                 pronunciationScore: response.data.pronunciationScore || 0,
-                score: response.data.score || 0
+                score: response.data.score || 0,
               };
             }
           } catch (error) {
-            console.error(`Error fetching score for question ${question.id}:`, error);
+            console.error(
+              `Error fetching score for question ${question.id}:`,
+              error
+            );
           }
         }
       }
 
-      setQuestionScores(prev => ({ ...prev, ...scores }));
+      setQuestionScores((prev) => ({ ...prev, ...scores }));
     } catch (error) {
       console.error("Error fetching question scores:", error);
     }
   }, [questions, topicId, selectedOptions]);
-
 
   useEffect(() => {
     if (questions.length > 0) {
@@ -248,7 +272,13 @@ function AnswerQuestion() {
     }
   }, [questions, fetchQuestionScores]);
 
-  const renderQuestionItem = ({ item, index }: { item: ResponseInterfaces.IQuestionResponse; index: number }) => (
+  const renderQuestionItem = ({
+    item,
+    index,
+  }: {
+    item: ResponseInterfaces.IQuestionResponse;
+    index: number;
+  }) => (
     <AnswerQuestionItem
       item={item}
       index={index}
@@ -272,34 +302,43 @@ function AnswerQuestion() {
       setPlaybackSound={setPlaybackSound}
       isLastQuestion={activeSlide === questions.length - 1}
     />
-
   );
 
   return (
-    <View style={{
-      flex: 1,
-      justifyContent: 'center',
-    }}>
-      <View style={{
-        height: '70%',
-        justifyContent: 'center',
-      }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+      }}
+    >
+      <View
+        style={{
+          height: "70%",
+          justifyContent: "center",
+        }}
+      >
         <Carousel
           ref={carouselRef}
           data={questions}
           renderItem={renderQuestionItem}
           width={screenWidth}
-          onSnapToItem={(index: React.SetStateAction<number>) => setActiveSlide(index)}
+          onSnapToItem={(index: React.SetStateAction<number>) =>
+            setActiveSlide(index)
+          }
           enabled={false}
           style={{
             flex: 1,
           }}
         />
-        <View style={{
-          alignItems: "center",
-          paddingVertical: 16,
-        }}>
-          <Text style={{fontSize: 16}}>Câu {activeSlide + 1}/{questions.length}</Text>
+        <View
+          style={{
+            alignItems: "center",
+            paddingVertical: 16,
+          }}
+        >
+          <Text style={{ fontSize: 16 }}>
+            Câu {activeSlide + 1}/{questions.length}
+          </Text>
         </View>
       </View>
     </View>
