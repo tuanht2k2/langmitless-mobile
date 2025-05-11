@@ -32,7 +32,7 @@ function OverlayActivityIndicator() {
         }}
       >
         {/* <ActivityIndicator color={color.blue1} size={30} /> */}
-        <Image source={searchingAnimation} style={{ height: 60, width: 60 }} />
+        <Image source={loadingAnimation} style={{ height: 60, width: 60 }} />
       </View>
     </Modal>
   );

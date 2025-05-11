@@ -62,7 +62,15 @@ const ROUTES: IRoute[] = [
   {
     name: "member/AnswerQuestion",
     title: "Danh sách câu hỏi",
-  }
+  },
+  {
+    name: "withdrawal-request",
+    title: "Rút tiền",
+  },
+  {
+    name: "credit-card",
+    title: "Quản lý Thẻ tín dụng",
+  },
 ];
 
 export default function HeaderLayout() {

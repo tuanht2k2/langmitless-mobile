@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import ModalComponent from "@/components/Modal";
 import Toast from "react-native-toast-message";
 import { RequestInterfaces } from "@/data/interfaces/request";
+import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 
 interface IProps {
   otpVerified?: boolean;
@@ -31,6 +32,8 @@ function OtpComponent(props: IProps) {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [getOtpLoading, setGetOtpLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const [verifyResponse, setVerifyResponse] =
     useState<ResponseInterfaces.IOtpResponse>({});
@@ -49,6 +52,7 @@ function OtpComponent(props: IProps) {
         return;
       }
       setVerifyResponse(data);
+      console.log(data);
       if (data.correct) {
         props.setOtpVerified(true);
       }
@@ -61,8 +65,10 @@ function OtpComponent(props: IProps) {
   };
 
   const getOtp = async () => {
+    dispatch(overlayLoading());
     try {
       const res = await otpService.get();
+      dispatch(overlayLoaded());
 
       const data = res?.data;
       if (!data) {
@@ -88,6 +94,7 @@ function OtpComponent(props: IProps) {
         "Hãy kiểm tra email mà bạn đã đăng ký"
       );
     } catch (error) {
+      dispatch(overlayLoaded());
       CommonService.showToast(
         "error",
         "Bạn đã gửi OTP quá 5 lần",
@@ -140,10 +147,12 @@ function OtpComponent(props: IProps) {
       </ModalComponent>
       <View
         style={{
-          padding: 50,
           backgroundColor: color.white1,
           gap: 50,
           height: "100%",
+          display: "flex",
+          alignItems: "center",
+          paddingVertical: 50,
         }}
       >
         <Text

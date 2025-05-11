@@ -18,8 +18,6 @@ import { Controller, useForm } from "react-hook-form";
 import { ScrollView, Text, TextInput, View } from "react-native";
 import { useSelector } from "react-redux";
 
-//@ts-ignore
-import bankingIcon from "@/assets/images/icons/banking.png";
 import paymentService from "@/services/paymentService";
 import { useRouter } from "expo-router";
 

@@ -1,6 +1,6 @@
-import {RequestInterfaces} from "@/data/interfaces/request";
-import {apiService} from "./axios";
-import {COURSE_URL, QUESTION_URL_V2} from "./url";
+import { RequestInterfaces } from "@/data/interfaces/request";
+import { apiService } from "./axios";
+import { COURSE_URL, QUESTION_URL_V2 } from "./url";
 
 const questionService = {
   async search(request: RequestInterfaces.ISearchCourseRequest) {
@@ -32,41 +32,55 @@ const questionService = {
     }
   },
 
-  async getListQuestionByTopic(request: RequestInterfaces.ITopicsSearchRequest) {
+  async getListQuestionByTopic(
+    request: RequestInterfaces.ITopicsSearchRequest
+  ) {
     try {
-      return apiService.post(`${QUESTION_URL_V2.BASE}/by-topic`, request)
-    } catch (error) {
-      throw error
-    }
-  },
-
-  async createQuestionMultipleChoice(request: RequestInterfaces.IMultipleChoiceRequest) {
-    try {
-      return apiService.post(`${QUESTION_URL_V2.BASE}/multiple-choice`, request)
+      return apiService.post(`${QUESTION_URL_V2.BASE}/by-topic`, request);
     } catch (error) {
       throw error;
     }
   },
 
-  createQuestionPronunciation(request: RequestInterfaces.IPronunciationRequest) {
+  async createQuestionMultipleChoice(
+    request: RequestInterfaces.IMultipleChoiceRequest
+  ) {
+    try {
+      return apiService.post(
+        `${QUESTION_URL_V2.BASE}/multiple-choice`,
+        request
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  createQuestionPronunciation(
+    request: RequestInterfaces.IPronunciationRequest
+  ) {
     try {
       const formData = new FormData();
       formData.append("topicId", request.topicId);
-      formData.append("content", request.content)
+      formData.append("content", request.content);
       formData.append("audioSample", {
         uri: request.audioSample.uri,
         name: request.audioSample.name,
         type: request.audioSample.type,
       } as any);
 
-
-      return apiService.postFormV2(`${QUESTION_URL_V2.BASE}/pronunciation`, formData);
+      return apiService.postForm(
+        `${QUESTION_URL_V2.BASE}/pronunciation`,
+        formData
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   },
 
-  updateQuestionPronunciation(questionId:string,request:RequestInterfaces.IPronunciationRequestUpdate) {
+  updateQuestionPronunciation(
+    questionId: string,
+    request: RequestInterfaces.IPronunciationRequestUpdate
+  ) {
     try {
       const formData = new FormData();
 
@@ -77,12 +91,15 @@ const questionService = {
         const file = {
           uri: request.audioSample.uri,
           name: request.audioSample.name,
-          type: request.audioSample.type || 'audio/mpeg',
-        }
+          type: request.audioSample.type || "audio/mpeg",
+        };
         formData.append("audioSample", file as any); // Thêm tệp âm thanh vào FormData
       }
 
-      return apiService.postFormV2(`${QUESTION_URL_V2.BASE}/pronunciation/update`, formData);
+      return apiService.postForm(
+        `${QUESTION_URL_V2.BASE}/pronunciation/update`,
+        formData
+      );
     } catch (error) {
       console.log("Error in updateQuestionPronunciation:", error);
     }
@@ -90,21 +107,25 @@ const questionService = {
 
   async deleteQuestion(questionId: string | undefined) {
     try {
-      return apiService.delete(`${QUESTION_URL_V2.BASE}/${questionId}`)
+      return apiService.delete(`${QUESTION_URL_V2.BASE}/${questionId}`);
     } catch (error) {
       throw error;
     }
   },
 
-  async updateQuestionMultipleChoice(questionId: string | undefined, request: RequestInterfaces.IMultipleChoiceRequestUpdate) {
+  async updateQuestionMultipleChoice(
+    questionId: string | undefined,
+    request: RequestInterfaces.IMultipleChoiceRequestUpdate
+  ) {
     try {
-      return apiService.post(`${QUESTION_URL_V2.BASE}/multiple-choice/update/${questionId}`, request)
+      return apiService.post(
+        `${QUESTION_URL_V2.BASE}/multiple-choice/update/${questionId}`,
+        request
+      );
     } catch (error) {
       throw error;
     }
   },
-
-
 };
 
 export default questionService;

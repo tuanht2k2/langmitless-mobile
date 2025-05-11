@@ -18,7 +18,7 @@ import CommonService from "@/services/CommonService";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import topicService from "@/services/topicService";
 import { useDispatch } from "react-redux";
-import {router} from "expo-router";
+import { router } from "expo-router";
 
 interface IProps {
   data: ResponseInterfaces.ITopicResponse[];
@@ -35,10 +35,8 @@ function TopicList(props: IProps) {
 
   const {
     control,
-    setValue,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {

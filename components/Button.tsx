@@ -28,6 +28,11 @@ function Button(props: IProps) {
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
+        shadowColor: color.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
         ...props.style,
       }}
       disabled={props.disabled}

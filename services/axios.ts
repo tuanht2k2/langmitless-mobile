@@ -5,7 +5,7 @@ export const ApiInstance = axios.create({
   baseURL:
     process.env.EXPO_PUBLIC_BASE_URL?.replace(/['";]/g, "") ||
     "http://localhost:8080/api/v1/",
-  timeout: 30000,
+  timeout: 40000,
   headers: {
     "X-Custom-Header": "foobar",
   },

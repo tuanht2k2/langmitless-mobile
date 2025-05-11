@@ -30,7 +30,7 @@ interface IProps {
   iconStyle?: ViewStyle;
   headerStyle?: ViewStyle;
   titleStyle?: TextStyle;
-  onClose?: () => void; // Callback function to handle modal closing
+  onClose?: () => void;
 }
 
 function ModalComponent(props: IProps) {

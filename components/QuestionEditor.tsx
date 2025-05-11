@@ -1,15 +1,15 @@
 import color from "@/assets/styles/color";
-import React, {useCallback, useState} from "react";
-import {Control, FieldErrors} from "react-hook-form";
-import {Text, View} from "react-native";
-import {RequestInterfaces} from "@/data/interfaces/request";
+import React, { useCallback, useState } from "react";
+import { Control, FieldErrors } from "react-hook-form";
+import { Text, View } from "react-native";
+import { RequestInterfaces } from "@/data/interfaces/request";
 import QuestionPronunciationEditor from "@/components/QuestionPronunciationEditor";
 import QuestionMultipleChoiceEditor from "@/components/QuestionMultipleChoiceEditor";
-import {Dropdown} from "react-native-element-dropdown";
-import {useDispatch} from "react-redux";
-import {overlayLoaded, overlayLoading} from "@/redux/reducers/globalSlide";
+import { Dropdown } from "react-native-element-dropdown";
+import { useDispatch } from "react-redux";
+import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 import questionService from "@/services/questionService";
-import {useLocalSearchParams} from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import CommonService from "@/services/CommonService";
 
 interface IProps {
@@ -19,16 +19,15 @@ interface IProps {
 }
 
 const questionTypes = [
-  {label: "Phát âm (Pronunciation)", value: "Pronunciation"},
-  {label: "Trắc nghiệm (Multiple Choice)", value: "MultipleChoice"},
+  { label: "Phát âm (Pronunciation)", value: "Pronunciation" },
+  { label: "Trắc nghiệm (Multiple Choice)", value: "MultipleChoice" },
 ];
 
-function QuestionEditor({control, errors, onSuccess}: IProps) {
+function QuestionEditor({ control, errors, onSuccess }: IProps) {
   const topicId = useLocalSearchParams().topicId as string;
 
   const [questionType, setQuestionType] = useState<string | null>(null);
   const dispatch = useDispatch();
-
 
   const handleQuestionTypeChange = (val: string) => {
     setQuestionType(val);
@@ -43,7 +42,11 @@ function QuestionEditor({control, errors, onSuccess}: IProps) {
         };
         dispatch(overlayLoading());
         await questionService.createQuestionMultipleChoice(requestData);
-        CommonService.showToast("success", "Thành công", "Tạo câu hỏi thành công");
+        CommonService.showToast(
+          "success",
+          "Thành công",
+          "Tạo câu hỏi thành công"
+        );
         onSuccess();
         dispatch(overlayLoaded());
       } catch (error) {
@@ -66,7 +69,11 @@ function QuestionEditor({control, errors, onSuccess}: IProps) {
 
         dispatch(overlayLoading());
         await questionService.createQuestionPronunciation(requestData);
-        CommonService.showToast("success", "Thành công", "Tạo câu hỏi phát âm thành công");
+        CommonService.showToast(
+          "success",
+          "Thành công",
+          "Tạo câu hỏi phát âm thành công"
+        );
         onSuccess();
         dispatch(overlayLoaded());
       } catch (error) {
@@ -80,7 +87,7 @@ function QuestionEditor({control, errors, onSuccess}: IProps) {
 
   return (
     <>
-      <View style={{gap: 15}}>
+      <View style={{ gap: 15 }}>
         {!questionType && (
           <>
             <Dropdown
@@ -92,21 +99,28 @@ function QuestionEditor({control, errors, onSuccess}: IProps) {
               onChange={(item) => {
                 handleQuestionTypeChange(item.value);
               }}
+              style={{ padding: 10, paddingBottom: 20 }}
             />
           </>
         )}
 
         {questionType === "Pronunciation" && (
-          <QuestionPronunciationEditor onSubmit={createPronunciationQuestion} onBack={() => setQuestionType(null)}/>
+          <QuestionPronunciationEditor
+            onSubmit={createPronunciationQuestion}
+            onBack={() => setQuestionType(null)}
+          />
         )}
 
         {questionType === "MultipleChoice" && (
-          <QuestionMultipleChoiceEditor onSubmit={createQuestion} onBack={() => setQuestionType(null)}/>
+          <QuestionMultipleChoiceEditor
+            onSubmit={createQuestion}
+            onBack={() => setQuestionType(null)}
+          />
         )}
 
         {questionType && (
           <Text
-            style={{color: color.grey2, textAlign: "center", marginTop: 10}}
+            style={{ color: color.grey2, textAlign: "center", marginTop: 10 }}
             onPress={() => setQuestionType(null)}
           >
             ← Quay lại chọn loại câu hỏi
