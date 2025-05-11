@@ -1,4 +1,4 @@
-import {Interfaces} from "./model";
+import { Interfaces } from "./model";
 
 export namespace ResponseInterfaces {
   export interface ICommonResponse<T> {
@@ -125,8 +125,15 @@ export namespace ResponseInterfaces {
     score: number;
   }
 
-  export interface IQuestionScore{
+  export interface IQuestionScore {
     pronunciationScore: number;
     score: number;
+  }
+
+  export interface ICreditCard {
+    cardNumber?: string;
+    bank?: string;
+    accountId?: string;
+    qrImage?: string;
   }
 }

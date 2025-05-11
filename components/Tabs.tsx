@@ -31,7 +31,7 @@ function Tabs(props: IProps) {
                 props.activeIndex === index ? color.blue1 : color.white1,
               paddingVertical: 10,
               paddingHorizontal: 20,
-              borderRadius: 15,
+              borderRadius: 10,
               height: 40,
               ...props.tabStyles,
             }}
@@ -41,7 +41,8 @@ function Tabs(props: IProps) {
               style={{
                 color:
                   props.activeIndex === index ? color.yellow1 : color.pink3,
-                fontSize: 16,
+                fontSize: 14,
+                fontWeight: "500",
               }}
             >
               {tab.title}

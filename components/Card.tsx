@@ -16,7 +16,7 @@ function Card(props: ICardProps) {
         backgroundColor: color.white1,
         borderWidth: 1,
         borderColor: color.grey1,
-        shadowColor: color.pink3,
+        shadowColor: color.primary3,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,

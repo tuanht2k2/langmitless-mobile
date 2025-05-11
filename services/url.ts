@@ -116,5 +116,15 @@ export enum PAYMENT_URL {
 }
 
 export enum ANSWER_URL {
-  BASE= "answer"
+  BASE = "answer",
+}
+
+export enum WITHDRAWAL_REQUEST_URL {
+  CREATE = "/business/withdrawal-requests/create",
+  UPDATE_STATUS = "/business/withdrawal-requests/update-status",
+}
+
+export enum CREDIT_CARD_URL {
+  DETAILS = "/business/credit-cards/details",
+  CREATE = "/business/credit-cards/create",
 }

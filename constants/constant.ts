@@ -9,6 +9,32 @@ import KorFlag from "@/assets/images/flags/kor.png";
 //@ts-ignore
 import JapFlag from "@/assets/images/flags/jap.png";
 
+// credit card
+//@ts-ignore
+import mbBankIcon from "@/assets/images/bankIcons/mb.png";
+//@ts-ignore
+import tcbIcon from "@/assets/images/bankIcons/techcombank.png";
+//@ts-ignore
+import tpbankIcon from "@/assets/images/bankIcons/tpbank.jpg";
+
+export const BANKS: ComponentInterfaces.IDropdownOption<string>[] = [
+  {
+    name: "MB Bank",
+    code: "mb",
+    img: mbBankIcon,
+  },
+  {
+    name: "Techcombank",
+    code: "tcb",
+    img: tcbIcon,
+  },
+  {
+    name: "TP Bank",
+    code: "tp",
+    img: tpbankIcon,
+  },
+];
+
 export const LANGUAGES: ComponentInterfaces.IDropdownOption<string>[] = [
   {
     name: "Tiếng Việt",

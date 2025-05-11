@@ -230,4 +230,19 @@ export namespace RequestInterfaces {
     topicId: string;
     questionId: string;
   }
+
+  export interface IEditWithdrawalRequest {
+    id?: string;
+    recever?: string;
+    amount?: number;
+    description?: string;
+    status?: "CANCELLED" | "INIT" | "REJECTED" | "ACCEPTED";
+  }
+
+  export interface IEditCreditCardRequest {
+    cardNumber?: string;
+    bank?: string;
+    accountId?: string;
+    qrImage?: any;
+  }
 }

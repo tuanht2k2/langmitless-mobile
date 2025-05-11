@@ -16,6 +16,9 @@ import { useDispatch } from "react-redux";
 
 // @ts-ignore
 import emptyIcon from "@/assets/images/no_result.png";
+// @ts-ignore
+import courseIcon from "@/assets/images/icons/course.png";
+
 import CourseList from "@/components/CourseList";
 import IconButtonComponent from "@/components/IconButton";
 import GlobalStyle from "@/assets/styles/globalStyles";
@@ -99,16 +102,32 @@ function TopicScreen() {
 
   return (
     <View style={{ padding: 10 }}>
-      <Card styles={{ borderWidth: 1, borderColor: color.pink2, gap: 10 }}>
-        <Text
+      <Card
+        styles={{
+          borderWidth: 1,
+          gap: 10,
+          shadowColor: color.blue1,
+        }}
+      >
+        <View
           style={{
-            fontSize: 17,
-            color: color.grey4,
-            fontWeight: "bold",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 3,
           }}
         >
-          Tìm kiếm khóa học
-        </Text>
+          <Image style={{ height: 30, width: 30 }} source={courseIcon} />
+          <Text
+            style={{
+              fontSize: 17,
+              color: color.blue1,
+              fontWeight: "bold",
+            }}
+          >
+            Tìm kiếm khóa học
+          </Text>
+        </View>
         <HorizontalDivider />
         <View style={{ paddingTop: 10 }}>
           <View
@@ -129,14 +148,14 @@ function TopicScreen() {
                     alignItems: "center",
                     flex: 1,
                     borderWidth: 1,
-                    borderColor: color.grey1,
+                    borderColor: color.blue1,
                     borderRadius: 7,
                     // height: 50,
                   }}
                 >
                   <TextInput
-                    placeholder="Tên khóa học"
-                    placeholderTextColor={color.textGrey3}
+                    placeholder="Nhập tên khóa học..."
+                    placeholderTextColor={color.textGrey2}
                     style={[
                       {
                         height: "100%",
@@ -158,14 +177,18 @@ function TopicScreen() {
             />
             <Button
               title="Tìm kiếm"
-              style={{}}
+              style={{ backgroundColor: color.blue1 }}
               onClick={handleSubmit(onSubmit)}
             />
           </View>
           <DropdownComponent
             options={LANGUAGES}
             placeholder="Chọn ngôn ngữ"
-            placeholderStyle={{ color: color.textGrey3 }}
+            placeholderStyle={{
+              color: color.textGrey2,
+              fontSize: 15,
+              fontWeight: "500",
+            }}
             control={control}
             errors={errors}
             name="language"
@@ -174,7 +197,11 @@ function TopicScreen() {
           <DropdownComponent
             options={COURSE_LEVELS}
             placeholder="Chọn cấp độ"
-            placeholderStyle={{ color: color.textGrey3 }}
+            placeholderStyle={{
+              color: color.textGrey2,
+              fontSize: 15,
+              fontWeight: "500",
+            }}
             control={control}
             errors={errors}
             name="level"
@@ -182,14 +209,18 @@ function TopicScreen() {
           <DropdownComponent
             options={COURSE_PRICE}
             placeholder="Chọn giá tiền"
-            placeholderStyle={{ color: color.textGrey3 }}
+            placeholderStyle={{
+              color: color.textGrey2,
+              fontSize: 15,
+              fontWeight: "500",
+            }}
             control={control}
             errors={errors}
             name="price"
           />
         </View>
       </Card>
-      <Card styles={{ marginTop: 20 }}>
+      <Card styles={{ marginTop: 20, shadowColor: color.blue1 }}>
         {courses && courses.length > 0 && (
           <CourseList
             data={courses}
@@ -203,11 +234,14 @@ function TopicScreen() {
           </View>
         )}
         {!courses && (
-          <Text
-            style={{ paddingVertical: 20, fontSize: 16, color: color.grey4 }}
-          >
-            Hãy tìm kiếm gì đó...
-          </Text>
+          <View style={{ display: "flex", alignItems: "center" }}>
+            <Text
+              style={{ paddingVertical: 20, fontSize: 16, color: color.grey4 }}
+            >
+              Hãy tìm kiếm gì đó...
+            </Text>
+            <Image source={emptyIcon} style={{ height: 200, width: 200 }} />
+          </View>
         )}
       </Card>
     </View>

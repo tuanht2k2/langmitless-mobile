@@ -1,3 +1,4 @@
+import color from "@/assets/styles/color";
 import { useCourse } from "@/contexts";
 import CourseProvider from "@/contexts/courseContext/CourseProvider";
 import { Stack } from "expo-router";
@@ -31,8 +32,7 @@ function CourseLayout() {
             name={route.name}
             options={{
               headerTitle: route.title,
-              // headerStyle: styles.header,
-              // headerTitleStyle: styles.headerText,
+              headerTitleStyle: { color: color.textBlue1, fontWeight: "500" },
             }}
           />
         ))}
