@@ -4,35 +4,34 @@ import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import { playAudio } from "@/utils/audioUtils";
+import color from "@/assets/styles/color";
 
 interface AnswerQuestionItemProps {
   item: ResponseInterfaces.IQuestionResponse;
   index: number;
-  selectedOption: string | null;
-  recording: boolean;
-  audioUri: string | null;
-  sound: Audio.Sound | null;
+  selectedOption?: string | null;
+  recording?: boolean;
+  audioUri?: string | null;
   playbackSound: Audio.Sound | null;
-  hasChecked: boolean;
-  activeSlide: number;
-  questionsLength: number;
-  pronunciationResult: {
-    pronunciationScore: number;
-    score: number;
+  hasChecked?: boolean;
+  pronunciationResult?: {
+    pronunciationScore?: number;
+    score?: number;
   } | null;
-  questionScores: Record<string, { pronunciationScore: number; score: number }>;
+  questionScores: Record<
+    string,
+    { pronunciationScore?: number; score?: number }
+  >;
   handleSelectOption: (
     questionId: string | undefined,
     optionId: string
   ) => void;
-  startRecording: () => void;
-  stopRecording: () => void;
-  handleGoToPrev: () => void;
-  handleGoToNext: () => void;
-  handleCheckAnswer: () => void;
-  setSound: React.Dispatch<React.SetStateAction<Audio.Sound | null>>;
+  startRecording?: () => void;
+  stopRecording?: () => void;
+  handleGoToPrev?: () => void;
+  handleCheckAnswer?: () => void;
   setPlaybackSound: React.Dispatch<React.SetStateAction<Audio.Sound | null>>;
-  isLastQuestion: boolean;
+  isLastQuestion?: boolean;
 }
 
 const AnswerQuestionItem: React.FC<AnswerQuestionItemProps> = ({
@@ -41,19 +40,14 @@ const AnswerQuestionItem: React.FC<AnswerQuestionItemProps> = ({
   selectedOption,
   recording,
   audioUri,
-  sound,
   playbackSound,
   hasChecked,
-  activeSlide,
-  questionsLength,
   isLastQuestion,
   handleSelectOption,
   startRecording,
   stopRecording,
   handleGoToPrev,
-  handleGoToNext,
   handleCheckAnswer,
-  setSound,
   setPlaybackSound,
   questionScores,
 }) => {
@@ -163,7 +157,7 @@ const AnswerQuestionItem: React.FC<AnswerQuestionItemProps> = ({
               gap: 12,
             }}
           >
-            {item.audioSample && (
+            {/* {item.audioSample && (
               <TouchableOpacity
                 onPress={() => playAudio(item.audioSample, sound, setSound)}
                 style={{
@@ -187,7 +181,7 @@ const AnswerQuestionItem: React.FC<AnswerQuestionItemProps> = ({
                   Nghe mẫu
                 </Text>
               </TouchableOpacity>
-            )}
+            )} */}
 
             <TouchableOpacity
               onPress={recording ? stopRecording : startRecording}
@@ -363,7 +357,7 @@ const AnswerQuestionItem: React.FC<AnswerQuestionItemProps> = ({
           <Text style={{ color: "#fff", fontWeight: "600" }}>Quay lại</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={handleCheckAnswer}
           style={{
             flex: 1,
@@ -382,22 +376,24 @@ const AnswerQuestionItem: React.FC<AnswerQuestionItemProps> = ({
             style={{ marginRight: 8 }}
           />
           <Text style={{ color: "#fff", fontWeight: "600" }}>Kiểm tra</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
-          onPress={handleGoToNext}
+          onPress={handleCheckAnswer}
           style={{
             flex: 1,
             paddingVertical: 12,
-            backgroundColor: isLastQuestion ? "#FF5722" : "#2196F3",
+            backgroundColor: isLastQuestion ? color.blue1 : color.success3,
             borderRadius: 8,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff", fontWeight: "600", marginRight: 8 }}>
-            {isLastQuestion ? "Về chủ đề" : "Tiếp theo"}
+          <Text
+            style={{ color: color.white1, fontWeight: "600", marginRight: 8 }}
+          >
+            {isLastQuestion ? "Hoàn thành" : "Trả lời"}
           </Text>
           <Ionicons
             name={isLastQuestion ? "home" : "arrow-forward"}

@@ -10,7 +10,6 @@ import { RootState } from "@/redux/store";
 import { useCourse } from "@/contexts";
 import color from "@/assets/styles/color";
 import Card from "@/components/Card";
-import TopicList from "@/components/TopicList";
 import Button from "@/components/Button";
 import ModalComponent from "@/components/Modal";
 import OtpComponent from "@/components/OtpComponent";
@@ -117,6 +116,9 @@ function Course() {
               <TopicListMember
                 data={course.topics || []}
                 editable={account?.id === course.createdBy?.id}
+                canViewScoreHistory={
+                  account?.id !== course.createdBy?.id && course.isMember
+                }
                 onSelectTopic={(id) => {
                   setSelectedTopicId(id);
                 }}
@@ -128,7 +130,7 @@ function Course() {
       {course && !course.isMember && course.createdBy?.id != account?.id && (
         <Button
           title={`${course.cost} VNĐ`}
-          style={{ margin: 10 }}
+          style={{ margin: 10, backgroundColor: color.blue1 }}
           onClick={() => {
             if ((account?.balance || 0) < (course.cost || 0)) {
               CommonService.showToast(
@@ -144,7 +146,7 @@ function Course() {
       {course && course.isMember && course.createdBy?.id != account?.id && (
         <Button
           title={"Bắt đầu"}
-          style={{ margin: 10 }}
+          style={{ margin: 10, backgroundColor: color.blue1 }}
           onClick={() => {
             if (!selectedTopicId) {
               CommonService.showToast(

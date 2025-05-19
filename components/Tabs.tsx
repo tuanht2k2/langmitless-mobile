@@ -10,6 +10,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import Card from "./Card";
 
 interface IProps {
   tabs: ComponentInterfaces.ITab[];

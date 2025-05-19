@@ -1,24 +1,26 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 import questionService from "@/services/questionService";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import { Audio } from "expo-av";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import answerService from "@/services/answerService";
 import AnswerQuestionItem from "@/components/AnswerQuestionItem";
 import IAnswerPronunciationScore = ResponseInterfaces.IAnswerPronunciationScore;
-import toastComponent from "@/components/ToastComponent";
 import CommonService from "@/services/CommonService";
+import color from "@/assets/styles/color";
+import { RootState } from "@/redux/store";
 
 const screenWidth = Dimensions.get("window").width;
 interface IQuestionScoreResult {
   pronunciationScore: number;
   score: number;
 }
+
 function AnswerQuestion() {
   const { topicId } = useLocalSearchParams();
   const dispatch = useDispatch();
@@ -43,6 +45,11 @@ function AnswerQuestion() {
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: string;
   }>({});
+
+  const account = useSelector((state: RootState) => state.auth.account);
+
+  const transactionRef = useRef(account?.id + "_" + new Date().getTime());
+
   const navigation = useNavigation();
 
   const [searchRequest, setSearchRequest] =
@@ -76,7 +83,6 @@ function AnswerQuestion() {
     getData(searchRequest);
   }, [searchRequest]);
 
-  // console.log(questions[activeSlide])
   const handleSelectOption = (
     questionId: string | undefined,
     optionId: string
@@ -86,7 +92,6 @@ function AnswerQuestion() {
       ...prev,
       [questionId]: optionId,
     }));
-    console.log(`Selected option: ${optionId} for question: ${questionId}`);
   };
 
   const startRecording = async () => {
@@ -155,16 +160,13 @@ function AnswerQuestion() {
   const handleCheckAnswer = async () => {
     const currentQuestion = questions[activeSlide];
     dispatch(overlayLoading());
+
     try {
       if (currentQuestion.type === "Pronunciation") {
         const currentAudioUri = audioUris[currentQuestion.id as string];
         if (!currentAudioUri) {
           dispatch(overlayLoaded());
-          CommonService.showToast(
-            "error",
-            "Không được rồi !! ",
-            "Bạn phải ghi âm đã "
-          );
+          CommonService.showToast("error", "Bạn phải ghi âm trước");
           return;
         }
         if (currentAudioUri) {
@@ -177,25 +179,10 @@ function AnswerQuestion() {
                 name: `recording_${Date.now()}.mp3`,
                 type: "audio/mp3",
               },
+              transactionId: transactionRef.current.toString(),
             };
 
-          console.log("answerRequest", answerRequest);
-          const response = await answerService.answerQuestionPronunciation(
-            answerRequest
-          );
-          console.log(response);
-          setPronunciationResults((prev) => ({
-            ...prev,
-            [currentQuestion.id as string]: response.data,
-          }));
-
-          setQuestionScores((prev) => ({
-            ...prev,
-            [currentQuestion.id as string]: {
-              pronunciationScore: response.data.pronunciationScore,
-              score: response.data.score,
-            },
-          }));
+          await answerService.answerQuestionPronunciation(answerRequest);
         }
       } else if (
         currentQuestion.type === "MultipleChoice" &&
@@ -205,24 +192,12 @@ function AnswerQuestion() {
           topicId: topicId as string,
           questionId: currentQuestion.id as string,
           answeredText: selectedOptions[currentQuestion.id as string],
+          transactionId: transactionRef.current.toString(),
         };
 
-        const response = await answerService.answerQuestionMultipleChoice(
-          answerRequest
-        );
-        setPronunciationResults((prev) => ({
-          ...prev,
-          [currentQuestion.id as string]: response.data,
-        }));
-
-        setQuestionScores((prev) => ({
-          ...prev,
-          [currentQuestion.id as string]: {
-            pronunciationScore: 0,
-            score: response.data.score,
-          },
-        }));
+        await answerService.answerQuestionMultipleChoice(answerRequest);
       }
+      handleGoToNext();
     } catch (error) {
       console.error("Error submitting answer:", error);
     } finally {
@@ -231,46 +206,46 @@ function AnswerQuestion() {
     }
   };
 
-  const fetchQuestionScores = useCallback(async () => {
-    try {
-      const scores: Record<string, IQuestionScoreResult> = {};
+  // const fetchQuestionScores = useCallback(async () => {
+  //   try {
+  //     const scores: Record<string, IQuestionScoreResult> = {};
 
-      for (const question of questions) {
-        if (question.id && selectedOptions[question.id]) {
-          try {
-            const request: RequestInterfaces.IQuestionScore = {
-              topicId: topicId as string,
-              questionId: question.id,
-            };
+  //     for (const question of questions) {
+  //       if (question.id && selectedOptions[question.id]) {
+  //         try {
+  //           const request: RequestInterfaces.IQuestionScore = {
+  //             topicId: topicId as string,
+  //             questionId: question.id,
+  //           };
 
-            const response = await answerService.getScoreByQuestion(request);
+  //           const response = await answerService.getScoreByQuestion(request);
 
-            if (response.data) {
-              scores[question.id] = {
-                pronunciationScore: response.data.pronunciationScore || 0,
-                score: response.data.score || 0,
-              };
-            }
-          } catch (error) {
-            console.error(
-              `Error fetching score for question ${question.id}:`,
-              error
-            );
-          }
-        }
-      }
+  //           if (response.data) {
+  //             scores[question.id] = {
+  //               pronunciationScore: response.data.pronunciationScore || 0,
+  //               score: response.data.score || 0,
+  //             };
+  //           }
+  //         } catch (error) {
+  //           console.error(
+  //             `Error fetching score for question ${question.id}:`,
+  //             error
+  //           );
+  //         }
+  //       }
+  //     }
 
-      setQuestionScores((prev) => ({ ...prev, ...scores }));
-    } catch (error) {
-      console.error("Error fetching question scores:", error);
-    }
-  }, [questions, topicId, selectedOptions]);
+  //     setQuestionScores((prev) => ({ ...prev, ...scores }));
+  //   } catch (error) {
+  //     console.error("Error fetching question scores:", error);
+  //   }
+  // }, [questions, topicId, selectedOptions]);
 
-  useEffect(() => {
-    if (questions.length > 0) {
-      fetchQuestionScores();
-    }
-  }, [questions, fetchQuestionScores]);
+  // useEffect(() => {
+  //   if (questions.length > 0) {
+  //     fetchQuestionScores();
+  //   }
+  // }, [questions, fetchQuestionScores]);
 
   const renderQuestionItem = ({
     item,
@@ -285,20 +260,15 @@ function AnswerQuestion() {
       selectedOption={selectedOptions[item.id as string]}
       recording={recording !== null}
       audioUri={audioUris[item.id as string] || null}
-      sound={sound}
       playbackSound={playbackSound}
       hasChecked={hasChecked || !!questionScores[item.id as string]}
       questionScores={questionScores}
-      activeSlide={activeSlide}
-      questionsLength={questions.length}
       pronunciationResult={pronunciationResults[item.id as string] || null}
       handleSelectOption={handleSelectOption}
       startRecording={startRecording}
       stopRecording={stopRecording}
       handleGoToPrev={handleGoToPrev}
-      handleGoToNext={handleGoToNext}
       handleCheckAnswer={handleCheckAnswer}
-      setSound={setSound}
       setPlaybackSound={setPlaybackSound}
       isLastQuestion={activeSlide === questions.length - 1}
     />
@@ -336,7 +306,7 @@ function AnswerQuestion() {
             paddingVertical: 16,
           }}
         >
-          <Text style={{ fontSize: 16 }}>
+          <Text style={{ fontSize: 16, color: color.grey4, fontWeight: "400" }}>
             Câu {activeSlide + 1}/{questions.length}
           </Text>
         </View>

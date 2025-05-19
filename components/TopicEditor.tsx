@@ -55,7 +55,7 @@ function TopicEditor(props: IProps) {
       dispatch(overlayLoaded());
 
       if (!res || res.code != 200) {
-        CommonService.showError();
+        CommonService.showToast("error", "Đã xảy ra lỗi", res.message);
         return;
       }
 

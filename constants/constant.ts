@@ -16,6 +16,8 @@ import mbBankIcon from "@/assets/images/bankIcons/mb.png";
 import tcbIcon from "@/assets/images/bankIcons/techcombank.png";
 //@ts-ignore
 import tpbankIcon from "@/assets/images/bankIcons/tpbank.jpg";
+import color from "@/assets/styles/color";
+import { ConstantInterfaces } from "@/data/interfaces/constant";
 
 export const BANKS: ComponentInterfaces.IDropdownOption<string>[] = [
   {
@@ -75,10 +77,10 @@ export const COURSE_LEVELS: ComponentInterfaces.IDropdownOption<number>[] = [
     name: "Chuyên sâu",
     code: 3,
   },
-  {
-    name: "Chuyên gia",
-    code: 4,
-  },
+  // {
+  //   name: "Chuyên gia",
+  //   code: 4,
+  // },
 ];
 
 export const COURSE_PRICE: ComponentInterfaces.IDropdownOption<string>[] = [
@@ -99,3 +101,8 @@ export const COURSE_PRICE: ComponentInterfaces.IDropdownOption<string>[] = [
     code: "EXPENSIVE",
   },
 ];
+
+export const SCORE_COLOR: ConstantInterfaces.IScoreColor = {
+  dark: [color.red3, color.red3, color.grey3, color.warning3, color.success3],
+  light: [color.red1, color.red1, color.grey1, color.warning1, color.success1],
+};

@@ -20,10 +20,12 @@ import topicService from "@/services/topicService";
 import { useDispatch } from "react-redux";
 import { router } from "expo-router";
 import { CheckBox } from "@rneui/base";
+import TopicScore from "./TopicScore";
 
 interface IProps {
   data: ResponseInterfaces.ITopicResponse[];
   editable?: boolean;
+  canViewScoreHistory?: boolean;
   style?: ViewStyle;
   onSelectTopic?: (topicId: string | null) => void;
 }
@@ -31,16 +33,14 @@ interface IProps {
 function TopicListMember(props: IProps) {
   const dispatch = useDispatch();
 
-  const { style, data, editable } = props;
+  const { style, data, editable, canViewScoreHistory } = props;
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const { course, getCourseDetails } = useCourse();
 
   const {
     control,
-    setValue,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -51,6 +51,8 @@ function TopicListMember(props: IProps) {
   });
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [activeTopicScore, setActiveTopicScore] =
+    useState<ResponseInterfaces.ITopicResponse | null>(null);
 
   const onTopicSubmit = async (data: any) => {
     CommonService.dispatchOverlayLoading(dispatch, true);
@@ -109,10 +111,10 @@ function TopicListMember(props: IProps) {
                 style={{
                   ...GlobalStyle.horizontalFlex,
                   alignItems: "center",
-                  gap: 10,
                   borderWidth: 1,
                   borderRadius: 10,
-                  borderColor: color.pink1,
+                  borderColor:
+                    item.type == "EXAM" ? color.pink2 : color.primary1,
                   justifyContent: "space-between",
                 }}
               >
@@ -136,7 +138,7 @@ function TopicListMember(props: IProps) {
                   <View
                     style={{
                       ...GlobalStyle.horizontalFlex,
-                      alignItems: "center",
+                      justifyContent: "space-between",
                       gap: 5,
                       flex: 1,
                       overflow: "hidden",
@@ -153,6 +155,8 @@ function TopicListMember(props: IProps) {
                       {index + 1}.
                     </Text>
                     <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
                       style={{
                         ...GlobalStyle.mainText,
                         fontSize: 15,
@@ -161,7 +165,10 @@ function TopicListMember(props: IProps) {
                     >
                       {item.tag?.name}
                     </Text>
+
                     <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
                       style={{
                         color: color.textGrey4,
                         fontSize: 15,
@@ -172,6 +179,7 @@ function TopicListMember(props: IProps) {
                     </Text>
                   </View>
                 </View>
+
                 {editable && (
                   <View style={{ ...GlobalStyle.horizontalFlex, gap: 3 }}>
                     <IconButtonComponent
@@ -183,6 +191,15 @@ function TopicListMember(props: IProps) {
                       }}
                     />
                   </View>
+                )}
+                {canViewScoreHistory && (
+                  <IconButtonComponent
+                    icon="history"
+                    iconColor={color.blue1}
+                    onPress={() => {
+                      setActiveTopicScore(item);
+                    }}
+                  />
                 )}
               </View>
             ))}
@@ -209,6 +226,17 @@ function TopicListMember(props: IProps) {
           <TopicEditor control={control} errors={errors} />
           <Button title="Lưu" onClick={handleSubmit(onTopicSubmit)} />
         </View>
+      </ModalComponent>
+      <ModalComponent
+        visible={!!activeTopicScore}
+        onClose={() => {
+          setActiveTopicScore(null);
+        }}
+        // icon="token"
+        title="Lịch sử làm bài"
+        showHeader
+      >
+        {activeTopicScore && <TopicScore topic={activeTopicScore} />}
       </ModalComponent>
     </View>
   );

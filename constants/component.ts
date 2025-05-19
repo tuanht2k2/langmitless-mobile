@@ -38,6 +38,7 @@ export namespace ComponentInterfaces {
 
   export interface ITab {
     title?: string;
+    value?: string;
     image?: ImageSourcePropType;
   }
 

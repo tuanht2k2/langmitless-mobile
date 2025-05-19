@@ -218,12 +218,14 @@ export namespace RequestInterfaces {
       name: string;
       type: string;
     };
+    transactionId: string;
   }
 
   export interface IAnswerQuestionMultipleChoice {
     topicId: string;
     questionId: string;
     answeredText: string;
+    transactionId: string;
   }
 
   export interface IQuestionScore {
@@ -244,5 +246,16 @@ export namespace RequestInterfaces {
     bank?: string;
     accountId?: string;
     qrImage?: any;
+  }
+
+  export interface ISearchTransactionRequest {
+    topicId?: string;
+    userId?: string;
+  }
+
+  export interface IGetScoreByTransactionRequest {
+    topicId?: string;
+    userId?: string;
+    transactionId: string;
   }
 }

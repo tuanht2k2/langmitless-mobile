@@ -20,7 +20,6 @@ function CourseProvider(props: IProps) {
     try {
       const res = await courseService.get(id);
       if (res.data) setCourse(res.data);
-      console.log("course", res.data);
     } catch (error) {
       CommonService.showToast("error", "Đã xảy ra lỗi!");
     }
