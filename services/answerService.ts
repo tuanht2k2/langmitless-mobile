@@ -15,7 +15,8 @@ const answerService = {
         name: request.answerFile.name,
         type: request.answerFile.type,
       } as any);
-      return apiService.postForm(`${ANSWER_URL.BASE}/Pronunciation`, formData);
+      formData.append("transactionId", request.transactionId);
+      return apiService.postForm(ANSWER_URL.PRONUNCIATION, formData);
     } catch (error) {
       console.log(error);
     }
@@ -25,21 +26,21 @@ const answerService = {
     request: RequestInterfaces.IAnswerQuestionMultipleChoice
   ) {
     try {
-      return apiService.post(`${ANSWER_URL.BASE}/MultipleChoice`, request);
+      return apiService.post(ANSWER_URL.MULTIPLE_CHOICE, request);
     } catch (error) {
       console.log(error);
     }
   },
 
-  getScoreByQuestion(request: RequestInterfaces.IQuestionScore) {
-    try {
-      return apiService.post(
-        `${ANSWER_URL.BASE}/get-score-by-question`,
-        request
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  },
+  // getScoreByQuestion(request: RequestInterfaces.IQuestionScore) {
+  //   try {
+  //     return apiService.post(
+  //       `${ANSWER_URL.BASE}/get-score-by-question`,
+  //       request
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // },
 };
 export default answerService;

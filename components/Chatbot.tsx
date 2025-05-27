@@ -38,6 +38,7 @@ import {
   showChatbot,
 } from "@/redux/reducers/globalSlide";
 import useResilientSocket from "@/utils/useResilientSocket";
+import Card from "./Card";
 
 const { height, width } = Dimensions.get("window");
 
@@ -126,77 +127,117 @@ function ChatbotComponent() {
     };
 
     return (
-      <View>
-        <Text style={{ fontWeight: "semibold", color: color.textPink3 }}>
-          <Text style={{ fontWeight: "bold" }}>{course.name}</Text>
+      <Card>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            color: color.pink3,
+            marginBottom: 6,
+          }}
+        >
+          {course.name}
         </Text>
-        <Text style={{ fontWeight: "bold", color: color.textGrey3 }}>
-          Mô tả:{" "}
-          <Text style={{ color: color.textMain, fontWeight: "400" }}>
-            {course.description}
+
+        <Text
+          style={{ color: color.textGrey4, fontWeight: "600", marginBottom: 2 }}
+        >
+          Mô tả:
+        </Text>
+        <Text style={{ color: color.textBlack1, marginBottom: 8 }}>
+          {course.description}
+        </Text>
+
+        <Text
+          style={{ color: color.textGrey4, fontWeight: "600", marginBottom: 2 }}
+        >
+          Giá tiền:
+        </Text>
+        <Text
+          style={{
+            color: color.yellow3,
+            fontSize: 16,
+            fontWeight: "bold",
+            marginBottom: 8,
+          }}
+        >
+          {course.cost}
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 10,
+          }}
+        >
+          <Text
+            style={{
+              color: color.textGrey4,
+              fontWeight: "600",
+              marginRight: 5,
+            }}
+          >
+            Ngôn ngữ:
           </Text>
-        </Text>
-        <Text style={{ fontWeight: "bold", color: color.textGrey3 }}>
-          Giá tiền:{" "}
-          <Text style={{ color: color.textYellow2 }}>{course.cost}</Text>
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          <Text>Ngôn ngữ: </Text>
           <Image
             source={CommonService.getCourseLanguage(course.language)?.img}
             style={{ width: 20, height: 20, marginRight: 5 }}
           />
-          <Text>{CommonService.getCourseLanguage(course.language)?.name}</Text>
+          <Text style={{ color: color.textBlack1 }}>
+            {CommonService.getCourseLanguage(course.language)?.name}
+          </Text>
         </View>
+
         <View
           style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 3,
-            justifyContent: "center",
+            gap: 10,
           }}
         >
           <TouchableOpacity
             style={{
-              padding: 5,
+              flex: 1,
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
+              paddingVertical: 8,
+              backgroundColor: color.primary1,
+              borderRadius: 6,
               gap: 5,
-              borderColor: color.primary3,
-              borderWidth: 1,
-              marginTop: 5,
-              borderRadius: 5,
             }}
             onPress={() => {
               hideModal();
               navigateToCourse(course.id as string);
             }}
           >
-            <Text style={{ color: color.textPink3 }}>Xem chi tiết</Text>
-            <Icon name="visibility" size={20} color={color.textPink3} />
+            <Icon name="visibility" size={18} color={color.primary4} />
+            <Text style={{ color: color.primary4, fontWeight: "bold" }}>
+              Xem chi tiết
+            </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={{
-              padding: 5,
+              flex: 1,
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
+              paddingVertical: 8,
+              backgroundColor: color.pink1,
+              borderRadius: 6,
               gap: 5,
-              borderColor: color.pink3,
-              borderWidth: 1,
-              marginTop: 5,
-              borderRadius: 5,
             }}
             onPress={() => {
               dispatch(askChatbotAboutCourse(course));
             }}
           >
-            <Text style={{ color: color.textPrimary3 }}>Tìm hiểu thêm</Text>
-            <Icon name="support-agent" size={20} color={color.textPrimary3} />
+            <Icon name="support-agent" size={18} color={color.pink3} />
+            <Text style={{ color: color.pink3, fontWeight: "bold" }}>
+              Tìm hiểu thêm
+            </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Card>
     );
   };
 
@@ -314,22 +355,23 @@ function ChatbotComponent() {
                   {message.courses && message.courses.length > 0 && (
                     <View style={{ gap: 5 }}>
                       {message.courses.map((item: any, index) => (
-                        <View
-                          key={index}
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            padding: 5,
-                            backgroundColor: color.white1,
-                            borderRadius: 10,
-                            marginVertical: 5,
-                            borderWidth: 1,
-                            borderColor: color.primary3,
-                          }}
-                        >
-                          <CourseDetails {...item} />
-                        </View>
+                        // <View
+                        //   key={index}
+                        //   style={{
+                        //     display: "flex",
+                        //     flexDirection: "row",
+                        //     alignItems: "center",
+                        //     padding: 5,
+                        //     backgroundColor: color.white1,
+                        //     borderRadius: 10,
+                        //     marginVertical: 5,
+                        //     // borderWidth: 1,
+                        //     // borderColor: color.primary3,
+                        //   }}
+                        // >
+                        //   <CourseDetails {...item} />
+                        // </View>
+                        <CourseDetails key={index} {...item} />
                       ))}
                     </View>
                   )}

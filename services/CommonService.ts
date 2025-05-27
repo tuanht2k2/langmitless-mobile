@@ -21,8 +21,8 @@ const CommonService = {
       onPress: onPress,
     });
   },
-  showError: () => {
-    CommonService.showToast("error", "Đã xảy ra lỗi");
+  showError: (message: string = "") => {
+    CommonService.showToast("error", "Đã xảy ra lỗi", message);
   },
   uriListToFiles: async (
     uriList: string[]
@@ -72,6 +72,14 @@ const CommonService = {
     } else {
       dispatch(overlayLoaded());
     }
+  },
+
+  generateUUID: () => {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      const v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
   },
 };
 

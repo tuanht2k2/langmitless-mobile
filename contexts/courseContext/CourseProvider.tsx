@@ -14,21 +14,27 @@ function CourseProvider(props: IProps) {
 
   const [course, setCourse] =
     useState<ResponseInterfaces.ICourseResponse | null>(null);
+  const [selectedMember, setSelectedMember] = useState<string>("");
 
   const getCourseDetails = async (id: string) => {
     CommonService.dispatchOverlayLoading(dispatch, true);
     try {
       const res = await courseService.get(id);
       if (res.data) setCourse(res.data);
-      console.log("course", res.data);
     } catch (error) {
       CommonService.showToast("error", "Đã xảy ra lỗi!");
     }
     CommonService.dispatchOverlayLoading(dispatch, false);
   };
 
+  const selectMember = (id: string) => {
+    setSelectedMember(id);
+  };
+
   return (
-    <CourseContext.Provider value={{ course, getCourseDetails }}>
+    <CourseContext.Provider
+      value={{ course, getCourseDetails, selectMember, selectedMember }}
+    >
       {props.children}
     </CourseContext.Provider>
   );

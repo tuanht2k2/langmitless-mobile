@@ -74,6 +74,9 @@ const color = {
 
   blue1: "#244f71",
 
+  accentGold: "#FFD700",
+  accentSilver: "#C0C0C0",
+
   transparent: "#ff000000",
 
   lightOverlay: "#282a354a",

@@ -233,7 +233,6 @@ function YourCourseScreen() {
           setModalVisible(false);
         }}
         showHeader
-        icon="school"
         title={watch("id") ? "Chỉnh sửa khóa học" : "Tạo khóa học mới"}
       >
         <View style={{ padding: 14, gap: 10 }}>
