@@ -9,6 +9,8 @@ import { Text } from "react-native";
 import { View } from "react-native";
 import { Audio } from "expo-av";
 import { playAudio } from "@/utils/audioUtils";
+import HorizontalDivider from "./HorizontalDivider";
+import { Icon } from "@rneui/themed";
 
 interface IProps {
   question: ResponseInterfaces.IQuestionResponse;
@@ -71,6 +73,17 @@ function QuestionResult({ question, index, style }: IProps) {
               <Ionicons name="play" size={20} color="#2563EB" />
             </TouchableOpacity>
           </View>
+          {/* Text mẫu */}
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ fontSize: 14, fontWeight: "600", color: "#0F172A" }}>
+              Văn bản mẫu:
+            </Text>
+            <Text style={{ fontSize: 14, color: "#334155", marginTop: 4 }}>
+              {question.textSample || "Không có"}
+            </Text>
+          </View>
+
+          <HorizontalDivider />
 
           {/* Âm thanh người dùng */}
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
@@ -89,23 +102,13 @@ function QuestionResult({ question, index, style }: IProps) {
             </TouchableOpacity>
           </View>
 
-          {/* Text mẫu */}
-          <View style={{ marginTop: 10 }}>
-            <Text style={{ fontSize: 14, fontWeight: "600", color: "#0F172A" }}>
-              Văn bản mẫu:
-            </Text>
-            <Text style={{ fontSize: 14, color: "#334155", marginTop: 4 }}>
-              {question.textSample || "Không có"}
-            </Text>
-          </View>
-
           {/* Text trả lời */}
           <View style={{ marginTop: 10 }}>
             <Text style={{ fontSize: 14, fontWeight: "600", color: "#0F172A" }}>
               Văn bản bạn đọc:
             </Text>
             <Text style={{ fontSize: 14, color: "#334155", marginTop: 4 }}>
-              {question.answer || "Không có"}
+              {question.answer || ""}
             </Text>
           </View>
         </View>
@@ -113,48 +116,53 @@ function QuestionResult({ question, index, style }: IProps) {
 
       {question.type === QUESTION_TYPE.MULTIPLE_CHOICE && question.option && (
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-          {question.option.map((option) => (
-            <View
-              key={option.id}
-              style={{
-                width: "48%",
-                padding: 12,
-                borderRadius: 10,
-                borderWidth: 1.5,
-                borderColor: option.correct
-                  ? color.success3
-                  : question.answer == option.content
-                  ? color.red3
-                  : color.grey1,
-                backgroundColor: option.correct
-                  ? color.success1
-                  : question.answer == option.content
-                  ? color.red1
-                  : color.grey1,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 10,
-              }}
-            >
-              <Text
+          {question.option.map((option) => {
+            const isCorrect =
+              question.answer == option.content && option.content;
+
+            return (
+              <View
+                key={option.id}
                 style={{
-                  fontSize: 14,
-                  color: color.textBlack2,
-                  fontWeight: option.correct ? "600" : "400",
+                  width: "48%",
+                  padding: 12,
+                  borderRadius: 10,
+                  borderWidth: 1.5,
+                  borderColor: option.correct
+                    ? color.success3
+                    : question.answer == option.content
+                    ? color.red3
+                    : color.grey1,
+                  backgroundColor: option.correct
+                    ? color.success1
+                    : question.answer == option.content // select wrong answer
+                    ? color.red1
+                    : color.grey1,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 10,
                 }}
               >
-                {option.content}
-              </Text>
-              {option.correct && (
-                <Ionicons
-                  name="checkmark-circle"
-                  size={20}
-                  color={color.success3}
-                />
-              )}
-            </View>
-          ))}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: color.textBlack2,
+                    fontWeight: option.correct ? "600" : "400",
+                  }}
+                >
+                  {option.content}
+                </Text>
+                {option.correct && (
+                  <Icon
+                    name={isCorrect ? "check-circle" : "cancel"}
+                    size={20}
+                    color={isCorrect ? color.success3 : color.red3}
+                  />
+                )}
+              </View>
+            );
+          })}
         </View>
       )}
     </View>

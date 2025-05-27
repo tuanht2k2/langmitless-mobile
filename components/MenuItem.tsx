@@ -3,6 +3,8 @@ import { ComponentInterfaces } from "@/constants/component";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Icon } from "@rneui/themed";
 import { useNavigation, useRouter } from "expo-router";
+import color from "@/assets/styles/color";
+// dùng bảng màu bạn đã đưa
 
 function MenuItem(props: ComponentInterfaces.IMenuItem) {
   const router = useRouter();
@@ -16,10 +18,18 @@ function MenuItem(props: ComponentInterfaces.IMenuItem) {
   return (
     <TouchableOpacity
       style={{
-        display: "flex",
+        paddingVertical: 10,
+        paddingHorizontal: 12,
         alignItems: "center",
-        cursor: "pointer",
-        padding: 5,
+        justifyContent: "center",
+        backgroundColor: "#f2f4f7",
+        borderRadius: 12,
+        shadowColor: color.black4,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        elevation: 2,
+        width: 80,
         ...props.style,
       }}
       onPress={() => {
@@ -31,15 +41,28 @@ function MenuItem(props: ComponentInterfaces.IMenuItem) {
       {props.img && (
         <Image
           source={props.img}
-          style={{ height: 25, width: 25, objectFit: "contain" }}
+          style={{
+            height: 28,
+            width: 28,
+            resizeMode: "contain",
+            marginBottom: 6,
+          }}
         />
       )}
-      {props.icon && <Icon name={props.icon || ""} color={props.iconColor} />}
+      {props.icon && (
+        <Icon
+          name={props.icon}
+          color={props.iconColor || color.primary3}
+          size={28}
+          style={{ marginBottom: 6 }}
+        />
+      )}
       <Text
         style={{
-          color: props.labelColor,
-          fontWeight: "bold",
+          color: props.labelColor || color.textBlack,
+          fontWeight: "600",
           fontSize: 12,
+          textAlign: "center",
         }}
       >
         {props.name}

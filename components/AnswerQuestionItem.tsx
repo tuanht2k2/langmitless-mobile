@@ -393,7 +393,7 @@ const AnswerQuestionItem: React.FC<AnswerQuestionItemProps> = ({
           <Text
             style={{ color: color.white1, fontWeight: "600", marginRight: 8 }}
           >
-            {isLastQuestion ? "Hoàn thành" : "Trả lời"}
+            {isLastQuestion ? "Nộp bài" : "Trả lời"}
           </Text>
           <Ionicons
             name={isLastQuestion ? "home" : "arrow-forward"}

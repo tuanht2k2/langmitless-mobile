@@ -329,71 +329,103 @@ function BankingScreen() {
       )}
       <ModalComponent
         title="Xác nhận chuyển khoản"
-        icon={"assured-workload"}
+        // icon={"assured-workload"}
         titleStyle={{ color: color.primary1 }}
         showHeader
         visible={!!confirmModalData}
         style={{ paddingBottom: 20 }}
         onClose={() => setConfirmModalData(null)}
       >
-        <View>
+        <View
+          style={{
+            backgroundColor: color.white1,
+            borderRadius: 10,
+            padding: 16,
+            shadowColor: color.black,
+            shadowOpacity: 0.05,
+            shadowOffset: { width: 0, height: 2 },
+            shadowRadius: 4,
+            elevation: 2,
+          }}
+        >
           <View
             style={{
-              padding: 10,
-              display: "flex",
-              gap: 10,
               flexDirection: "row",
               alignItems: "center",
+              gap: 12,
+              marginBottom: 10,
             }}
           >
             <AvatarComponent
               accountUrl={confirmModalData?.receiver.profileImage}
               size={60}
             />
-            <View>
-              <Text>
-                Tên người nhận:{"   "}
-                <Text style={{ fontWeight: "bold" }}>
+            <View style={{ gap: 4 }}>
+              <Text style={{ color: color.textGrey4 }}>
+                Tên người nhận:{" "}
+                <Text style={{ fontWeight: "bold", color: color.textBlack }}>
                   {confirmModalData?.receiver?.name}
                 </Text>
               </Text>
-              <Text>
-                Số điện thoại người nhận{"  "}
-                <Text style={{ fontWeight: "bold" }}>
+
+              <Text style={{ color: color.textGrey4 }}>
+                Số điện thoại:{" "}
+                <Text style={{ fontWeight: "bold", color: color.textBlack }}>
                   {confirmModalData?.receiver?.phoneNumber}
                 </Text>
               </Text>
-              <Text>
-                Số tiền chuyển khoản:{"  "}
+
+              <Text style={{ color: color.textGrey4 }}>
+                Số tiền chuyển:{" "}
                 <Text style={{ fontWeight: "bold", color: color.red3 }}>
                   {confirmModalData?.amount} VND
                 </Text>
               </Text>
-              <Text>
-                Nội dung chuyển khoản:{"  "}
-                <Text style={{ fontWeight: "bold" }}>
+
+              <Text style={{ color: color.textGrey4 }}>
+                Nội dung:{" "}
+                <Text style={{ fontWeight: "bold", color: color.textBlack }}>
                   {confirmModalData?.message}
                 </Text>
               </Text>
             </View>
           </View>
-          <HorizontalDivider style={{ marginVertical: 10 }} />
+
+          <HorizontalDivider style={{ marginVertical: 12 }} />
+
           <View
             style={{
-              gap: 10,
-              display: "flex",
               flexDirection: "row",
-              justifyContent: "center",
+              justifyContent: "space-between",
+              gap: 12,
             }}
           >
-            <Button title="Quay lại" style={{}} onClick={() => {}}></Button>
+            <Button
+              title="Quay lại"
+              style={{
+                flex: 1,
+                borderColor: color.primary3,
+                borderWidth: 1,
+                borderRadius: 6,
+                backgroundColor: color.white3,
+              }}
+              textColor={color.primary4}
+              // titleStyle={{ color: color.primary4, fontWeight: "600" }}
+              onClick={() => {}}
+            />
+
             <Button
               title="Xác nhận"
-              style={{ backgroundColor: color.grey3 }}
+              style={{
+                flex: 1,
+                backgroundColor: color.red3,
+                borderRadius: 6,
+              }}
+              // titleStyle={{ color: color.white1, fontWeight: "bold" }}
               onClick={() => {
                 handleBanking();
               }}
-            ></Button>
+            />
           </View>
         </View>
       </ModalComponent>

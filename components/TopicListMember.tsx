@@ -180,6 +180,15 @@ function TopicListMember(props: IProps) {
                   </View>
                 </View>
 
+                {canViewScoreHistory && (
+                  <IconButtonComponent
+                    icon="history"
+                    iconColor={color.blue1}
+                    onPress={() => {
+                      setActiveTopicScore(item);
+                    }}
+                  />
+                )}
                 {editable && (
                   <View style={{ ...GlobalStyle.horizontalFlex, gap: 3 }}>
                     <IconButtonComponent
@@ -191,15 +200,6 @@ function TopicListMember(props: IProps) {
                       }}
                     />
                   </View>
-                )}
-                {canViewScoreHistory && (
-                  <IconButtonComponent
-                    icon="history"
-                    iconColor={color.blue1}
-                    onPress={() => {
-                      setActiveTopicScore(item);
-                    }}
-                  />
                 )}
               </View>
             ))}

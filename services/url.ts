@@ -83,6 +83,7 @@ export enum COURSE_URL {
   SEARCH = "/courses/search",
   STUDENT_SEARCH = "/courses/student-search",
   BUY = "/courses/buy",
+  GET_MEMBERS = "/courses/get-members",
 }
 
 export enum TOPIC_URL {

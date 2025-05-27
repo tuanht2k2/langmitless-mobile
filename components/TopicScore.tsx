@@ -3,7 +3,7 @@ import { RequestInterfaces } from "@/data/interfaces/request";
 import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
 import { RootState } from "@/redux/store";
 import topicService from "@/services/topicService";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import QuestionResult from "./QuestionResult";
 import HorizontalDivider from "./HorizontalDivider";
 import { SCORE_COLOR } from "@/constants/constant";
 import { Dimensions } from "react-native";
+import { useCourse } from "@/contexts";
 
 interface IProps {
   topic: ResponseInterfaces.ITopicResponse;
@@ -27,10 +28,11 @@ export interface IScoreColor {
   light: string;
 }
 
-const { height, width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 function TopicScore(props: IProps) {
   const account = useSelector((state: RootState) => state.auth.account);
+  const { selectedMember } = useCourse();
 
   const dispatch = useDispatch();
 
@@ -47,7 +49,7 @@ function TopicScore(props: IProps) {
     dispatch(overlayLoading());
     try {
       const request: RequestInterfaces.ISearchTransactionRequest = {
-        userId: account?.id,
+        userId: selectedMember || account?.id,
         topicId: props.topic.id,
       };
 

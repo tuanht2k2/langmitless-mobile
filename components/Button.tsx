@@ -1,4 +1,5 @@
 import color from "@/assets/styles/color";
+import { Icon } from "@rneui/themed";
 import React from "react";
 import {
   ActivityIndicator,
@@ -16,15 +17,18 @@ interface IProps {
   disabled?: boolean;
   textColor?: string;
   fontSize?: number;
+  icon?: string;
+  iconColor?: string;
 }
 
 function Button(props: IProps) {
   return (
     <TouchableOpacity
       style={{
-        padding: 10,
-        borderRadius: 10,
-        backgroundColor: props.disabled ? color.grey3 : color.pink3,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderRadius: 7,
+        backgroundColor: props.disabled ? color.grey3 : color.pink1,
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
@@ -44,15 +48,28 @@ function Button(props: IProps) {
       {props.loading ? (
         <ActivityIndicator color={color.white1} />
       ) : (
-        <Text
+        <View
           style={{
-            color: props.textColor ? props.textColor : color.white2,
-            fontWeight: "bold",
-            fontSize: props.fontSize || 16,
+            display: "flex",
+            flexDirection: "row",
+            gap: 5,
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          {props.title}
-        </Text>
+          {props.icon && (
+            <Icon name={props.icon} color={props.iconColor || color.pink3} />
+          )}
+          <Text
+            style={{
+              color: props.textColor ? props.textColor : color.pink3,
+              fontWeight: "bold",
+              fontSize: props.fontSize || 14,
+            }}
+          >
+            {props.title}
+          </Text>
+        </View>
       )}
     </TouchableOpacity>
   );

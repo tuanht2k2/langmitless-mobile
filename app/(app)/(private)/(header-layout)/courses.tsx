@@ -178,6 +178,7 @@ function TopicScreen() {
             <Button
               title="Tìm kiếm"
               style={{ backgroundColor: color.blue1 }}
+              textColor={color.yellow2}
               onClick={handleSubmit(onSubmit)}
             />
           </View>

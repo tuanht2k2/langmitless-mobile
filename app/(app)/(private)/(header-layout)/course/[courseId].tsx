@@ -1,11 +1,18 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import CommonService from "@/services/CommonService";
 import GlobalStyle from "@/assets/styles/globalStyles";
 //@ts-ignore
 import noResultFoundImg from "@/assets/images/no_result.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useCourse } from "@/contexts";
 import color from "@/assets/styles/color";
@@ -17,12 +24,126 @@ import { RequestInterfaces } from "@/data/interfaces/request";
 import { ResponseInterfaces } from "@/data/interfaces/response";
 import courseService from "@/services/courseService";
 import TopicListMember from "@/components/TopicListMember";
+import { Interfaces } from "@/data/interfaces/model";
+import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
+import AvatarComponent from "@/components/Avatar";
+import { Icon } from "@rneui/themed";
+
+interface IColorElement {
+  text: string;
+  background: string;
+}
+interface IColor {
+  light: IColorElement;
+  dark: IColorElement;
+}
+
+const colors: IColor[] = [
+  {
+    light: {
+      background: color.warning1,
+      text: color.warning2,
+    },
+    dark: {
+      background: color.warning2,
+      text: color.warning1,
+    },
+  },
+  {
+    light: {
+      background: color.secondary1,
+      text: color.secondary2,
+    },
+    dark: {
+      background: color.secondary2,
+      text: color.secondary1,
+    },
+  },
+  {
+    light: {
+      background: color.primary3,
+      text: color.primary1,
+    },
+    dark: {
+      background: color.primary4,
+      text: color.primary2,
+    },
+  },
+  {
+    light: {
+      background: color.success1,
+      text: color.success2,
+    },
+    dark: {
+      background: color.success2,
+      text: color.success1,
+    },
+  },
+  {
+    light: {
+      background: color.pink1,
+      text: color.pink2,
+    },
+    dark: {
+      background: color.pink2,
+      text: color.pink1,
+    },
+  },
+  {
+    light: {
+      background: color.red1,
+      text: color.red2,
+    },
+    dark: {
+      background: color.red2,
+      text: color.red1,
+    },
+  },
+  {
+    light: {
+      background: color.purple1,
+      text: color.purple2,
+    },
+    dark: {
+      background: color.purple2,
+      text: color.purple1,
+    },
+  },
+  {
+    light: {
+      background: color.yellow1,
+      text: color.yellow2,
+    },
+    dark: {
+      background: color.yellow2,
+      text: color.yellow1,
+    },
+  },
+  {
+    light: {
+      background: color.grey1,
+      text: color.grey2,
+    },
+    dark: {
+      background: color.grey2,
+      text: color.grey1,
+    },
+  },
+];
+
+const screenWidth = Dimensions.get("window").width;
+const itemSize = screenWidth / 3 - 20;
 
 function Course() {
+  const dispatch = useDispatch();
+
   const { courseId } = useLocalSearchParams();
   const loading = useSelector((state: RootState) => state.global.isLoading);
+
   const account = useSelector((state: RootState) => state.auth.account);
-  const { course, getCourseDetails } = useCourse();
+  const { course, getCourseDetails, selectMember, selectedMember } =
+    useCourse();
+
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   useEffect(() => {
     getCourseDetails(courseId as string);
@@ -49,6 +170,29 @@ function Course() {
     } catch (error) {
       setBuyModalVisible(false);
       CommonService.showToast("error", "Đã xảy ra lỗi!");
+    }
+  };
+
+  const [memberVisible, setMemberVisible] = useState<boolean>(false);
+
+  const [members, setMembers] = useState<Interfaces.IUser[]>([]);
+
+  const handleGetMembers = async () => {
+    if (!courseId) return;
+    setMemberVisible(true);
+    try {
+      dispatch(overlayLoading());
+      const res: ResponseInterfaces.ICommonResponse<Interfaces.IUser[]> =
+        await courseService.getMembers(courseId as string);
+      if (!res || res.code != 200) {
+        CommonService.showError();
+        return;
+      }
+      setMembers(res.data);
+    } catch (error) {
+      CommonService.showError();
+    } finally {
+      dispatch(overlayLoaded());
     }
   };
 
@@ -93,23 +237,42 @@ function Course() {
               <Text style={{ color: color.textMain, fontStyle: "italic" }}>
                 {course.description}
               </Text>
-              <View>
-                <Text style={{ color: color.textGrey4, fontSize: 13 }}>
-                  Tạo bởi:
-                  <Text
-                    style={{ color: color.pink3, fontWeight: "bold" }}
-                  >{` ${course.createdBy?.name},`}</Text>
-                </Text>
-                <Text style={{ color: color.textGrey4, fontSize: 13 }}>
-                  {CommonService.getFormattedISO(course.createdAt)}
-                </Text>
-                <Text style={{ color: color.textGrey4, fontSize: 13 }}>
-                  Giá tiền:
-                  <Text style={{ color: color.pink3, fontWeight: "bold" }}>
-                    {` ${course.cost}`}
-                  </Text>{" "}
-                  VNĐ
-                </Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View>
+                  <Text style={{ color: color.textGrey4, fontSize: 13 }}>
+                    Tạo bởi:
+                    <Text
+                      style={{ color: color.pink3, fontWeight: "bold" }}
+                    >{` ${course.createdBy?.name},`}</Text>
+                  </Text>
+                  <Text style={{ color: color.textGrey4, fontSize: 13 }}>
+                    {CommonService.getFormattedISO(course.createdAt)}
+                  </Text>
+                  <Text style={{ color: color.textGrey4, fontSize: 13 }}>
+                    Giá tiền:
+                    <Text style={{ color: color.pink3, fontWeight: "bold" }}>
+                      {` ${course.cost}`}
+                    </Text>{" "}
+                    VNĐ
+                  </Text>
+                </View>
+                {account?.id == course.createdBy?.id && (
+                  <Button
+                    title="Xem thành viên"
+                    icon="groups"
+                    textColor={color.primary3}
+                    iconColor={color.primary3}
+                    style={{ backgroundColor: color.primary1 }}
+                    onClick={handleGetMembers}
+                  />
+                )}
               </View>
             </Card>
             <Card>
@@ -117,7 +280,7 @@ function Course() {
                 data={course.topics || []}
                 editable={account?.id === course.createdBy?.id}
                 canViewScoreHistory={
-                  account?.id !== course.createdBy?.id && course.isMember
+                  !!selectedMember || account?.id != course.createdBy?.id
                 }
                 onSelectTopic={(id) => {
                   setSelectedTopicId(id);
@@ -147,6 +310,7 @@ function Course() {
         <Button
           title={"Bắt đầu"}
           style={{ margin: 10, backgroundColor: color.blue1 }}
+          textColor={color.accentGold}
           onClick={() => {
             if (!selectedTopicId) {
               CommonService.showToast(
@@ -177,6 +341,87 @@ function Course() {
             handleBuyCourse();
           }}
         />
+      </ModalComponent>
+      <ModalComponent
+        title="Xem thành viên"
+        onClose={() => {
+          setMemberVisible(false);
+        }}
+        visible={memberVisible}
+        showHeader
+      >
+        <View>
+          <View style={{ padding: 5, paddingHorizontal: 20, gap: 5 }}>
+            {!selectedMember && (
+              <Text style={{ color: color.grey3, fontStyle: "italic" }}>
+                Hãy chọn 1 học sinh để xem lịch sử làm bài
+              </Text>
+            )}
+            {selectedMember && (
+              <Text style={{ color: color.grey3, fontStyle: "italic" }}>
+                Ấn vào từng chủ đề để xem lịch sử làm bài của học sinh
+              </Text>
+            )}
+          </View>
+          <ScrollView
+            contentContainerStyle={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              padding: 10,
+            }}
+          >
+            {members.map((member, index) => {
+              const localColor: IColor = colors[index % colors.length];
+
+              const isActive = member.id === selectedMember;
+              const textColor = isActive
+                ? localColor.dark.text
+                : localColor.light.text;
+              const backgroundColor = isActive
+                ? localColor.dark.background
+                : localColor.light.background;
+
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    width: itemSize,
+                    aspectRatio: 1,
+                    backgroundColor: backgroundColor,
+                    borderRadius: 12,
+                    margin: 5,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative",
+                  }}
+                  onPress={() => {
+                    selectMember(
+                      selectedMember == member.id ? "" : member.id || ""
+                    );
+                  }}
+                >
+                  <AvatarComponent imageUrl={member.profileImage} />
+                  <Text
+                    style={{
+                      marginTop: 6,
+                      color: textColor,
+                      fontSize: 14,
+                      fontWeight: "600",
+                      textAlign: "center",
+                    }}
+                  >
+                    {index + 1}. {member.name}
+                  </Text>
+                  {isActive && (
+                    <View style={{ position: "absolute", top: -5, right: -5 }}>
+                      <Icon name="check-circle" color={color.success3} />
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
       </ModalComponent>
     </View>
   );

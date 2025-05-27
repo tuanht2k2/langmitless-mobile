@@ -89,7 +89,13 @@ function ModalComponent(props: IProps) {
                         style={{ height: 30, width: 30 }}
                       />
                     )}
-                    <Text style={{ ...GlobalStyle.mainText, fontSize: 16 }}>
+                    <Text
+                      style={{
+                        color: color.textBlue1,
+                        fontSize: 16,
+                        fontWeight: "500",
+                      }}
+                    >
                       {props.title}
                     </Text>
                   </View>

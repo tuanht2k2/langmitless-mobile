@@ -1,5 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { View, Text, Dimensions } from "react-native";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import { overlayLoaded, overlayLoading } from "@/redux/reducers/globalSlide";
@@ -14,6 +26,9 @@ import IAnswerPronunciationScore = ResponseInterfaces.IAnswerPronunciationScore;
 import CommonService from "@/services/CommonService";
 import color from "@/assets/styles/color";
 import { RootState } from "@/redux/store";
+import ModalComponent from "@/components/Modal";
+import { ActivityIndicator } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const screenWidth = Dimensions.get("window").width;
 interface IQuestionScoreResult {
@@ -147,13 +162,15 @@ function AnswerQuestion() {
     }
   };
 
+  const [resultVisible, setResultVisible] = useState(false);
+
   const handleGoToNext = () => {
     if (activeSlide < questions.length - 1) {
       setActiveSlide(activeSlide + 1);
       carouselRef.current?.next();
       setHasChecked(false);
     } else {
-      navigation.goBack();
+      setResultVisible(true);
     }
   };
 
@@ -206,47 +223,6 @@ function AnswerQuestion() {
     }
   };
 
-  // const fetchQuestionScores = useCallback(async () => {
-  //   try {
-  //     const scores: Record<string, IQuestionScoreResult> = {};
-
-  //     for (const question of questions) {
-  //       if (question.id && selectedOptions[question.id]) {
-  //         try {
-  //           const request: RequestInterfaces.IQuestionScore = {
-  //             topicId: topicId as string,
-  //             questionId: question.id,
-  //           };
-
-  //           const response = await answerService.getScoreByQuestion(request);
-
-  //           if (response.data) {
-  //             scores[question.id] = {
-  //               pronunciationScore: response.data.pronunciationScore || 0,
-  //               score: response.data.score || 0,
-  //             };
-  //           }
-  //         } catch (error) {
-  //           console.error(
-  //             `Error fetching score for question ${question.id}:`,
-  //             error
-  //           );
-  //         }
-  //       }
-  //     }
-
-  //     setQuestionScores((prev) => ({ ...prev, ...scores }));
-  //   } catch (error) {
-  //     console.error("Error fetching question scores:", error);
-  //   }
-  // }, [questions, topicId, selectedOptions]);
-
-  // useEffect(() => {
-  //   if (questions.length > 0) {
-  //     fetchQuestionScores();
-  //   }
-  // }, [questions, fetchQuestionScores]);
-
   const renderQuestionItem = ({
     item,
     index,
@@ -275,43 +251,116 @@ function AnswerQuestion() {
   );
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-      }}
-    >
-      <View
-        style={{
-          height: "70%",
-          justifyContent: "center",
-        }}
-      >
-        <Carousel
-          ref={carouselRef}
-          data={questions}
-          renderItem={renderQuestionItem}
-          width={screenWidth}
-          onSnapToItem={(index: React.SetStateAction<number>) =>
-            setActiveSlide(index)
-          }
-          enabled={false}
-          style={{
-            flex: 1,
-          }}
-        />
+    <Fragment>
+      {!resultVisible && (
         <View
           style={{
-            alignItems: "center",
-            paddingVertical: 16,
+            flex: 1,
+            justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 16, color: color.grey4, fontWeight: "400" }}>
-            Câu {activeSlide + 1}/{questions.length}
-          </Text>
+          <View
+            style={{
+              height: "70%",
+              justifyContent: "center",
+            }}
+          >
+            <Carousel
+              ref={carouselRef}
+              data={questions}
+              renderItem={renderQuestionItem}
+              width={screenWidth}
+              onSnapToItem={(index: React.SetStateAction<number>) =>
+                setActiveSlide(index)
+              }
+              enabled={false}
+              style={{
+                flex: 1,
+              }}
+            />
+            <View
+              style={{
+                alignItems: "center",
+                paddingVertical: 16,
+              }}
+            >
+              <Text
+                style={{ fontSize: 16, color: color.grey4, fontWeight: "400" }}
+              >
+                Câu {activeSlide + 1}/{questions.length}
+              </Text>
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      )}
+      {resultVisible && (
+        <LinearGradient
+          colors={[color.primary3, color.accentGold || "#FFD700"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            width: "100%",
+            height: "100%",
+            paddingVertical: 32,
+            paddingHorizontal: 24,
+            alignItems: "center",
+            borderRadius: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: "bold",
+              color: color.textWhite1,
+              textAlign: "center",
+            }}
+          >
+            🎉 Chúc mừng bạn!
+          </Text>
+
+          <Text
+            style={{
+              fontSize: 16,
+              marginTop: 12,
+              color: color.textWhite2,
+              textAlign: "center",
+            }}
+          >
+            Bạn đã hoàn thành bài thi. Chúng tôi đang tính điểm cho bạn...
+          </Text>
+
+          <ActivityIndicator
+            size="large"
+            color={color.success3}
+            style={{ marginVertical: 20 }}
+          />
+
+          <TouchableOpacity
+            onPress={() => {
+              setResultVisible(false);
+              navigation.goBack();
+            }}
+            style={{
+              marginTop: 10,
+              backgroundColor: color.accentGold || "#FFD700",
+              paddingVertical: 12,
+              paddingHorizontal: 32,
+              borderRadius: 24,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: color.textBlack,
+              }}
+            >
+              Xem kết quả
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
+      )}
+    </Fragment>
   );
 }
 

@@ -45,6 +45,13 @@ const courseService = {
       throw error;
     }
   },
+  async getMembers(courseId: string) {
+    try {
+      return apiService.post(COURSE_URL.GET_MEMBERS, { id: courseId });
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default courseService;
