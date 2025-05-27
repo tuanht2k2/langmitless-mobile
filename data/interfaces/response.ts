@@ -83,6 +83,7 @@ export namespace ResponseInterfaces {
     id?: string;
     description?: string;
     tag?: ITagResponse;
+    type?: "EXERCISE" | "EXAM";
   }
 
   export interface ITagResponse {
@@ -109,9 +110,22 @@ export namespace ResponseInterfaces {
     type?: string;
     content?: string;
     audioSample?: string | null;
+    textSample?: string;
+    answer?: string; // Student answered
+    answerAudio?: string; // Student answered => used for PRONUNCIATION
     option?: IOptionResponse[] | null;
     members?: Interfaces.IAccount[];
     topics?: ITopicResponse[];
+    topicId?: string;
+    score?: number;
+  }
+
+  export interface ITransactionScore {
+    topicId?: string;
+    userId?: string;
+    transactionId?: string;
+    score?: number;
+    questions?: IQuestionResponse[];
   }
 
   export interface IOptionResponse {
@@ -128,6 +142,13 @@ export namespace ResponseInterfaces {
   export interface IQuestionScore {
     pronunciationScore: number;
     score: number;
+  }
+
+  export interface ICreditCard {
+    cardNumber?: string;
+    bank?: string;
+    accountId?: string;
+    qrImage?: string;
   }
 
   export interface ICreditCard {

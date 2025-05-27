@@ -83,11 +83,14 @@ export enum COURSE_URL {
   SEARCH = "/courses/search",
   STUDENT_SEARCH = "/courses/student-search",
   BUY = "/courses/buy",
+  GET_MEMBERS = "/courses/get-members",
 }
 
 export enum TOPIC_URL {
   BASE = "/topics",
   SEARCH = "/topics/search",
+  SEARCH_TRANSACTIONS = "/topics/search-transaction-by-topic",
+  GET_SCORE_BY_TRANSACTIONS = "/topics/get-score-by-transaction",
 }
 
 export enum QUESTION_URL_V2 {
@@ -117,6 +120,8 @@ export enum PAYMENT_URL {
 
 export enum ANSWER_URL {
   BASE = "answer",
+  MULTIPLE_CHOICE = "/answer/MultipleChoice",
+  PRONUNCIATION = "/answer/Pronunciation",
 }
 
 export enum WITHDRAWAL_REQUEST_URL {

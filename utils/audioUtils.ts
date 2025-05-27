@@ -1,6 +1,5 @@
 import * as DocumentPicker from "expo-document-picker";
 import { Audio } from "expo-av";
-import React from "react";
 
 export const pickAudioFile = async (
   onPicked: (audio: { uri: string; name: string; type: string }) => void
@@ -33,9 +32,8 @@ export const playAudio = async (
   setSound: (sound: Audio.Sound) => void
 ) => {
   try {
-    // Kiểm tra uri hợp lệ trước khi sử dụng
     if (!uri) {
-      console.warn("URI audio không hợp lệ");
+      console.warn("URI audio not valid!");
       return;
     }
 
@@ -44,7 +42,7 @@ export const playAudio = async (
     }
 
     const { sound: newSound } = await Audio.Sound.createAsync(
-      { uri }, // Giờ đây uri chắc chắn là string
+      { uri },
       { shouldPlay: true }
     );
 

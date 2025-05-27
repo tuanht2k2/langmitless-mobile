@@ -70,6 +70,8 @@ function CourseList(props: IProps) {
                     fontSize: 16,
                     fontWeight: "500",
                   }}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
                 >
                   {item.name}
                 </Text>

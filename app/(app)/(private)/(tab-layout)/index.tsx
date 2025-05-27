@@ -1,13 +1,6 @@
-import { Link, router, useRouter } from "expo-router";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
+import { Text, View, ScrollView, ImageBackground } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Icon } from "@rneui/themed";
 import AvatarComponent from "@/components/Avatar";
@@ -85,12 +78,7 @@ export default function HomeScreen() {
       labelColor: color.textMain,
       icon: "query-stats",
     },
-    {
-      iconColor: color.warning3,
-      labelColor: color.textMain,
-      icon: "data-usage",
-      onClick: getAccountDetail,
-    },
+
     {
       name: "Trò chuyện",
       iconColor: color.warning3,
@@ -108,6 +96,12 @@ export default function HomeScreen() {
       onClick: () => {
         dispatch(showChatbot());
       },
+    },
+    {
+      iconColor: color.warning3,
+      labelColor: color.textMain,
+      icon: "data-usage",
+      onClick: getAccountDetail,
     },
   ];
 
@@ -137,42 +131,46 @@ export default function HomeScreen() {
                 padding: 20,
               }}
             >
-              <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <AvatarComponent
-                    accountUrl={account?.id}
-                    imageUrl={account?.profileImage}
-                    size={50}
-                  />
-                  <View>
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        fontWeight: "semibold",
-                        color: color.textWhite2,
-                      }}
-                    >
-                      Xin chào,
-                    </Text>
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: 18,
-                        color: color.textWhite2,
-                      }}
-                    >
-                      {account?.name}
-                    </Text>
-                  </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 12,
+                  paddingVertical: 10,
+                  paddingHorizontal: 16,
+                  backgroundColor: color.primary3,
+                  borderRadius: 12,
+                }}
+              >
+                <AvatarComponent
+                  accountUrl={account?.id}
+                  imageUrl={account?.profileImage}
+                  size={50}
+                />
+
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "600",
+                      color: color.textWhite2,
+                      marginBottom: 2,
+                    }}
+                  >
+                    Xin chào,
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 18,
+                      color: color.textWhite2,
+                    }}
+                  >
+                    {account?.name}
+                  </Text>
                 </View>
               </View>
+
               <Card
                 styles={{
                   gap: 10,
@@ -197,18 +195,27 @@ export default function HomeScreen() {
                 <HorizontalDivider style={{ backgroundColor: color.pink3 }} />
                 <View
                   style={{
-                    padding: 5,
-                    display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
+                    backgroundColor: color.grey1,
+                    paddingVertical: 10,
+                    paddingHorizontal: 12,
+                    borderRadius: 10,
+                    gap: 10,
                   }}
                 >
-                  <Icon name="attach-money" color={"red"} />
+                  <Icon
+                    name="attach-money"
+                    color={color.success3}
+                    size={28}
+                    style={{ marginRight: 10 }}
+                  />
                   <View>
                     <Text
                       style={{
-                        fontSize: 15,
-                        color: color.grey4,
+                        fontSize: 14,
+                        color: color.textGrey4,
+                        marginBottom: 2,
                       }}
                     >
                       Số dư
@@ -216,11 +223,11 @@ export default function HomeScreen() {
                     <Text
                       style={{
                         fontWeight: "bold",
-                        fontSize: 15,
+                        fontSize: 16,
                         color: color.textMain,
                       }}
                     >
-                      {account?.balance} VND
+                      {account?.balance?.toLocaleString("vi-VN")} VND
                     </Text>
                   </View>
                 </View>
