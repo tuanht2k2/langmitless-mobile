@@ -77,23 +77,35 @@ function LearnWithTeacherScreen() {
     router.push("/courses");
   };
 
-  const [tabIndex, setTabIndex] = useState(0);
-
   return (
     <>
       {loading ? (
         <FullScreenLoadingComponent />
       ) : (
-        <View style={{ minHeight: "100%", padding: 10 }}>
-          <ScrollView style={{}}>
-            <Card styles={{ gap: 10 }}>
-              <Text style={{ fontWeight: "bold", color: color.textMain }}>
+        <View style={{ flex: 1, padding: 12, backgroundColor: "#f5f7fa" }}>
+          <ScrollView>
+            <Card
+              styles={{
+                gap: 12,
+                padding: 16,
+                borderRadius: 16,
+                backgroundColor: "#fff",
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "#342c75",
+                  fontSize: 18,
+                  marginBottom: 12,
+                }}
+              >
                 Học 1vs1 cùng giáo viên
               </Text>
               {teachersLoading ? (
                 <ListSkeleton length={4} hasCircle />
               ) : (
-                <View style={{}}>
+                <View>
                   {teachers.map((teacher, index) => (
                     <TouchableOpacity
                       key={index}
@@ -102,35 +114,43 @@ function LearnWithTeacherScreen() {
                         handleNavigate(teacher.id);
                       }}
                       style={{
-                        backgroundColor: color.grey1,
-                        padding: 5,
-                        borderRadius: 10,
-                        display: "flex",
+                        backgroundColor: "#e6f0ff", // nền xanh nhẹ
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                        borderRadius: 12,
                         flexDirection: "row",
                         justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: 12,
+                        shadowColor: "#000",
+                        shadowOpacity: 0.05,
+                        shadowRadius: 5,
+                        elevation: 2,
                       }}
                     >
                       <View
                         style={{
-                          display: "flex",
                           flexDirection: "row",
-                          gap: 10,
+                          gap: 14,
                           alignItems: "center",
                         }}
                       >
-                        <AvatarComponent imageUrl={teacher.profileImage} />
+                        <AvatarComponent
+                          imageUrl={teacher.profileImage}
+                          size={48}
+                        />
                         <View
                           style={{
-                            display: "flex",
                             flexDirection: "row",
-                            gap: 5,
                             alignItems: "center",
+                            gap: 6,
                           }}
                         >
                           <Text
                             style={{
-                              color: color.blue1,
-                              fontSize: 15,
+                              color: "#244f71",
+                              fontSize: 16,
+                              fontWeight: "600",
                             }}
                           >
                             {teacher.name}
@@ -139,50 +159,67 @@ function LearnWithTeacherScreen() {
                             name="fiber-manual-record"
                             color={
                               teacher.status === "ONLINE"
-                                ? color.success3
-                                : color.warning3
+                                ? "#27ae60" // success3
+                                : "#f39c12" // warning3
                             }
-                            size={15}
+                            size={16}
                           />
                         </View>
                       </View>
                       <View
                         style={{
-                          display: "flex",
                           flexDirection: "row",
                           alignItems: "center",
-                          backgroundColor: color.blue1,
+                          backgroundColor: "#244f71",
                           borderWidth: 1,
-                          borderColor: color.yellow1,
-                          padding: 2,
-                          borderRadius: 5,
-                          paddingHorizontal: 10,
+                          borderColor: "#FAF8BF",
+                          paddingVertical: 4,
+                          paddingHorizontal: 14,
+                          borderRadius: 8,
                         }}
                       >
                         <Text
-                          style={{ color: color.yellow1, fontWeight: "bold" }}
+                          style={{
+                            color: "#FAF8BF",
+                            fontWeight: "bold",
+                            fontSize: 14,
+                          }}
                         >
                           {teacher.cost}/h
                         </Text>
-                        {/* <Icon name="attach-money" color={color.red3} /> */}
                       </View>
                     </TouchableOpacity>
                   ))}
                 </View>
               )}
             </Card>
-            <Card styles={{ marginTop: 10 }}>
-              <Text style={{ marginBottom: 20 }}>Học thông qua bài tập</Text>
-              <Button title="Tìm khóa học" onClick={handleSearchCourses} />
-              {/* <Tabs
-                activeIndex={tabIndex}
-                onChange={setTabIndex}
-                tabs={TABS}
-                styles={{ paddingHorizontal: 10 }}
+
+            <Card
+              styles={{
+                marginTop: 16,
+                padding: 16,
+                borderRadius: 16,
+                backgroundColor: "#fff",
+              }}
+            >
+              <Text
+                style={{ marginBottom: 24, color: "#7f7f7f", fontSize: 16 }}
+              >
+                Học thông qua bài tập
+              </Text>
+              <Button
+                title="Tìm khóa học"
+                onClick={handleSearchCourses}
+                style={{
+                  borderRadius: 12,
+                  backgroundColor: color.primary3,
+                  paddingVertical: 12,
+                }}
+                textColor={color.white1}
+                fontSize={16}
+                icon="search"
+                iconColor={color.white1}
               />
-              <View>
-                {tabIndex == 0 && <Button title=""/>}
-              </View> */}
             </Card>
           </ScrollView>
         </View>

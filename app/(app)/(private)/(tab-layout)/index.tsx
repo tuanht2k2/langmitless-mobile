@@ -1,4 +1,11 @@
-import { Text, View, ScrollView, ImageBackground } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 
@@ -32,6 +39,7 @@ import {
   showMessenger,
 } from "@/redux/reducers/globalSlide";
 import { loadAccount } from "@/redux/reducers/authSlice";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function HomeScreen() {
   const account = useSelector((state: RootState) => state.auth.account);
@@ -119,123 +127,150 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <ImageBackground style={GlobalStyle.background} source={backgroundImg}>
-      <View style={{ marginTop: 40, marginBottom: 0, gap: 5 }}>
-        <ScrollView scrollEventThrottle={16}>
-          {isLoading ? (
-            <FullScreenLoadingComponent />
-          ) : (
+    <LinearGradient
+      colors={["#3498db", "#6a82fb", "#9b59b6", "#6a82fb", "#3498db"]}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      locations={[0, 0.25, 0.5, 0.75, 1]}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        {isLoading ? (
+          <FullScreenLoadingComponent />
+        ) : (
+          <View style={styles.content}>
             <View
               style={{
-                width: "100%",
-                padding: 20,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 12,
+                padding: 12,
+                backgroundColor: "#6a82fb33", // xanh tím nhạt trong suốt
+                borderRadius: 16,
               }}
             >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 12,
-                  paddingVertical: 10,
-                  paddingHorizontal: 16,
-                  backgroundColor: color.primary3,
-                  borderRadius: 12,
-                }}
-              >
-                <AvatarComponent
-                  accountUrl={account?.id}
-                  imageUrl={account?.profileImage}
-                  size={50}
-                />
+              <AvatarComponent
+                accountUrl={account?.id}
+                imageUrl={account?.profileImage}
+                size={50}
+              />
+              <View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "600",
+                    color: "#4a3f9e",
+                    marginBottom: 4,
+                  }}
+                >
+                  Xin chào,
+                </Text>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: "#342c75",
+                  }}
+                >
+                  {account?.name}
+                </Text>
+              </View>
+            </View>
 
+            {/* Menu Card */}
+            <Card
+              styles={{
+                marginTop: 20,
+                padding: 16,
+                borderRadius: 16,
+                backgroundColor: color.white1,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+                gap: 16,
+              }}
+            >
+              <View style={styles.menuWrap}>
+                {MENU.map((item, index) => (
+                  <MenuItem key={index} {...item} />
+                ))}
+              </View>
+
+              <HorizontalDivider style={{ backgroundColor: color.pink3 }} />
+
+              {/* Balance Box */}
+              <View style={styles.balanceBox}>
+                <Icon
+                  name="attach-money"
+                  color={color.success3}
+                  size={28}
+                  style={{ marginRight: 10 }}
+                />
                 <View>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "600",
-                      color: color.textWhite2,
-                      marginBottom: 2,
-                    }}
-                  >
-                    Xin chào,
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 18,
-                      color: color.textWhite2,
-                    }}
-                  >
-                    {account?.name}
+                  <Text style={styles.balanceLabel}>Số dư</Text>
+                  <Text style={styles.balanceValue}>
+                    {account?.balance?.toLocaleString("vi-VN")} VND
                   </Text>
                 </View>
               </View>
-
-              <Card
-                styles={{
-                  gap: 10,
-                  marginTop: 20,
-                  borderWidth: 1,
-                  borderColor: color.grey2,
-                }}
-              >
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 20,
-                    padding: 5,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {MENU.map((item, index) => (
-                    <MenuItem key={index} {...item} />
-                  ))}
-                </View>
-                <HorizontalDivider style={{ backgroundColor: color.pink3 }} />
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    backgroundColor: color.grey1,
-                    paddingVertical: 10,
-                    paddingHorizontal: 12,
-                    borderRadius: 10,
-                    gap: 10,
-                  }}
-                >
-                  <Icon
-                    name="attach-money"
-                    color={color.success3}
-                    size={28}
-                    style={{ marginRight: 10 }}
-                  />
-                  <View>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: color.textGrey4,
-                        marginBottom: 2,
-                      }}
-                    >
-                      Số dư
-                    </Text>
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: 16,
-                        color: color.textMain,
-                      }}
-                    >
-                      {account?.balance?.toLocaleString("vi-VN")} VND
-                    </Text>
-                  </View>
-                </View>
-              </Card>
-            </View>
-          )}
-        </ScrollView>
-      </View>
-    </ImageBackground>
+            </Card>
+          </View>
+        )}
+      </ScrollView>
+    </LinearGradient>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    paddingBottom: 40,
+  },
+  content: {
+    width: "100%",
+  },
+  greetingBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: color.primary4,
+    padding: 16,
+    borderRadius: 12,
+  },
+  greetingText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: color.textWhite2,
+    marginBottom: 2,
+  },
+  username: {
+    fontWeight: "bold",
+    fontSize: 18,
+    color: color.textWhite2,
+  },
+  menuWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 20,
+    justifyContent: "center",
+  },
+  balanceBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: color.grey1,
+    padding: 12,
+    borderRadius: 10,
+  },
+  balanceLabel: {
+    fontSize: 14,
+    color: color.textGrey4,
+    marginBottom: 2,
+  },
+  balanceValue: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: color.textMain,
+  },
+});

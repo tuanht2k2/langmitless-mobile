@@ -144,27 +144,36 @@ function RoomScreen() {
               styles={{
                 flexDirection: "row",
                 alignItems: "center",
-                padding: 15,
+                padding: 20,
                 backgroundColor: color.white1,
-                borderRadius: 12,
+                borderRadius: 16,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.1,
+                shadowRadius: 8,
+                elevation: 5,
               }}
             >
               <AvatarComponent imageUrl={teacherData.profileImage} size={80} />
-              <View style={{ flex: 1, marginLeft: 15 }}>
+              <View style={{ flex: 1, marginLeft: 20 }}>
                 <Text
                   style={{
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: "700",
                     color: color.textMain,
+                    marginBottom: 6,
                   }}
                 >
-                  {" "}
                   {teacherData.name}
                 </Text>
                 <Text
-                  style={{ fontSize: 15, color: color.grey3, marginTop: 4 }}
+                  style={{
+                    fontSize: 16,
+                    color: color.grey4,
+                    marginTop: 4,
+                    fontWeight: "600",
+                  }}
                 >
-                  {" "}
                   {teacherData.cost} đ/h
                 </Text>
               </View>
@@ -172,66 +181,107 @@ function RoomScreen() {
               <View style={{ alignItems: "flex-end" }}>
                 <Text
                   style={{
-                    fontSize: 15,
-                    fontWeight: "500",
+                    fontSize: 16,
+                    fontWeight: "600",
                     color: color.warning4,
                     textDecorationLine: "underline",
-                    marginBottom: 4,
+                    marginBottom: 6,
                   }}
                 >
                   Liên hệ
                 </Text>
-                <Text style={{ color: color.grey3, fontSize: 14 }}>
+                <Text style={{ color: color.grey3, fontSize: 15 }}>
                   {teacherData.phoneNumber}
                 </Text>
-                <View style={{ flexDirection: "row", marginTop: 6 }}>
+                <View style={{ flexDirection: "row", marginTop: 10 }}>
                   <IconButtonComponent
                     icon="mail"
                     iconColor={color.warning4}
-                    size={24}
+                    size={26}
                     onPress={navigateMessenger}
                   />
                   <IconButtonComponent
                     icon="call"
                     iconColor={color.success3}
-                    size={24}
-                    style={{ marginLeft: 8 }}
+                    size={26}
+                    style={{ marginLeft: 12 }}
                   />
                 </View>
               </View>
             </Card>
 
             <Card styles={{ padding: 10, marginTop: 10 }}>
-              <Text style={{ fontSize: 17 }}>Lịch sử được thuê</Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "700",
+                  color: color.primary4,
+                  marginBottom: 15,
+                  textShadowColor: "rgba(0, 0, 0, 0.1)",
+                  textShadowOffset: { width: 1, height: 1 },
+                  textShadowRadius: 3,
+                }}
+              >
+                Lịch sử được thuê
+              </Text>
+
               <View style={{ gap: 10, marginTop: 10 }}>
                 {teacherData.hireHistory &&
                   teacherData.hireHistory
-                    .filter(
-                      (hire: ResponseInterfaces.IHireResponse) =>
-                        hire.actualTime
-                    )
-                    .map((hire: ResponseInterfaces.IHireResponse, index) => (
+                    .filter((hire) => hire.actualTime)
+                    .map((hire, index) => (
                       <View
                         key={index}
                         style={{
-                          display: "flex",
                           flexDirection: "row",
                           alignItems: "center",
-                          gap: 5,
+                          gap: 10,
+                          backgroundColor: "#f9faff", // nền nhẹ
+                          borderRadius: 12,
+                          padding: 12,
+                          marginBottom: 12,
                           borderWidth: 1,
-                          borderColor: color.grey1,
-                          borderRadius: 10,
-                          padding: 10,
+                          borderColor: color.grey2,
+                          shadowColor: color.accentGold,
+                          shadowOffset: { width: 0, height: 3 },
+                          shadowOpacity: 0.1,
+                          shadowRadius: 6,
+                          elevation: 3,
                         }}
                       >
-                        <Text style={{ width: 20 }}>{index + 1}</Text>
+                        <Text
+                          style={{
+                            width: 25,
+                            fontWeight: "600",
+                            color: color.textPrimary4,
+                            textAlign: "center",
+                          }}
+                        >
+                          {index + 1}
+                        </Text>
                         <AvatarComponent
                           imageUrl={hire.createdBy?.profileImage}
+                          size={40}
                         />
-                        <Text style={{ fontWeight: "bold" }}>
+                        <Text
+                          style={{
+                            flex: 1,
+                            fontWeight: "700",
+                            color: color.textMain,
+                            fontSize: 15,
+                          }}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
                           {hire.createdBy?.name}
                         </Text>
-                        <Text style={{ color: color.grey4 }}>
+                        <Text
+                          style={{
+                            color: color.grey4,
+                            fontWeight: "500",
+                            fontSize: 14,
+                          }}
+                        >
                           Đã thuê{" "}
                           {hire.actualTime
                             ? Math.floor((hire.actualTime * 100) / 3600) / 100

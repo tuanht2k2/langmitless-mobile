@@ -7,7 +7,13 @@ import roomService from "@/services/roomService";
 import getSocketClient from "@/utils/getSocketClient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { AppState, ImageBackground, Modal, Text } from "react-native";
+import {
+  AppState,
+  ImageBackground,
+  Modal,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { View } from "react-native";
 import {
   mediaDevices,
@@ -22,12 +28,9 @@ import Stomp from "stompjs";
 
 // @ts-ignore
 import disconnectIcon from "@/assets/images/icons/disconnect.png";
-// @ts-ignore
-import noDataFoundImage from "@/assets/images/no_data_found.png";
 import ModalComponent from "@/components/Modal";
 import hireService from "@/services/hireService";
 import { ResponseInterfaces } from "@/data/interfaces/response";
-import { set } from "firebase/database";
 import { RequestInterfaces } from "@/data/interfaces/request";
 import CommonService from "@/services/CommonService";
 import AvatarComponent from "@/components/Avatar";
@@ -524,74 +527,138 @@ function RoomScreen() {
             visible={endCall}
             titleStyle={{ color: color.red1 }}
             title="Bạn có chắc chắn muốn kết thúc cuộc gọi không?"
+            onClose={() => {
+              setEndCall(false);
+            }}
           >
             <View
               style={{
-                paddingVertical: 20,
-                gap: 20,
-                display: "flex",
+                paddingVertical: 24,
+                paddingHorizontal: 16,
+                gap: 24,
+                backgroundColor: "#fff",
+                borderRadius: 16,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.1,
+                shadowRadius: 6,
+                elevation: 4,
                 alignItems: "center",
               }}
             >
               <Text
                 style={{
                   color: color.blue1,
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: "bold",
+                  textAlign: "center",
                 }}
               >
                 Kết thúc cuộc gọi?
               </Text>
-              {getTimeStatus() == 1 && (
+
+              {getTimeStatus() === 1 && (
                 <Text
                   style={{
                     color: color.red3,
-                    fontSize: 17,
+                    fontSize: 16,
                     textAlign: "center",
-                    fontWeight: "bold",
+                    fontWeight: "600",
+                    paddingHorizontal: 10,
                   }}
                 >
                   Cuộc gọi dưới 1/3 thời gian nên sẽ không được tính phí
                 </Text>
               )}
+
               <View
                 style={{
-                  paddingVertical: 20,
-                  gap: 20,
-                  display: "flex",
                   flexDirection: "row",
                   justifyContent: "center",
+                  gap: 16,
+                  paddingTop: 10,
                 }}
               >
-                <Button
-                  title="Xác nhận"
-                  onClick={() => {
-                    handleConfirmEndCall();
+                <TouchableOpacity
+                  onPress={handleConfirmEndCall}
+                  activeOpacity={0.85}
+                  style={{
+                    backgroundColor: color.red3,
+                    paddingVertical: 12,
+                    paddingHorizontal: 24,
+                    borderRadius: 12,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 3,
+                    elevation: 2,
                   }}
-                />
-                <Button
-                  title="Quay lại"
-                  style={{ backgroundColor: color.primary4 }}
-                  onClick={() => {
-                    setEndCall(false);
+                >
+                  <Text
+                    style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}
+                  >
+                    Xác nhận
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => setEndCall(false)}
+                  activeOpacity={0.85}
+                  style={{
+                    backgroundColor: color.primary4,
+                    paddingVertical: 12,
+                    paddingHorizontal: 24,
+                    borderRadius: 12,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 3,
+                    elevation: 2,
                   }}
-                />
+                >
+                  <Text
+                    style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}
+                  >
+                    Quay lại
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </ModalComponent>
         </View>
       )}
       {hire && hire.status !== "ENDED" && !remoteStream && (
-        <View style={{ gap: 10 }}>
-          <Text style={{ color: color.blue1, fontSize: 17 }}>
+        <View
+          style={{
+            gap: 14,
+            padding: 20,
+            backgroundColor: "#f0f8ff",
+            borderRadius: 16,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.1,
+            shadowRadius: 6,
+            elevation: 3,
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: color.blue1,
+              fontSize: 18,
+              fontWeight: "600",
+              textAlign: "center",
+            }}
+          >
             Bắt đầu cuộc trò chuyện ngay
           </Text>
+
           <View
             style={{
-              gap: 10,
-              display: "flex",
               flexDirection: "row",
               justifyContent: "center",
+              alignItems: "center",
+              gap: 20,
             }}
           >
             <AvatarComponent imageUrl={hire.teacher?.profileImage} size={70} />
@@ -600,20 +667,66 @@ function RoomScreen() {
               size={70}
             />
           </View>
-          <Button title="Bắt đầu" onClick={startCall} />
+
+          <TouchableOpacity
+            onPress={startCall}
+            activeOpacity={0.8}
+            style={{
+              backgroundColor: color.blue1,
+              paddingVertical: 12,
+              paddingHorizontal: 30,
+              borderRadius: 10,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 3,
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                fontWeight: "600",
+              }}
+            >
+              Bắt đầu
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
+
       {hire && hire.status === "ENDED" && (
-        <View style={{ gap: 10 }}>
-          <Text style={{ color: color.blue1, fontSize: 17 }}>
+        <View
+          style={{
+            gap: 20,
+            backgroundColor: "#fff",
+            padding: 24,
+            borderRadius: 16,
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.1,
+            shadowRadius: 6,
+            elevation: 4,
+          }}
+        >
+          <Text
+            style={{
+              color: color.blue1,
+              fontSize: 20,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
             Cuộc gọi đã kết thúc
           </Text>
+
           <View
             style={{
-              gap: 10,
-              display: "flex",
               flexDirection: "row",
               justifyContent: "center",
+              gap: 20,
             }}
           >
             <AvatarComponent imageUrl={hire.teacher?.profileImage} size={70} />
@@ -622,12 +735,27 @@ function RoomScreen() {
               size={70}
             />
           </View>
-          <Button
-            title="Quay lại"
-            onClick={() => {
-              router.replace("/");
+
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => router.replace("/")}
+            style={{
+              marginTop: 10,
+              backgroundColor: color.primary4,
+              paddingVertical: 12,
+              paddingHorizontal: 28,
+              borderRadius: 12,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.15,
+              shadowRadius: 3,
+              elevation: 3,
             }}
-          />
+          >
+            <Text style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}>
+              Quay lại
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
       {/* </ImageBackground> */}
