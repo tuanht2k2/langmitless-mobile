@@ -133,7 +133,6 @@ export default function PrivateLayout() {
       if (hire.status === "ACCEPTED") {
         router.push(`/room/${hire.id}`);
       } else {
-        console.log("heheh");
         dispatch(clearHired());
       }
     }

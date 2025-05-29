@@ -183,6 +183,7 @@ function RoomScreen() {
       });
 
       localPC.addEventListener("track", (e: any) => {
+        console.log("co track: ", account?.name, "stream: ", e?.streams[0]);
         const newStream = new MediaStream();
         e.streams[0]?.getTracks().forEach((track: any) => {
           newStream.addTrack(track);
@@ -201,6 +202,18 @@ function RoomScreen() {
           };
           if (!socketClientRef.current) return;
           roomService.sendWebRTCData(candidateData, socketClientRef.current);
+        }
+      });
+
+      localPC.addEventListener("iceconnectionstatechange", () => {
+        const state = localPC.iceConnectionState;
+
+        if (
+          state === "disconnected" ||
+          state === "failed" ||
+          state === "closed"
+        ) {
+          handleConfirmEndCall(true);
         }
       });
 
@@ -337,22 +350,23 @@ function RoomScreen() {
     return ratio < 0.33 ? 1 : 2;
   };
 
-  const handleConfirmEndCall = async () => {
+  const handleConfirmEndCall = async (isPassive: boolean) => {
     try {
       if (!hire) return;
 
-      const request: RequestInterfaces.IEditHireRequest = {
-        id: roomId as string,
-        status: "ENDED",
-      };
-      const res: ResponseInterfaces.ICommonResponse<null> =
-        await hireService.updateStatus(request);
-      if (res.code !== 200) {
-        CommonService.showToast("error", res.message);
-        return;
+      if (!isPassive) {
+        const request: RequestInterfaces.IEditHireRequest = {
+          id: roomId as string,
+          status: "ENDED",
+        };
+        const res: ResponseInterfaces.ICommonResponse<null> =
+          await hireService.updateStatus(request);
+
+        if (res.code == 200 && res.data) {
+          setHire(res.data);
+        }
       }
 
-      setHire(res.data);
       clearStream();
       if (socketClientRef.current) {
         socketClientRef.current.disconnect(() => {
@@ -580,7 +594,9 @@ function RoomScreen() {
                 }}
               >
                 <TouchableOpacity
-                  onPress={handleConfirmEndCall}
+                  onPress={() => {
+                    handleConfirmEndCall(false);
+                  }}
                   activeOpacity={0.85}
                   style={{
                     backgroundColor: color.red3,
