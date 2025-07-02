@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import color from "@/assets/styles/color";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import ModalComponent from "./Modal";
 import Draggable from "react-native-draggable";
 import GlobalStyle from "@/assets/styles/globalStyles";
@@ -120,6 +120,13 @@ function ChatbotComponent() {
     `/topic/chatbot/${account?.id}/messages`,
     handleChatbotResponse
   );
+
+  const scrollViewRef = useRef<ScrollView>(null);
+  useEffect(() => {
+    if (messages && messages.length > 0) {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
 
   const CourseDetails = (course: ResponseInterfaces.ICourseResponse) => {
     const navigateToCourse = (id: string) => {
@@ -297,7 +304,7 @@ function ChatbotComponent() {
                 }}
               >
                 <Text style={{ fontSize: 16, color: color.grey4 }}>
-                  Bạn đang tìm hiểu về:{" "}
+                  {/* Bạn đang tìm hiểu về:{" "} */}
                   <Text style={{ fontWeight: "500", color: color.pink3 }}>
                     {course.name}
                   </Text>
@@ -321,6 +328,7 @@ function ChatbotComponent() {
             }}
             contentContainerStyle={{ padding: 10 }}
             showsVerticalScrollIndicator={false}
+            ref={scrollViewRef}
           >
             {messages.map((message, index) => (
               <View

@@ -169,6 +169,9 @@ function RoomScreen() {
       case "candidate":
         handleCandidate(data);
         break;
+      case "end":
+        handleConfirmEndCall(true);
+        break;
       default:
         return;
     }
@@ -226,7 +229,6 @@ function RoomScreen() {
   const startCall = async () => {
     if (!socketClientRef.current) return;
     if (!localPCRef.current) {
-      console.error("Khong co local ref");
       return;
     }
 
@@ -492,7 +494,7 @@ function RoomScreen() {
         backgroundColor: color.grey1,
       }}
     >
-      {remoteStream && localStream && (
+      {remoteStream && (
         <View
           style={{
             position: "relative",
@@ -502,7 +504,7 @@ function RoomScreen() {
           }}
         >
           <RTCView
-            streamURL={remoteStream.toURL()}
+            streamURL={remoteStream?.toURL()}
             objectFit="cover"
             style={{ height: "100%", width: "100%" }}
           />
@@ -518,7 +520,7 @@ function RoomScreen() {
             }}
           >
             <RTCView
-              streamURL={localStream.toURL()}
+              streamURL={localStream?.toURL()}
               objectFit="cover"
               style={{
                 height: "100%",
@@ -618,7 +620,9 @@ function RoomScreen() {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  onPress={() => setEndCall(false)}
+                  onPress={() => {
+                    router.replace("/");
+                  }}
                   activeOpacity={0.85}
                   style={{
                     backgroundColor: color.primary4,

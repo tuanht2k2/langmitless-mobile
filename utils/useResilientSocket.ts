@@ -20,9 +20,9 @@ const useResilientSocket = (
 
     const socket = new SockJS(socketBaseUrl);
     const client = Stomp.over(socket);
-    client.debug = (str) => {
-      console.log("STOMP DEBUG:", str);
-    };
+    // client.debug = (str) => {
+    //   console.log("STOMP DEBUG:", str);
+    // };
 
     client.connect(
       {},
